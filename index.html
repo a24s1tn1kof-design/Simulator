@@ -228,6 +228,85 @@
             margin-top: 6px;
         }
 
+        /* Книга для учения */
+        .book-btn {
+            background: #2ecc71;
+            border: none;
+            color: #fff;
+            padding: 14px 20px;
+            border-radius: 30px;
+            font-weight: 700;
+            font-size: 16px;
+            cursor: pointer;
+            touch-action: manipulation;
+            transition: 0.2s;
+            box-shadow: 0 4px 20px rgba(46,204,113,0.4);
+            width: 100%;
+            margin-top: 16px;
+        }
+        .book-btn:active { transform: scale(0.96); }
+
+        .book-modal {
+            display: none;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.92);
+            backdrop-filter: blur(16px);
+            border-radius: 28px;
+            padding: 30px 22px;
+            z-index: 200;
+            overflow-y: auto;
+        }
+        .book-modal.active { display: block; }
+        .book-modal .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .book-modal .modal-header h2 {
+            color: #2ecc71;
+            font-size: 20px;
+            font-weight: 700;
+        }
+        .book-modal .modal-close {
+            background: rgba(255,255,255,0.08);
+            border: none;
+            color: #fff;
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            font-size: 20px;
+            cursor: pointer;
+        }
+        .book-content {
+            color: #ddd;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+        .book-content .question-block {
+            background: rgba(255,255,255,0.04);
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 14px;
+            border-left: 3px solid #2ecc71;
+        }
+        .book-content .question-block .q {
+            color: #fff;
+            font-weight: 600;
+            margin-bottom: 6px;
+        }
+        .book-content .question-block .a {
+            color: #aaa;
+        }
+        .book-content .question-block .a strong {
+            color: #2ecc71;
+            font-weight: 600;
+        }
+
         .phone-screen::-webkit-scrollbar { width: 3px; }
         .phone-screen::-webkit-scrollbar-track { background: transparent; }
         .phone-screen::-webkit-scrollbar-thumb { background: #333; border-radius: 10px; }
@@ -276,6 +355,7 @@
                 <button class="modal-close" onclick="closeStudy()">✕</button>
             </div>
             <div id="studyContent"></div>
+            <!-- Кнопка "Книга для учения" будет вставляться сюда через JS -->
         </div>
 
         <!-- МОДАЛКА БАНК -->
@@ -290,6 +370,16 @@
                 <p style="color:#555;font-size:12px;margin-top:6px;">В разработке...</p>
             </div>
         </div>
+
+        <!-- МОДАЛКА КНИГА ДЛЯ УЧЕНИЯ -->
+        <div class="book-modal" id="bookModal">
+            <div class="modal-header">
+                <h2>📖 Книга для учения</h2>
+                <button class="modal-close" onclick="closeBook()">✕</button>
+            </div>
+            <div class="book-content" id="bookContent"></div>
+        </div>
+
     </div>
 </div>
 
@@ -316,7 +406,6 @@
                 else el.style.color = '#2ecc71';
             });
         } else {
-            // fallback — случайное число от 70 до 100
             var fake = Math.floor(Math.random() * 30) + 70;
             document.getElementById('batteryDisplay').textContent = '🔋 ' + fake + '%';
         }
@@ -344,6 +433,15 @@
         document.getElementById('bankModal').classList.remove('active');
     }
 
+    function openBook() {
+        document.getElementById('bookModal').classList.add('active');
+        renderBook();
+    }
+
+    function closeBook() {
+        document.getElementById('bookModal').classList.remove('active');
+    }
+
     document.getElementById('studyModal').addEventListener('click', function(e) {
         if (e.target === this) {
             this.classList.remove('active');
@@ -353,139 +451,54 @@
     document.getElementById('bankModal').addEventListener('click', function(e) {
         if (e.target === this) this.classList.remove('active');
     });
+    document.getElementById('bookModal').addEventListener('click', function(e) {
+        if (e.target === this) this.classList.remove('active');
+    });
 
     // ===== ПРОФЕССИИ =====
     var professions = [
-        { id: 'fsb', name: 'ФСБ', desc: 'Федеральная служба безопасности', trainingTime: 14, examDate: 'Экзамен: 7-й и 14-й день' },
-        { id: 'mchs', name: 'МЧС', desc: 'Спасатель, пожарный', trainingTime: 14, examDate: 'Экзамен: 7-й и 14-й день' },
-        { id: 'medic', name: 'Медик', desc: 'Врач, фельдшер', trainingTime: 14, examDate: 'Экзамен: 7-й и 14-й день' },
-        { id: 'mvd', name: 'МВД', desc: 'Полицейский, следователь', trainingTime: 14, examDate: 'Экзамен: 7-й и 14-й день' },
-        { id: 'teacher', name: 'Учитель', desc: 'Преподаватель, наставник', trainingTime: 14, examDate: 'Экзамен: 7-й и 14-й день' }
-    ];
-
-    var selectedProfession = localStorage.getItem('selectedProfession') || null;
-    var startDate = localStorage.getItem('startDate') || null;
-    var openedDetail = null;
-
-    function getDaysLeft() {
-        if (!startDate) return 14;
-        var start = new Date(startDate);
-        var now = new Date();
-        var diff = Math.floor((now - start) / (1000 * 60 * 60 * 24));
-        var left = 14 - diff;
-        return left < 0 ? 0 : left;
-    }
-
-    function getDaysPassed() {
-        if (!startDate) return 0;
-        var start = new Date(startDate);
-        var now = new Date();
-        return Math.floor((now - start) / (1000 * 60 * 60 * 24));
-    }
-
-    function updateDaysCounter() {
-        var days = getDaysLeft();
-        var el = document.getElementById('daysCounter');
-        if (el) el.textContent = days;
-        var bigEl = document.querySelector('.days-left-big');
-        if (bigEl) bigEl.textContent = 'Осталось дней: ' + days;
-        if (days <= 0) {
-            var statusEl = document.querySelector('.status-text');
-            if (statusEl) statusEl.textContent = 'Обучение завершено';
-            var examEl = document.querySelector('.exam-date');
-            if (examEl) examEl.textContent = 'Обучение завершено';
-            if (window.daysInterval) clearInterval(window.daysInterval);
-        }
-    }
-
-    function renderStudy() {
-        var content = document.getElementById('studyContent');
-
-        if (selectedProfession) {
-            var prof = null;
-            for (var i = 0; i < professions.length; i++) {
-                if (professions[i].id === selectedProfession) { prof = professions[i]; break; }
-            }
-            if (prof) {
-                var daysLeft = getDaysLeft();
-                var daysPassed = getDaysPassed();
-                var finished = daysLeft <= 0;
-
-                content.innerHTML = `
-                    <div class="selected-profession-block">
-                        <div class="prof-name">${prof.name}</div>
-                        <div class="prof-desc">${prof.desc}</div>
-                        <div class="status-text">${finished ? 'Обучение завершено' : 'Профессия выбрана'}</div>
-                        <div class="days-left-big">${finished ? 'Обучение завершено' : 'Осталось дней: ' + daysLeft}</div>
-                        <div style="color:#888;font-size:12px;margin-top:4px;">${finished ? 'Вы успешно освоили профессию' : 'День ' + Math.min(daysPassed, 14) + ' из 14'}</div>
-                    </div>
-                    <div class="profession-detail open">
-                        <div class="row"><span class="label">Время обучения</span><span class="value">${prof.trainingTime} дней</span></div>
-                        <div class="row"><span class="label">Экзамены</span><span class="value">${prof.examDate}</span></div>
-                        <div class="row"><span class="label">Осталось дней</span><span class="value" id="daysCounter">${finished ? 0 : daysLeft}</span></div>
-                        <div class="exam-date">${finished ? 'Обучение завершено' : 'Вы проходите обучение по этой профессии'}</div>
-                    </div>
-                `;
-
-                if (!finished) {
-                    if (window.daysInterval) clearInterval(window.daysInterval);
-                    window.daysInterval = setInterval(function() {
-                        var newDays = getDaysLeft();
-                        var counter = document.getElementById('daysCounter');
-                        if (counter) counter.textContent = newDays;
-                        var big = document.querySelector('.days-left-big');
-                        if (big) big.textContent = 'Осталось дней: ' + newDays;
-                        if (newDays <= 0) {
-                            clearInterval(window.daysInterval);
-                            renderStudy();
-                        }
-                    }, 1000);
-                }
-            }
-            return;
-        }
-
-        var html = '<div class="profession-list">';
-        for (var j = 0; j < professions.length; j++) {
-            var p = professions[j];
-            var isOpen = (openedDetail === p.id);
-            html += `
-                <div class="profession-card" onclick="toggleDetail('${p.id}')">
-                    <div class="info">
-                        <h3>${p.name}</h3>
-                        <p>${p.desc}</p>
-                        <div class="detail">Нажмите для выбора</div>
-                    </div>
-                    <button class="profession-btn" onclick="event.stopPropagation(); selectProfession('${p.id}')">Выбрать</button>
-                </div>
-                <div class="profession-detail ${isOpen ? 'open' : ''}" id="detail-${p.id}">
-                    <div class="row"><span class="label">Время обучения</span><span class="value">${p.trainingTime} дней</span></div>
-                    <div class="row"><span class="label">Экзамены</span><span class="value">${p.examDate}</span></div>
-                    <div class="days-left">Выберите профессию для начала обучения</div>
-                    <div class="exam-date">Длительность обучения: 14 дней</div>
-                </div>
-            `;
-        }
-        html += '</div>';
-        content.innerHTML = html;
-    }
-
-    function toggleDetail(id) {
-        openedDetail = (openedDetail === id) ? null : id;
-        renderStudy();
-    }
-
-    function selectProfession(id) {
-        if (selectedProfession) { alert('Профессия уже выбрана!'); return; }
-        selectedProfession = id;
-        startDate = new Date().toISOString();
-        localStorage.setItem('selectedProfession', id);
-        localStorage.setItem('startDate', startDate);
-        renderStudy();
-    }
-
-    // ===== ЗАПУСК =====
-    renderStudy();
-</script>
-</body>
-    </html>
+        { 
+            id: 'fsb', 
+            name: 'ФСБ', 
+            desc: 'Федеральная служба безопасности', 
+            trainingTime: 14, 
+            examDate: 'Экзамен: 7-й и 14-й день',
+            questions: [
+                { q: 'В торговом центре неизвестные открыли стрельбу, слышны взрывы. Ваши действия?', a: 'Немедленно покинуть здание через ближайший выход, если это невозможно — укрыться в подсобном помещении, заблокировать дверь, выключить свет и звук телефона, не создавать панику, дождаться прибытия спецслужб. Не приближаться к окнам, не вступать в контакт с нападавшими.' },
+                { q: 'Вы получили сообщение о заложенной бомбе в вашем учебном заведении. Что делать?', a: 'Не паниковать, немедленно сообщить преподавателю или охране, покинуть здание по эвакуационному плану, не пользоваться лифтами, отойти на безопасное расстояние, не трогать подозрительные предметы. Дождаться инструкций от МЧС или полиции.' },
+                { q: 'Вас захватили в заложники. Ваши действия?', a: 'Сохранять спокойствие, не спорить с террористами, выполнять их требования если это не угрожает жизни, не делать резких движений, попытаться запомнить детали (количество, внешность, оружие), по возможности незаметно подать сигнал через сообщение или соцсети.' }
+            ]
+        },
+        { 
+            id: 'mchs', 
+            name: 'МЧС', 
+            desc: 'Спасатель, пожарный', 
+            trainingTime: 14, 
+            examDate: 'Экзамен: 7-й и 14-й день',
+            questions: [
+                { q: 'Произошло землетрясение средней силы. Вы находитесь в квартире на 5-м этаже. Ваши действия?', a: 'Лечь на пол рядом с кроватью или столом, защитить голову руками, отойти от окон и тяжёлой мебели. После прекращения толчков — покинуть здание по лестнице, не пользуясь лифтом. Помочь пожилым людям и детям.' },
+                { q: 'Вы обнаружили возгорание в многоквартирном доме. Что делать?', a: 'Немедленно вызвать пожарную службу по номеру 101 или 112, сообщить точный адрес и этаж. Если пожар небольшой — попытаться потушить огнетушителем. Если огонь сильный — немедленно покинуть помещение, закрыть двери и окна, предупредить соседей. Не пользоваться лифтом.' },
+                { q: 'Человек упал в обморок на улице. Ваши действия как спасателя?', a: 'Проверить пульс и дыхание. Если дыхания нет — начать сердечно-легочную реанимацию (30 нажатий на грудную клетку, 2 вдоха). Вызвать скорую помощь по номеру 103 или 112. Уложить пострадавшего на бок в восстановительное положение до приезда врачей.' }
+            ]
+        },
+        { 
+            id: 'medic', 
+            name: 'Медик', 
+            desc: 'Врач, фельдшер', 
+            trainingTime: 14, 
+            examDate: 'Экзамен: 7-й и 14-й день',
+            questions: [
+                { q: 'У человека внезапно остановилось сердце. Что делать?', a: 'Немедленно начать сердечно-легочную реанимацию: положить пострадавшего на твёрдую поверхность, проверить дыхание, сделать 30 компрессий грудной клетки глубиной 5-6 см с частотой 100-120 в минуту, затем 2 искусственных вдоха. Продолжать до приезда скорой помощи или появления признаков жизни.' },
+                { q: 'Вы видите человека с признаками инсульта (асимметрия лица, нарушение речи, слабость в руке). Ваши действия?', a: 'Немедленно вызвать скорую помощь, усадить или уложить пострадавшего с приподнятой головой. Не давать еду, воду и лекарства. Засечь время начала симптомов, наблюдать за состоянием до приезда врачей.' },
+                { q: 'Ребёнок подавился едой и не может дышать. Ваши действия?', a: 'Встать позади ребёнка, обхватить его руками, наклонить вперёд, нанести 5 резких ударов между лопатками. Если не помогает — выполнить 5 компрессий в область живота (приём Геймлиха). Если ребёнок потерял сознание — начать СЛР, чередуя 30 нажатий и 2 вдоха. Вызвать скорую помощь.' }
+            ]
+        },
+        { 
+            id: 'mvd', 
+            name: 'МВД', 
+            desc: 'Полицейский, следователь', 
+            trainingTime: 14, 
+            examDate: 'Экзамен: 7-й и 14-й день',
+            questions: [
+                { q: 'Вы стали свидетелем уличного ограбления. Ваши действия как сотрудника полиции?', a: 'Немедленно набрать 102 или 112, сообщить приметы преступников, направление их движения. Если есть возможность — запомнить номер машины, детали внешности. Не вступать в конфликт, если угроза для жизни. Прибыть на место происшествия для дачи показаний.' },
+                { q: 'Вы нашли подозрительный предмет в общественном транспорте. Ваши действия?', a: 'Немедленно сообщить водителю или охране, вызвать полицию. Не трогать предмет, не приближаться к нему, вывести людей из автобуса, оградить место находки, дождаться прибытия спецслужб.'
