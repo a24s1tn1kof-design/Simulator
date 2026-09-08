@@ -153,6 +153,10 @@
             white-space: nowrap;
         }
         .profession-btn:active { transform: scale(0.92); }
+        .profession-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
 
         .empty-bank { text-align: center; padding: 50px 0; color: #555; }
         .empty-bank .big-icon { font-size: 64px; margin-bottom: 16px; }
@@ -183,6 +187,30 @@
             text-align: center;
             border-top: 1px solid rgba(255,255,255,0.05);
             padding-top: 8px;
+        }
+
+        .selected-profession-block {
+            background: rgba(46,204,113,0.1);
+            border: 1px solid #2ecc71;
+            border-radius: 16px;
+            padding: 20px;
+            text-align: center;
+            margin-bottom: 16px;
+        }
+        .selected-profession-block .prof-name {
+            color: #fff;
+            font-size: 20px;
+            font-weight: 600;
+        }
+        .selected-profession-block .prof-desc {
+            color: #aaa;
+            font-size: 13px;
+            margin-top: 4px;
+        }
+        .selected-profession-block .status-text {
+            color: #2ecc71;
+            font-size: 13px;
+            margin-top: 8px;
         }
 
         .phone-screen::-webkit-scrollbar { width: 3px; }
@@ -279,7 +307,6 @@
         document.getElementById('bankModal').classList.remove('active');
     }
 
-    // Закрытие по клику на фон
     document.getElementById('studyModal').addEventListener('click', function(e) {
         if (e.target === this) this.classList.remove('active');
     });
@@ -326,27 +353,62 @@
         }
     ];
 
-    var selectedProfession = null;
+    // Загружаем сохранённую профессию
+    var selectedProfession = localStorage.getItem('selectedProfession') || null;
     var openedDetail = null;
 
     function renderStudy() {
         var content = document.getElementById('studyContent');
+
+        // Если профессия выбрана — показываем только её
+        if (selectedProfession) {
+            var prof = null;
+            for (var i = 0; i < professions.length; i++) {
+                if (professions[i].id === selectedProfession) {
+                    prof = professions[i];
+                    break;
+                }
+            }
+
+            if (prof) {
+                content.innerHTML = `
+                    <div class="selected-profession-block">
+                        <div class="prof-name">${prof.name}</div>
+                        <div class="prof-desc">${prof.desc}</div>
+                        <div class="status-text">Профессия выбрана</div>
+                    </div>
+                    <div class="profession-detail open">
+                        <div class="row">
+                            <span class="label">Время обучения</span>
+                            <span class="value">${prof.trainingTime}</span>
+                        </div>
+                        <div class="row">
+                            <span class="label">Экзамены</span>
+                            <span class="value">${prof.examDate}</span>
+                        </div>
+                        <div class="exam-date">Вы проходите обучение по этой профессии</div>
+                    </div>
+                `;
+            }
+            return;
+        }
+
+        // Если профессия не выбрана — показываем все
         var html = '<div class="profession-list">';
         
-        for (var i = 0; i < professions.length; i++) {
-            var p = professions[i];
+        for (var j = 0; j < professions.length; j++) {
+            var p = professions[j];
             var isOpen = (openedDetail === p.id);
-            var isSelected = (selectedProfession === p.id);
             
             html += `
                 <div class="profession-card" onclick="toggleDetail('${p.id}')">
                     <div class="info">
                         <h3>${p.name}</h3>
                         <p>${p.desc}</p>
-                        <div class="detail">${isSelected ? 'Профессия выбрана' : 'Нажмите для выбора'}</div>
+                        <div class="detail">Нажмите для выбора</div>
                     </div>
-                    <button class="profession-btn" onclick="event.stopPropagation(); selectProfession('${p.id}')" ${isSelected ? 'disabled style="opacity:0.5;"' : ''}>
-                        ${isSelected ? 'Выбрана' : 'Выбрать'}
+                    <button class="profession-btn" onclick="event.stopPropagation(); selectProfession('${p.id}')">
+                        Выбрать
                     </button>
                 </div>
                 <div class="profession-detail ${isOpen ? 'open' : ''}" id="detail-${p.id}">
@@ -358,9 +420,7 @@
                         <span class="label">Экзамены</span>
                         <span class="value">${p.examDate}</span>
                     </div>
-                    <div class="exam-date">
-                        ${isSelected ? 'Вы проходите обучение по этой профессии' : 'Выберите профессию для начала обучения'}
-                    </div>
+                    <div class="exam-date">Выберите профессию для начала обучения</div>
                 </div>
             `;
         }
@@ -384,6 +444,7 @@
             return;
         }
         selectedProfession = id;
+        localStorage.setItem('selectedProfession', id);
         renderStudy();
     }
 
@@ -391,4 +452,4 @@
     renderStudy();
 </script>
 </body>
-    </html>
+</html>
