@@ -1,28 +1,21 @@
-<!DOCTYPE html>
+                                 <!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Симулятор</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            user-select: none;
-        }
-
+        * { margin: 0; padding: 0; box-sizing: border-box; user-select: none; }
         body {
             background: #1a1a2e;
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            font-family: 'Segoe UI', system-ui, sans-serif;
             touch-action: manipulation;
             padding: 10px;
         }
-
         .phone {
             width: 375px;
             max-width: 100%;
@@ -34,7 +27,6 @@
             position: relative;
             overflow: hidden;
         }
-
         .phone-screen {
             width: 100%;
             height: 100%;
@@ -45,7 +37,6 @@
             position: relative;
             scroll-behavior: smooth;
         }
-
         .status-bar {
             display: flex;
             justify-content: space-between;
@@ -56,17 +47,14 @@
             border-bottom: 1px solid #1a1a2a;
             margin-bottom: 16px;
         }
-
         .status-bar .time { color: #fff; }
         .status-icons { display: flex; gap: 6px; }
-
         .apps-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
             gap: 18px 12px;
             margin-top: 20px;
         }
-
         .app-item {
             display: flex;
             flex-direction: column;
@@ -77,7 +65,6 @@
             transition: transform 0.15s;
         }
         .app-item:active { transform: scale(0.92); }
-
         .app-icon {
             width: 62px;
             height: 62px;
@@ -89,17 +76,10 @@
             box-shadow: 0 6px 20px rgba(0,0,0,0.4);
             transition: 0.2s;
         }
-
         .app-icon.study { background: linear-gradient(135deg, #4facfe, #00f2fe); }
         .app-icon.bank { background: linear-gradient(135deg, #43e97b, #38f9d7); }
         .app-icon.locked { background: linear-gradient(135deg, #2d2d44, #3d3d5c); opacity: 0.5; }
-
-        .app-name {
-            color: #bbb;
-            font-size: 11px;
-            font-weight: 500;
-            text-align: center;
-        }
+        .app-name { color: #bbb; font-size: 11px; font-weight: 500; text-align: center; }
 
         .modal {
             display: none;
@@ -116,18 +96,13 @@
             overflow-y: auto;
         }
         .modal.active { display: block; }
-
         .modal-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
             margin-bottom: 20px;
         }
-        .modal-header h2 {
-            color: #fff;
-            font-size: 22px;
-            font-weight: 700;
-        }
+        .modal-header h2 { color: #fff; font-size: 22px; font-weight: 700; }
         .modal-close {
             background: rgba(255,255,255,0.08);
             border: none;
@@ -142,13 +117,7 @@
         }
         .modal-close:active { transform: scale(0.9); background: rgba(255,0,0,0.2); }
 
-        .profession-list {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-            margin-top: 8px;
-        }
-
+        .profession-list { display: flex; flex-direction: column; gap: 12px; margin-top: 8px; }
         .profession-card {
             background: rgba(255,255,255,0.05);
             border-radius: 16px;
@@ -160,16 +129,8 @@
             transition: 0.2s;
         }
         .profession-card:active { transform: scale(0.97); }
-        .profession-card .info h3 {
-            color: #fff;
-            font-size: 15px;
-            font-weight: 600;
-        }
-        .profession-card .info p {
-            color: #888;
-            font-size: 12px;
-            margin-top: 2px;
-        }
+        .profession-card .info h3 { color: #fff; font-size: 15px; font-weight: 600; }
+        .profession-card .info p { color: #888; font-size: 12px; margin-top: 2px; }
 
         .profession-btn {
             background: linear-gradient(135deg, #4facfe, #00f2fe);
@@ -186,28 +147,96 @@
             white-space: nowrap;
         }
         .profession-btn:active { transform: scale(0.92); }
-        .profession-btn.learned {
-            background: #2ecc71;
-            box-shadow: 0 4px 15px rgba(46,204,113,0.3);
-        }
         .profession-btn:disabled {
             opacity: 0.4;
             transform: none;
             box-shadow: none;
         }
-
-        .empty-bank {
-            text-align: center;
-            padding: 50px 0;
-            color: #555;
+        .profession-btn.learned {
+            background: #2ecc71;
+            box-shadow: 0 4px 15px rgba(46,204,113,0.3);
         }
+
+        .empty-bank { text-align: center; padding: 50px 0; color: #555; }
         .empty-bank .big-icon { font-size: 64px; margin-bottom: 16px; }
         .empty-bank p { font-size: 14px; }
 
+        .study-progress {
+            background: rgba(255,255,255,0.05);
+            border-radius: 16px;
+            padding: 16px;
+            margin-bottom: 16px;
+            border: 1px solid rgba(255,255,255,0.06);
+        }
+        .study-progress .row {
+            display: flex;
+            justify-content: space-between;
+            color: #ccc;
+            font-size: 14px;
+            padding: 4px 0;
+        }
+        .study-progress .row .label { color: #888; }
+        .study-progress .row .value { color: #fff; font-weight: 600; }
+        .study-progress .bar {
+            width: 100%;
+            height: 6px;
+            background: #1a1a2a;
+            border-radius: 10px;
+            margin-top: 10px;
+            overflow: hidden;
+        }
+        .study-progress .bar .fill {
+            height: 100%;
+            background: linear-gradient(90deg, #4facfe, #00f2fe);
+            border-radius: 10px;
+            transition: width 0.5s;
+        }
+        .exam-block {
+            background: rgba(255,200,0,0.08);
+            border: 1px solid rgba(255,200,0,0.2);
+            border-radius: 16px;
+            padding: 16px;
+            margin-top: 12px;
+            color: #f5c842;
+        }
+        .exam-block .title { font-weight: 700; font-size: 15px; }
+        .exam-block .question { color: #ddd; font-size: 14px; margin: 8px 0; }
+        .exam-options { display: flex; flex-direction: column; gap: 8px; margin-top: 8px; }
+        .exam-options button {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            color: #fff;
+            padding: 10px 14px;
+            border-radius: 12px;
+            font-size: 13px;
+            cursor: pointer;
+            touch-action: manipulation;
+            transition: 0.2s;
+            text-align: left;
+        }
+        .exam-options button:active { transform: scale(0.96); }
+        .exam-options button.correct { background: rgba(46,204,113,0.3); border-color: #2ecc71; }
+        .exam-options button.wrong { background: rgba(231,76,60,0.3); border-color: #e74c3c; }
+
+        .toast-custom {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0,0,0,0.9);
+            color: #fff;
+            padding: 12px 24px;
+            border-radius: 30px;
+            font-size: 14px;
+            border: 1px solid #333;
+            backdrop-filter: blur(10px);
+            white-space: nowrap;
+            z-index: 200;
+            transition: opacity 0.3s;
+        }
         .phone-screen::-webkit-scrollbar { width: 3px; }
         .phone-screen::-webkit-scrollbar-track { background: transparent; }
         .phone-screen::-webkit-scrollbar-thumb { background: #333; border-radius: 10px; }
-
         @media (max-width: 400px) {
             .phone { height: 95vh; border-radius: 28px; padding: 12px; }
             .phone-screen { border-radius: 20px; padding: 14px; }
@@ -217,21 +246,13 @@
     </style>
 </head>
 <body>
-
 <div class="phone">
     <div class="phone-screen" id="phoneScreen">
-
-        <!-- Статус-бар -->
         <div class="status-bar">
             <span class="time" id="statusTime">12:00</span>
-            <div class="status-icons">
-                <span>📶</span>
-                <span>📶</span>
-                <span>🔋</span>
-            </div>
+            <div class="status-icons"><span>📶</span><span>📶</span><span>🔋</span></div>
         </div>
 
-        <!-- Сетка приложений -->
         <div class="apps-grid">
             <div class="app-item" id="studyApp">
                 <div class="app-icon study">📚</div>
@@ -247,19 +268,21 @@
             </div>
         </div>
 
-        <!-- Модальное окно: Учеба -->
+        <!-- Модалка Учеба -->
         <div class="modal" id="studyModal">
             <div class="modal-header">
-                <h2>📚 Учеба</h2>
+                <h2>Учеба</h2>
                 <button class="modal-close" id="closeStudy">✕</button>
             </div>
-            <div class="profession-list" id="professionList"></div>
+            <div id="studyContent">
+                <!-- Содержимое генерируется JS -->
+            </div>
         </div>
 
-        <!-- Модальное окно: Банк -->
+        <!-- Модалка Банк -->
         <div class="modal" id="bankModal">
             <div class="modal-header">
-                <h2>🏦 Банк</h2>
+                <h2>Банк</h2>
                 <button class="modal-close" id="closeBank">✕</button>
             </div>
             <div class="empty-bank">
@@ -268,135 +291,243 @@
                 <p style="color:#555;font-size:12px;margin-top:6px;">В разработке...</p>
             </div>
         </div>
-
     </div>
 </div>
 
 <script>
     // ===== ДАННЫЕ =====
     const professions = [
-        { id: 'mchs', name: '🚒 МЧС', desc: 'Спасатель, пожарный' },
-        { id: 'medic', name: '🏥 Медик', desc: 'Врач, фельдшер' },
-        { id: 'fsb', name: '🕵️ ФСБ', desc: 'Сотрудник госбезопасности' },
-        { id: 'mvd', name: '👮 МВД', desc: 'Полицейский, следователь' },
-        { id: 'teacher', name: '👨‍🏫 Учитель', desc: 'Преподаватель, наставник' }
+        { id: 'mchs', name: 'МЧС', desc: 'Спасатель, пожарный' },
+        { id: 'medic', name: 'Медик', desc: 'Врач, фельдшер' },
+        { id: 'fsb', name: 'ФСБ', desc: 'Сотрудник госбезопасности' },
+        { id: 'mvd', name: 'МВД', desc: 'Полицейский, следователь' },
+        { id: 'teacher', name: 'Учитель', desc: 'Преподаватель, наставник' }
     ];
 
+    // Вопросы для экзаменов (по профессиям)
+    const examQuestions = {
+        mchs: [
+            { q: 'Какой номер пожарной службы?', options: ['01', '02', '03', '04'], correct: 0 },
+            { q: 'Что нужно делать при пожаре?', options: ['Звонить 01', 'Бежать', 'Прятаться', 'Открыть окна'], correct: 0 }
+        ],
+        medic: [
+            { q: 'Что нужно сделать при остановке сердца?', options: ['Массаж сердца', 'Дать воды', 'Позвать врача', 'Уложить на бок'], correct: 0 },
+            { q: 'Какая нормальная температура тела?', options: ['36.6', '37.5', '38.0', '39.0'], correct: 0 }
+        ],
+        fsb: [
+            { q: 'Что означает ФСБ?', options: ['Федеральная служба безопасности', 'Федеральная служба банков', 'Фонд спасения бизнеса', 'Федерация спорта'], correct: 0 },
+            { q: 'Кто руководит ФСБ?', options: ['Директор', 'Президент', 'Министр', 'Генерал'], correct: 0 }
+        ],
+        mvd: [
+            { q: 'Какой номер полиции?', options: ['02', '01', '03', '04'], correct: 0 },
+            { q: 'Кто стоит на страже порядка?', options: ['Полиция', 'Армия', 'Суд', 'Прокуратура'], correct: 0 }
+        ],
+        teacher: [
+            { q: 'Что такое педагогика?', options: ['Наука о воспитании', 'Наука о лечении', 'Наука о технике', 'Наука о деньгах'], correct: 0 },
+            { q: 'Кто такой учитель?', options: ['Преподаватель', 'Врач', 'Инженер', 'Адвокат'], correct: 0 }
+        ]
+    };
+
     // ===== СОСТОЯНИЕ =====
-    let learned = [];
+    let state = {
+        selectedProfession: null,  // id выбранной профессии
+        studyStartDay: null,       // день начала (число)
+        currentDay: 0,             // сколько дней прошло
+        exam1Passed: false,        // экзамен 1 пройден (7-й день)
+        exam2Passed: false,        // экзамен 2 пройден (14-й день)
+        finished: false,           // обучение завершено
+        examMode: false,           // режим экзамена
+        currentExamIndex: 0,       // какой вопрос по счёту
+        examAnswered: false        // ответил ли на текущий вопрос
+    };
+
+    let examQuestionsCache = [];
 
     // ===== DOM =====
     const studyModal = document.getElementById('studyModal');
     const bankModal = document.getElementById('bankModal');
-    const professionList = document.getElementById('professionList');
+    const studyContent = document.getElementById('studyContent');
     const statusTime = document.getElementById('statusTime');
 
-    // ===== ФУНКЦИИ =====
-    function renderProfessions() {
-        professionList.innerHTML = '';
-        professions.forEach(p => {
-            const isLearned = learned.includes(p.id);
-
-            const card = document.createElement('div');
-            card.className = 'profession-card';
-
-            const infoDiv = document.createElement('div');
-            infoDiv.className = 'info';
-            infoDiv.innerHTML = `
-                <h3>${p.name}</h3>
-                <p>${p.desc}</p>
-            `;
-
-            const btn = document.createElement('button');
-            btn.className = 'profession-btn';
-            if (isLearned) {
-                btn.classList.add('learned');
-                btn.textContent = '✅ Изучено';
-                btn.disabled = true;
-            } else {
-                btn.textContent = 'Изучить';
-                btn.disabled = false;
-            }
-
-            btn.addEventListener('click', (e) => {
-                e.stopPropagation();
-                if (!isLearned) {
-                    learned.push(p.id);
-                    renderProfessions();
-                    // Показываем уведомление
-                    showToast(`✅ ${p.name} изучена!`);
-                }
-            });
-
-            card.appendChild(infoDiv);
-            card.appendChild(btn);
-            professionList.appendChild(card);
-        });
-    }
-
+    // ===== ВСПОМОГАТЕЛЬНЫЕ =====
     function showToast(text) {
         const old = document.querySelector('.toast-custom');
         if (old) old.remove();
-
         const toast = document.createElement('div');
         toast.className = 'toast-custom';
         toast.textContent = text;
-        Object.assign(toast.style, {
-            position: 'absolute',
-            bottom: '30px',
-            left: '50%',
-            transform: 'translateX(-50%)',
-            background: 'rgba(0,0,0,0.9)',
-            color: '#fff',
-            padding: '12px 24px',
-            borderRadius: '30px',
-            fontSize: '14px',
-            border: '1px solid #333',
-            backdropFilter: 'blur(10px)',
-            whiteSpace: 'nowrap',
-            zIndex: '200',
-            transition: 'opacity 0.3s'
-        });
         document.getElementById('phoneScreen').appendChild(toast);
-        setTimeout(() => { toast.remove(); }, 2000);
+        setTimeout(() => { toast.remove(); }, 2500);
     }
 
-    // ===== ВРЕМЯ =====
-    function updateTime() {
+    function getDay() {
         const now = new Date();
-        const h = String(now.getHours()).padStart(2, '0');
-        const m = String(now.getMinutes()).padStart(2, '0');
-        statusTime.textContent = `${h}:${m}`;
+        return Math.floor(now.getTime() / (1000 * 60 * 60 * 24));
     }
 
-    // ===== СОБЫТИЯ =====
-    document.getElementById('studyApp').addEventListener('click', () => {
-        studyModal.classList.add('active');
-        renderProfessions();
-    });
+    function saveState() {
+        try {
+            localStorage.setItem('simulatorState', JSON.stringify(state));
+        } catch(e) {}
+    }
 
-    document.getElementById('bankApp').addEventListener('click', () => {
-        bankModal.classList.add('active');
-    });
+    function loadState() {
+        try {
+            const saved = localStorage.getItem('simulatorState');
+            if (saved) {
+                const data = JSON.parse(saved);
+                state.selectedProfession = data.selectedProfession || null;
+                state.studyStartDay = data.studyStartDay || null;
+                state.currentDay = data.currentDay || 0;
+                state.exam1Passed = data.exam1Passed || false;
+                state.exam2Passed = data.exam2Passed || false;
+                state.finished = data.finished || false;
+                state.examMode = data.examMode || false;
+                state.currentExamIndex = data.currentExamIndex || 0;
+                state.examAnswered = data.examAnswered || false;
+            }
+        } catch(e) {}
+    }
 
-    document.getElementById('closeStudy').addEventListener('click', () => {
-        studyModal.classList.remove('active');
-    });
+    // ===== ОСНОВНАЯ ЛОГИКА =====
+    function renderStudy() {
+        const prof = professions.find(p => p.id === state.selectedProfession);
 
-    document.getElementById('closeBank').addEventListener('click', () => {
-        bankModal.classList.remove('active');
-    });
+        // Если профессия НЕ выбрана — показываем список
+        if (!state.selectedProfession) {
+            studyContent.innerHTML = `
+                <div class="profession-list" id="professionList"></div>
+            `;
+            renderProfessionList();
+            return;
+        }
 
-    studyModal.addEventListener('click', (e) => {
-        if (e.target === studyModal) studyModal.classList.remove('active');
-    });
-    bankModal.addEventListener('click', (e) => {
-        if (e.target === bankModal) bankModal.classList.remove('active');
-    });
+        // Профессия выбрана
+        let html = `
+            <div class="study-progress">
+                <div class="row"><span class="label">Профессия</span><span class="value">${prof ? prof.name : '—'}</span></div>
+                <div class="row"><span class="label">День обучения</span><span class="value">${state.currentDay} / 14</span></div>
+                <div class="bar"><div class="fill" style="width:${Math.min(100, (state.currentDay/14)*100)}%"></div></div>
+            </div>
+        `;
 
-    // ===== ЗАПУСК =====
-    updateTime();
-    setInterval(updateTime, 10000);
-</script>
-</body>
-                                                                                        </html>
+        // Если обучение завершено
+        if (state.finished) {
+            html += `
+                <div style="background:rgba(46,204,113,0.1);border:1px solid #2ecc71;border-radius:16px;padding:20px;text-align:center;color:#2ecc71;">
+                    <div style="font-size:24px;margin-bottom:8px;">Обучение завершено</div>
+                    <div style="color:#aaa;font-size:13px;">Вы успешно освоили профессию ${prof ? prof.name : ''}</div>
+                </div>
+            `;
+            studyContent.innerHTML = html;
+            return;
+        }
+
+        // Если экзамен
+        if (state.examMode) {
+            html += renderExam();
+            studyContent.innerHTML = html;
+            return;
+        }
+
+        // Обычный процесс обучения
+        html += `
+            <div style="color:#888;font-size:13px;margin:10px 0;text-align:center;">
+                ${state.currentDay >= 14 ? 'Обучение завершено' : 'Идёт обучение...'}
+            </div>
+        `;
+
+        // Экзамен 1 (7-й день)
+        if (state.currentDay >= 7 && !state.exam1Passed && !state.examMode) {
+            html += `
+                <div class="exam-block">
+                    <div class="title">Экзамен 1 (неделя 1)</div>
+                    <div style="margin-top:10px;">
+                        <button class="profession-btn" id="startExam1" style="width:100%;">Начать экзамен</button>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Экзамен 2 (14-й день)
+        if (state.currentDay >= 14 && state.exam1Passed && !state.exam2Passed && !state.examMode) {
+            html += `
+                <div class="exam-block">
+                    <div class="title">Экзамен 2 (неделя 2)</div>
+                    <div style="margin-top:10px;">
+                        <button class="profession-btn" id="startExam2" style="width:100%;">Начать экзамен</button>
+                    </div>
+                </div>
+            `;
+        }
+
+        studyContent.innerHTML = html;
+
+        // Обработчики
+        document.getElementById('startExam1')?.addEventListener('click', () => startExam(1));
+        document.getElementById('startExam2')?.addEventListener('click', () => startExam(2));
+    }
+
+    function renderProfessionList() {
+        const list = document.getElementById('professionList');
+        if (!list) return;
+        list.innerHTML = '';
+        professions.forEach(p => {
+            const card = document.createElement('div');
+            card.className = 'profession-card';
+            card.innerHTML = `
+                <div class="info">
+                    <h3>${p.name}</h3>
+                    <p>${p.desc}</p>
+                </div>
+                <button class="profession-btn" data-id="${p.id}">Выбрать</button>
+            `;
+            card.querySelector('button').addEventListener('click', () => {
+                selectProfession(p.id);
+            });
+            list.appendChild(card);
+        });
+    }
+
+    function selectProfession(id) {
+        if (state.selectedProfession) {
+            showToast('Профессия уже выбрана. Выбрать можно только один раз.');
+            return;
+        }
+        state.selectedProfession = id;
+        state.studyStartDay = getDay();
+        state.currentDay = 0;
+        saveState();
+        renderStudy();
+        showToast('Обучение началось! Длительность: 14 дней.');
+    }
+
+    function startExam(examNumber) {
+        if (state.examMode) return;
+        const profId = state.selectedProfession;
+        if (!profId) return;
+
+        const questions = examQuestions[profId];
+        if (!questions) return;
+
+        examQuestionsCache = questions;
+        state.examMode = true;
+        state.currentExamIndex = 0;
+        state.examAnswered = false;
+        state.exam1Passed = examNumber === 1 ? false : state.exam1Passed;
+        state.exam2Passed = examNumber === 2 ? false : state.exam2Passed;
+        saveState();
+        renderStudy();
+    }
+
+    function renderExam() {
+        const questions = examQuestionsCache;
+        if (!questions || questions.length === 0) {
+            return '<div style="color:#888;">Ошибка: нет вопросов</div>';
+        }
+
+        const idx = state.currentExamIndex;
+        if (idx >= questions.length) {
+            // Все вопросы пройдены
+            finishExam();
+            return '<div style="color:#888;">Экзам                                               
