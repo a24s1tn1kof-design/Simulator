@@ -1,4 +1,4 @@
-                                 <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
@@ -156,6 +156,7 @@
             background: #2ecc71;
             box-shadow: 0 4px 15px rgba(46,204,113,0.3);
         }
+        .profession-btn.hidden { display: none; }
 
         .empty-bank { text-align: center; padding: 50px 0; color: #555; }
         .empty-bank .big-icon { font-size: 64px; margin-bottom: 16px; }
@@ -217,6 +218,7 @@
         .exam-options button:active { transform: scale(0.96); }
         .exam-options button.correct { background: rgba(46,204,113,0.3); border-color: #2ecc71; }
         .exam-options button.wrong { background: rgba(231,76,60,0.3); border-color: #e74c3c; }
+        .exam-options button:disabled { opacity: 0.6; }
 
         .toast-custom {
             position: absolute;
@@ -268,18 +270,14 @@
             </div>
         </div>
 
-        <!-- Модалка Учеба -->
         <div class="modal" id="studyModal">
             <div class="modal-header">
                 <h2>Учеба</h2>
                 <button class="modal-close" id="closeStudy">✕</button>
             </div>
-            <div id="studyContent">
-                <!-- Содержимое генерируется JS -->
-            </div>
+            <div id="studyContent"></div>
         </div>
 
-        <!-- Модалка Банк -->
         <div class="modal" id="bankModal">
             <div class="modal-header">
                 <h2>Банк</h2>
@@ -295,7 +293,6 @@
 </div>
 
 <script>
-    // ===== ДАННЫЕ =====
     const professions = [
         { id: 'mchs', name: 'МЧС', desc: 'Спасатель, пожарный' },
         { id: 'medic', name: 'Медик', desc: 'Врач, фельдшер' },
@@ -304,7 +301,6 @@
         { id: 'teacher', name: 'Учитель', desc: 'Преподаватель, наставник' }
     ];
 
-    // Вопросы для экзаменов (по профессиям)
     const examQuestions = {
         mchs: [
             { q: 'Какой номер пожарной службы?', options: ['01', '02', '03', '04'], correct: 0 },
@@ -328,28 +324,26 @@
         ]
     };
 
-    // ===== СОСТОЯНИЕ =====
     let state = {
-        selectedProfession: null,  // id выбранной профессии
-        studyStartDay: null,       // день начала (число)
-        currentDay: 0,             // сколько дней прошло
-        exam1Passed: false,        // экзамен 1 пройден (7-й день)
-        exam2Passed: false,        // экзамен 2 пройден (14-й день)
-        finished: false,           // обучение завершено
-        examMode: false,           // режим экзамена
-        currentExamIndex: 0,       // какой вопрос по счёту
-        examAnswered: false        // ответил ли на текущий вопрос
+        selectedProfession: null,
+        startDate: null,
+        exam1Passed: false,
+        exam2Passed: false,
+        finished: false,
+        examMode: false,
+        currentExamIndex: 0,
+        examAnswered: false,
+        examType: null
     };
 
     let examQuestionsCache = [];
+    let updateInterval = null;
 
-    // ===== DOM =====
     const studyModal = document.getElementById('studyModal');
     const bankModal = document.getElementById('bankModal');
     const studyContent = document.getElementById('studyContent');
     const statusTime = document.getElementById('statusTime');
 
-    // ===== ВСПОМОГАТЕЛЬНЫЕ =====
     function showToast(text) {
         const old = document.querySelector('.toast-custom');
         if (old) old.remove();
@@ -357,18 +351,11 @@
         toast.className = 'toast-custom';
         toast.textContent = text;
         document.getElementById('phoneScreen').appendChild(toast);
-        setTimeout(() => { toast.remove(); }, 2500);
-    }
-
-    function getDay() {
-        const now = new Date();
-        return Math.floor(now.getTime() / (1000 * 60 * 60 * 24));
+        setTimeout(() => toast.remove(), 3000);
     }
 
     function saveState() {
-        try {
-            localStorage.setItem('simulatorState', JSON.stringify(state));
-        } catch(e) {}
+        try { localStorage.setItem('simulatorState', JSON.stringify(state)); } catch(e) {}
     }
 
     function loadState() {
@@ -377,41 +364,66 @@
             if (saved) {
                 const data = JSON.parse(saved);
                 state.selectedProfession = data.selectedProfession || null;
-                state.studyStartDay = data.studyStartDay || null;
-                state.currentDay = data.currentDay || 0;
+                state.startDate = data.startDate || null;
                 state.exam1Passed = data.exam1Passed || false;
                 state.exam2Passed = data.exam2Passed || false;
                 state.finished = data.finished || false;
                 state.examMode = data.examMode || false;
                 state.currentExamIndex = data.currentExamIndex || 0;
                 state.examAnswered = data.examAnswered || false;
+                state.examType = data.examType || null;
             }
         } catch(e) {}
     }
 
-    // ===== ОСНОВНАЯ ЛОГИКА =====
+    function getDaysPassed() {
+        if (!state.startDate) return 0;
+        const start = new Date(state.startDate);
+        const now = new Date();
+        const diff = now - start;
+        return Math.floor(diff / (1000 * 60 * 60 * 24));
+    }
+
+    function checkProgress() {
+        if (!state.selectedProfession || state.finished) return;
+        const days = getDaysPassed();
+        
+        // Проверяем экзамены
+        if (days >= 7 && !state.exam1Passed && !state.examMode) {
+            showToast('Прошло 7 дней! Пора сдавать первый экзамен!');
+        }
+        if (days >= 14 && state.exam1Passed && !state.exam2Passed && !state.examMode) {
+            showToast('Прошло 14 дней! Пора сдавать второй экзамен!');
+        }
+        if (days >= 14 && state.exam1Passed && state.exam2Passed && !state.finished) {
+            state.finished = true;
+            saveState();
+            showToast('Обучение завершено! Поздравляем!');
+            if (studyModal.classList.contains('active')) renderStudy();
+        }
+        if (studyModal.classList.contains('active')) {
+            renderStudy();
+        }
+    }
+
     function renderStudy() {
         const prof = professions.find(p => p.id === state.selectedProfession);
+        const days = getDaysPassed();
 
-        // Если профессия НЕ выбрана — показываем список
         if (!state.selectedProfession) {
-            studyContent.innerHTML = `
-                <div class="profession-list" id="professionList"></div>
-            `;
+            studyContent.innerHTML = `<div class="profession-list" id="professionList"></div>`;
             renderProfessionList();
             return;
         }
 
-        // Профессия выбрана
         let html = `
             <div class="study-progress">
                 <div class="row"><span class="label">Профессия</span><span class="value">${prof ? prof.name : '—'}</span></div>
-                <div class="row"><span class="label">День обучения</span><span class="value">${state.currentDay} / 14</span></div>
-                <div class="bar"><div class="fill" style="width:${Math.min(100, (state.currentDay/14)*100)}%"></div></div>
+                <div class="row"><span class="label">День обучения</span><span class="value">${Math.min(days, 14)} / 14</span></div>
+                <div class="bar"><div class="fill" style="width:${Math.min(100, (days/14)*100)}%"></div></div>
             </div>
         `;
 
-        // Если обучение завершено
         if (state.finished) {
             html += `
                 <div style="background:rgba(46,204,113,0.1);border:1px solid #2ecc71;border-radius:16px;padding:20px;text-align:center;color:#2ecc71;">
@@ -423,22 +435,13 @@
             return;
         }
 
-        // Если экзамен
         if (state.examMode) {
             html += renderExam();
             studyContent.innerHTML = html;
             return;
         }
 
-        // Обычный процесс обучения
-        html += `
-            <div style="color:#888;font-size:13px;margin:10px 0;text-align:center;">
-                ${state.currentDay >= 14 ? 'Обучение завершено' : 'Идёт обучение...'}
-            </div>
-        `;
-
-        // Экзамен 1 (7-й день)
-        if (state.currentDay >= 7 && !state.exam1Passed && !state.examMode) {
+        if (days >= 7 && !state.exam1Passed) {
             html += `
                 <div class="exam-block">
                     <div class="title">Экзамен 1 (неделя 1)</div>
@@ -449,8 +452,7 @@
             `;
         }
 
-        // Экзамен 2 (14-й день)
-        if (state.currentDay >= 14 && state.exam1Passed && !state.exam2Passed && !state.examMode) {
+        if (days >= 14 && state.exam1Passed && !state.exam2Passed) {
             html += `
                 <div class="exam-block">
                     <div class="title">Экзамен 2 (неделя 2)</div>
@@ -461,9 +463,15 @@
             `;
         }
 
-        studyContent.innerHTML = html;
+        if (days < 7 && !state.exam1Passed) {
+            html += `
+                <div style="color:#666;text-align:center;margin-top:16px;font-size:13px;">
+                    До первого экзамена осталось: ${7 - days} дней
+                </div>
+            `;
+        }
 
-        // Обработчики
+        studyContent.innerHTML = html;
         document.getElementById('startExam1')?.addEventListener('click', () => startExam(1));
         document.getElementById('startExam2')?.addEventListener('click', () => startExam(2));
     }
@@ -495,11 +503,16 @@
             return;
         }
         state.selectedProfession = id;
-        state.studyStartDay = getDay();
-        state.currentDay = 0;
+        state.startDate = new Date().toISOString();
+        state.exam1Passed = false;
+        state.exam2Passed = false;
+        state.finished = false;
         saveState();
         renderStudy();
         showToast('Обучение началось! Длительность: 14 дней.');
+        // Запускаем проверку каждые 10 секунд
+        if (updateInterval) clearInterval(updateInterval);
+        updateInterval = setInterval(checkProgress, 10000);
     }
 
     function startExam(examNumber) {
@@ -514,20 +527,10 @@
         state.examMode = true;
         state.currentExamIndex = 0;
         state.examAnswered = false;
-        state.exam1Passed = examNumber === 1 ? false : state.exam1Passed;
-        state.exam2Passed = examNumber === 2 ? false : state.exam2Passed;
+        state.examType = examNumber;
         saveState();
         renderStudy();
     }
 
     function renderExam() {
-        const questions = examQuestionsCache;
-        if (!questions || questions.length === 0) {
-            return '<div style="color:#888;">Ошибка: нет вопросов</div>';
-        }
-
-        const idx = state.currentExamIndex;
-        if (idx >= questions.length) {
-            // Все вопросы пройдены
-            finishExam();
-            return '<div style="color:#888;">Экзам                                               
+        const questions = examQuestionsCa
