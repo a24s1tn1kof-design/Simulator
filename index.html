@@ -328,9 +328,8 @@
         </div>
 
     </div>
-</div>
-
-<script>
+    </div>
+    <script>
     // ===== НАСТОЯЩЕЕ ВРЕМЯ =====
     function updateTime() {
         var now = new Date();
@@ -452,4 +451,124 @@
         var html = '<div class="profession-list">';
         for (var j = 0; j < professions.length; j++) {
             var p = professions[j];
-            v
+            var isOpen = (openedDetail === p.id);
+            html += `
+                <div class="profession-card" onclick="toggleDetail('${p.id}')">
+                    <div class="info">
+                        <h3>${p.name}</h3>
+                        <p>${p.desc}</p>
+                        <div class="detail">Нажмите для выбора</div>
+                    </div>
+                    <button class="profession-btn" onclick="event.stopPropagation(); selectProfession('${p.id}')">Выбрать</button>
+                </div>
+                <div class="profession-detail ${isOpen ? 'open' : ''}" id="detail-${p.id}">
+                    <div class="row"><span class="label">Время обучения</span><span class="value">${p.trainingTime} дней</span></div>
+                    <div class="row"><span class="label">Экзамены</span><span class="value">${p.examDate}</span></div>
+                    <div class="days-left">Выберите профессию для начала обучения</div>
+                    <div class="exam-date">Длительность обучения: 14 дней</div>
+                </div>
+            `;
+        }
+        html += '</div>';
+        content.innerHTML = html;
+    }
+
+    function renderBook() {
+        var prof = null;
+        for (var i = 0; i < professions.length; i++) {
+            if (professions[i].id === selectedProfession) { prof = professions[i]; break; }
+        }
+        if (!prof) { document.getElementById('bookContent').innerHTML = '<div style="color:#888;">Нет вопросов</div>'; return; }
+
+        var html = '';
+        for (var j = 0; j < prof.questions.length; j++) {
+            var q = prof.questions[j];
+            html += `
+                <div class="question-block">
+                    <div class="q">❓ ${q.q}</div>
+                    <div class="a">${q.a}</div>
+                </div>
+            `;
+        }
+        document.getElementById('bookContent').innerHTML = html;
+    }
+
+    function toggleDetail(id) {
+        openedDetail = (openedDetail === id) ? null : id;
+        renderStudy();
+    }
+
+    function selectProfession(id) {
+        if (selectedProfession) { alert('Профессия уже выбрана!'); return; }
+        selectedProfession = id;
+        startDate = new Date().toISOString();
+        localStorage.setItem('selectedProfession', id);
+        localStorage.setItem('startDate', startDate);
+        renderStudy();
+    }
+
+    function openBook() {
+        document.getElementById('bookModal').classList.add('active');
+        renderBook();
+    }
+
+    function closeBook() {
+        document.getElementById('bookModal').classList.remove('active');
+    }
+
+    // ===== ОТКРЫТИЕ ПРИЛОЖЕНИЙ =====
+    function openStudy() {
+        document.getElementById('studyModal').classList.add('active');
+        renderStudy();
+    }
+
+    function closeStudy() {
+        document.getElementById('studyModal').classList.remove('active');
+    }
+
+    function openBank() {
+        document.getElementById('bankModal').classList.add('active');
+    }
+
+    function closeBank() {
+        document.getElementById('bankModal').classList.remove('active');
+    }
+
+    // ===== НАЗНАЧАЕМ СОБЫТИЯ =====
+    document.getElementById('studyAppBtn').addEventListener('click', openStudy);
+    document.getElementById('bankAppBtn').addEventListener('click', openBank);
+    document.getElementById('closeStudyBtn').addEventListener('click', closeStudy);
+    document.getElementById('closeBankBtn').addEventListener('click', closeBank);
+    document.getElementById('closeBookBtn').addEventListener('click', closeBook);
+
+    document.getElementById('studyModal').addEventListener('click', function(e) {
+        if (e.target === this) closeStudy();
+    });
+    document.getElementById('bankModal').addEventListener('click', function(e) {
+        if (e.target === this) closeBank();
+    });
+    document.getElementById('bookModal').addEventListener('click', function(e) {
+        if (e.target === this) closeBook();
+    });
+
+    // ===== ЗАПУСК =====
+    renderStudy();
+
+    setInterval(function() {
+        var counter = document.getElementById('daysCounter');
+        if (counter) {
+            var days = getDaysLeft();
+            counter.textContent = days;
+            var big = document.querySelector('.days-left-big');
+            if (big && !big.textContent.includes('Обучение завершено')) {
+                big.textContent = 'Осталось дней: ' + days;
+            }
+            if (days <= 0) {
+                var status = document.querySelector('.status-text');
+                if (status) status.textContent = 'Обучение завершено';
+            }
+        }
+    }, 1000);
+</script>
+</body>
+    </html>
