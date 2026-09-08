@@ -49,8 +49,6 @@
             margin-bottom: 16px;
         }
         .status-icons { display: flex; gap: 6px; font-size: 13px; align-items: center; }
-        .battery-level.low { color: #e74c3c; }
-        .battery-level.medium { color: #f5c842; }
 
         .apps-grid {
             display: grid;
@@ -134,11 +132,7 @@
         .profession-card:active { transform: scale(0.97); }
         .profession-card .info h3 { color: #fff; font-size: 15px; font-weight: 600; }
         .profession-card .info p { color: #888; font-size: 12px; margin-top: 2px; }
-        .profession-card .info .detail {
-            color: #4facfe;
-            font-size: 11px;
-            margin-top: 4px;
-        }
+        .profession-card .info .detail { color: #4facfe; font-size: 11px; margin-top: 4px; }
 
         .profession-btn {
             background: linear-gradient(135deg, #4facfe, #00f2fe);
@@ -155,10 +149,7 @@
             white-space: nowrap;
         }
         .profession-btn:active { transform: scale(0.92); }
-        .profession-btn:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
+        .profession-btn:disabled { opacity: 0.5; cursor: not-allowed; }
 
         .empty-bank { text-align: center; padding: 50px 0; color: #555; }
         .empty-bank .big-icon { font-size: 64px; margin-bottom: 16px; }
@@ -190,13 +181,6 @@
             border-top: 1px solid rgba(255,255,255,0.05);
             padding-top: 8px;
         }
-        .profession-detail .days-left {
-            color: #4facfe;
-            font-size: 15px;
-            font-weight: 700;
-            text-align: center;
-            margin-top: 6px;
-        }
 
         .selected-profession-block {
             background: rgba(46,204,113,0.1);
@@ -206,29 +190,11 @@
             text-align: center;
             margin-bottom: 16px;
         }
-        .selected-profession-block .prof-name {
-            color: #fff;
-            font-size: 20px;
-            font-weight: 600;
-        }
-        .selected-profession-block .prof-desc {
-            color: #aaa;
-            font-size: 13px;
-            margin-top: 4px;
-        }
-        .selected-profession-block .status-text {
-            color: #2ecc71;
-            font-size: 13px;
-            margin-top: 8px;
-        }
-        .selected-profession-block .days-left-big {
-            color: #4facfe;
-            font-size: 18px;
-            font-weight: 700;
-            margin-top: 6px;
-        }
+        .selected-profession-block .prof-name { color: #fff; font-size: 20px; font-weight: 600; }
+        .selected-profession-block .prof-desc { color: #aaa; font-size: 13px; margin-top: 4px; }
+        .selected-profession-block .status-text { color: #2ecc71; font-size: 13px; margin-top: 8px; }
+        .selected-profession-block .days-left-big { color: #4facfe; font-size: 18px; font-weight: 700; margin-top: 6px; }
 
-        /* Книга для учения */
         .book-btn {
             background: #2ecc71;
             border: none;
@@ -267,11 +233,7 @@
             align-items: center;
             margin-bottom: 20px;
         }
-        .book-modal .modal-header h2 {
-            color: #2ecc71;
-            font-size: 20px;
-            font-weight: 700;
-        }
+        .book-modal .modal-header h2 { color: #2ecc71; font-size: 20px; font-weight: 700; }
         .book-modal .modal-close {
             background: rgba(255,255,255,0.08);
             border: none;
@@ -282,11 +244,7 @@
             font-size: 20px;
             cursor: pointer;
         }
-        .book-content {
-            color: #ddd;
-            font-size: 14px;
-            line-height: 1.6;
-        }
+        .book-content { color: #ddd; font-size: 14px; line-height: 1.6; }
         .book-content .question-block {
             background: rgba(255,255,255,0.04);
             border-radius: 12px;
@@ -294,18 +252,8 @@
             margin-bottom: 14px;
             border-left: 3px solid #2ecc71;
         }
-        .book-content .question-block .q {
-            color: #fff;
-            font-weight: 600;
-            margin-bottom: 6px;
-        }
-        .book-content .question-block .a {
-            color: #aaa;
-        }
-        .book-content .question-block .a strong {
-            color: #2ecc71;
-            font-weight: 600;
-        }
+        .book-content .question-block .q { color: #fff; font-weight: 600; margin-bottom: 6px; }
+        .book-content .question-block .a { color: #aaa; }
 
         .phone-screen::-webkit-scrollbar { width: 3px; }
         .phone-screen::-webkit-scrollbar-track { background: transparent; }
@@ -334,11 +282,11 @@
 
         <!-- ПРИЛОЖЕНИЯ -->
         <div class="apps-grid">
-            <div class="app-item" onclick="openStudy()">
+            <div class="app-item" id="studyAppBtn">
                 <div class="app-icon study">📚</div>
                 <span class="app-name">Учеба</span>
             </div>
-            <div class="app-item" onclick="openBank()">
+            <div class="app-item" id="bankAppBtn">
                 <div class="app-icon bank">🏦</div>
                 <span class="app-name">Банк</span>
             </div>
@@ -352,17 +300,16 @@
         <div class="modal" id="studyModal">
             <div class="modal-header">
                 <h2>Учеба</h2>
-                <button class="modal-close" onclick="closeStudy()">✕</button>
+                <button class="modal-close" id="closeStudyBtn">✕</button>
             </div>
             <div id="studyContent"></div>
-            <!-- Кнопка "Книга для учения" будет вставляться сюда через JS -->
         </div>
 
         <!-- МОДАЛКА БАНК -->
         <div class="modal" id="bankModal">
             <div class="modal-header">
                 <h2>Банк</h2>
-                <button class="modal-close" onclick="closeBank()">✕</button>
+                <button class="modal-close" id="closeBankBtn">✕</button>
             </div>
             <div class="empty-bank">
                 <div class="big-icon">🏦</div>
@@ -371,11 +318,11 @@
             </div>
         </div>
 
-        <!-- МОДАЛКА КНИГА ДЛЯ УЧЕНИЯ -->
+        <!-- МОДАЛКА КНИГА -->
         <div class="book-modal" id="bookModal">
             <div class="modal-header">
                 <h2>📖 Книга для учения</h2>
-                <button class="modal-close" onclick="closeBook()">✕</button>
+                <button class="modal-close" id="closeBookBtn">✕</button>
             </div>
             <div class="book-content" id="bookContent"></div>
         </div>
@@ -392,7 +339,7 @@
         document.getElementById('statusTime').textContent = h + ':' + m;
     }
     updateTime();
-    setInterval(updateTime, 10000);
+    setInterval(updateTime, 5000);
 
     // ===== НАСТОЯЩАЯ БАТАРЕЯ =====
     function updateBattery() {
@@ -404,101 +351,105 @@
                 if (level < 20) el.style.color = '#e74c3c';
                 else if (level < 50) el.style.color = '#f5c842';
                 else el.style.color = '#2ecc71';
+            }).catch(function() {
+                document.getElementById('batteryDisplay').textContent = '🔋 72%';
             });
         } else {
-            var fake = Math.floor(Math.random() * 30) + 70;
-            document.getElementById('batteryDisplay').textContent = '🔋 ' + fake + '%';
+            document.getElementById('batteryDisplay').textContent = '🔋 68%';
         }
     }
     updateBattery();
-    setInterval(updateBattery, 30000);
-
-    // ===== ОТКРЫТИЕ ПРИЛОЖЕНИЙ =====
-    function openStudy() {
-        document.getElementById('studyModal').classList.add('active');
-        renderStudy();
-        updateDaysCounter();
-    }
-
-    function closeStudy() {
-        document.getElementById('studyModal').classList.remove('active');
-        if (window.daysInterval) clearInterval(window.daysInterval);
-    }
-
-    function openBank() {
-        document.getElementById('bankModal').classList.add('active');
-    }
-
-    function closeBank() {
-        document.getElementById('bankModal').classList.remove('active');
-    }
-
-    function openBook() {
-        document.getElementById('bookModal').classList.add('active');
-        renderBook();
-    }
-
-    function closeBook() {
-        document.getElementById('bookModal').classList.remove('active');
-    }
-
-    document.getElementById('studyModal').addEventListener('click', function(e) {
-        if (e.target === this) {
-            this.classList.remove('active');
-            if (window.daysInterval) clearInterval(window.daysInterval);
-        }
-    });
-    document.getElementById('bankModal').addEventListener('click', function(e) {
-        if (e.target === this) this.classList.remove('active');
-    });
-    document.getElementById('bookModal').addEventListener('click', function(e) {
-        if (e.target === this) this.classList.remove('active');
-    });
+    setInterval(updateBattery, 5000);
 
     // ===== ПРОФЕССИИ =====
     var professions = [
-        { 
-            id: 'fsb', 
-            name: 'ФСБ', 
-            desc: 'Федеральная служба безопасности', 
-            trainingTime: 14, 
-            examDate: 'Экзамен: 7-й и 14-й день',
+        { id: 'fsb', name: 'ФСБ', desc: 'Федеральная служба безопасности', trainingTime: 14, examDate: 'Экзамен: 7-й и 14-й день',
             questions: [
                 { q: 'В торговом центре неизвестные открыли стрельбу, слышны взрывы. Ваши действия?', a: 'Немедленно покинуть здание через ближайший выход, если это невозможно — укрыться в подсобном помещении, заблокировать дверь, выключить свет и звук телефона, не создавать панику, дождаться прибытия спецслужб. Не приближаться к окнам, не вступать в контакт с нападавшими.' },
-                { q: 'Вы получили сообщение о заложенной бомбе в вашем учебном заведении. Что делать?', a: 'Не паниковать, немедленно сообщить преподавателю или охране, покинуть здание по эвакуационному плану, не пользоваться лифтами, отойти на безопасное расстояние, не трогать подозрительные предметы. Дождаться инструкций от МЧС или полиции.' },
-                { q: 'Вас захватили в заложники. Ваши действия?', a: 'Сохранять спокойствие, не спорить с террористами, выполнять их требования если это не угрожает жизни, не делать резких движений, попытаться запомнить детали (количество, внешность, оружие), по возможности незаметно подать сигнал через сообщение или соцсети.' }
+                { q: 'Вы получили сообщение о заложенной бомбе в вашем учебном заведении. Что делать?', a: 'Не паниковать, немедленно сообщить преподавателю или охране, покинуть здание по эвакуационному плану, не пользоваться лифтами, отойти на безопасное расстояние, не трогать подозрительные предметы. Дождаться инструкций от МЧС или полиции.' }
             ]
         },
-        { 
-            id: 'mchs', 
-            name: 'МЧС', 
-            desc: 'Спасатель, пожарный', 
-            trainingTime: 14, 
-            examDate: 'Экзамен: 7-й и 14-й день',
+        { id: 'mchs', name: 'МЧС', desc: 'Спасатель, пожарный', trainingTime: 14, examDate: 'Экзамен: 7-й и 14-й день',
             questions: [
                 { q: 'Произошло землетрясение средней силы. Вы находитесь в квартире на 5-м этаже. Ваши действия?', a: 'Лечь на пол рядом с кроватью или столом, защитить голову руками, отойти от окон и тяжёлой мебели. После прекращения толчков — покинуть здание по лестнице, не пользуясь лифтом. Помочь пожилым людям и детям.' },
-                { q: 'Вы обнаружили возгорание в многоквартирном доме. Что делать?', a: 'Немедленно вызвать пожарную службу по номеру 101 или 112, сообщить точный адрес и этаж. Если пожар небольшой — попытаться потушить огнетушителем. Если огонь сильный — немедленно покинуть помещение, закрыть двери и окна, предупредить соседей. Не пользоваться лифтом.' },
-                { q: 'Человек упал в обморок на улице. Ваши действия как спасателя?', a: 'Проверить пульс и дыхание. Если дыхания нет — начать сердечно-легочную реанимацию (30 нажатий на грудную клетку, 2 вдоха). Вызвать скорую помощь по номеру 103 или 112. Уложить пострадавшего на бок в восстановительное положение до приезда врачей.' }
+                { q: 'Вы обнаружили возгорание в многоквартирном доме. Что делать?', a: 'Немедленно вызвать пожарную службу по номеру 101 или 112, сообщить точный адрес и этаж. Если пожар небольшой — попытаться потушить огнетушителем. Если огонь сильный — немедленно покинуть помещение, закрыть двери и окна, предупредить соседей. Не пользоваться лифтом.' }
             ]
         },
-        { 
-            id: 'medic', 
-            name: 'Медик', 
-            desc: 'Врач, фельдшер', 
-            trainingTime: 14, 
-            examDate: 'Экзамен: 7-й и 14-й день',
+        { id: 'medic', name: 'Медик', desc: 'Врач, фельдшер', trainingTime: 14, examDate: 'Экзамен: 7-й и 14-й день',
             questions: [
                 { q: 'У человека внезапно остановилось сердце. Что делать?', a: 'Немедленно начать сердечно-легочную реанимацию: положить пострадавшего на твёрдую поверхность, проверить дыхание, сделать 30 компрессий грудной клетки глубиной 5-6 см с частотой 100-120 в минуту, затем 2 искусственных вдоха. Продолжать до приезда скорой помощи или появления признаков жизни.' },
-                { q: 'Вы видите человека с признаками инсульта (асимметрия лица, нарушение речи, слабость в руке). Ваши действия?', a: 'Немедленно вызвать скорую помощь, усадить или уложить пострадавшего с приподнятой головой. Не давать еду, воду и лекарства. Засечь время начала симптомов, наблюдать за состоянием до приезда врачей.' },
-                { q: 'Ребёнок подавился едой и не может дышать. Ваши действия?', a: 'Встать позади ребёнка, обхватить его руками, наклонить вперёд, нанести 5 резких ударов между лопатками. Если не помогает — выполнить 5 компрессий в область живота (приём Геймлиха). Если ребёнок потерял сознание — начать СЛР, чередуя 30 нажатий и 2 вдоха. Вызвать скорую помощь.' }
+                { q: 'Вы видите человека с признаками инсульта (асимметрия лица, нарушение речи, слабость в руке). Ваши действия?', a: 'Немедленно вызвать скорую помощь, усадить или уложить пострадавшего с приподнятой головой. Не давать еду, воду и лекарства. Засечь время начала симптомов, наблюдать за состоянием до приезда врачей.' }
             ]
         },
-        { 
-            id: 'mvd', 
-            name: 'МВД', 
-            desc: 'Полицейский, следователь', 
-            trainingTime: 14, 
-            examDate: 'Экзамен: 7-й и 14-й день',
+        { id: 'mvd', name: 'МВД', desc: 'Полицейский, следователь', trainingTime: 14, examDate: 'Экзамен: 7-й и 14-й день',
             questions: [
                 { q: 'Вы стали свидетелем уличного ограбления. Ваши действия как сотрудника полиции?', a: 'Немедленно набрать 102 или 112, сообщить приметы преступников, направление их движения. Если есть возможность — запомнить номер машины, детали внешности. Не вступать в конфликт, если угроза для жизни. Прибыть на место происшествия для дачи показаний.' },
-                { q: 'Вы нашли подозрительный предмет в общественном транспорте. Ваши действия?', a: 'Немедленно сообщить водителю или охране, вызвать полицию. Не трогать предмет, не приближаться к нему, вывести людей из автобуса, оградить место находки, дождаться прибытия спецслужб.'
+                { q: 'Вы нашли подозрительный предмет в общественном транспорте. Ваши действия?', a: 'Немедленно сообщить водителю или охране, вызвать полицию. Не трогать предмет, не приближаться к нему, вывести людей из автобуса, оградить место находки, дождаться прибытия спецслужб.' }
+            ]
+        },
+        { id: 'teacher', name: 'Учитель', desc: 'Преподаватель, наставник', trainingTime: 14, examDate: 'Экзамен: 7-й и 14-й день',
+            questions: [
+                { q: 'В классе во время урока началась паника из-за сообщения о стрельбе в школе. Ваши действия?', a: 'Не паниковать самому, успокоить учеников, закрыть двери, выключить свет, заблокировать дверь стульями, не подходить к окнам, поддерживать тишину, связаться с администрацией или полицией, быть готовым действовать по команде.' },
+                { q: 'Вы стали свидетелем буллинга между учениками. Как поступить?', a: 'Немедленно вмешаться, развести учеников, провести беседу с ними и классным руководителем, выяснить причины, предложить психологическую помощь, сообщить родителям, организовать профилактическую работу.' }
+            ]
+        }
+    ];
+
+    var selectedProfession = localStorage.getItem('selectedProfession') || null;
+    var startDate = localStorage.getItem('startDate') || null;
+    var openedDetail = null;
+
+    function getDaysLeft() {
+        if (!startDate) return 14;
+        var start = new Date(startDate);
+        var now = new Date();
+        var diff = Math.floor((now - start) / (1000 * 60 * 60 * 24));
+        var left = 14 - diff;
+        return left < 0 ? 0 : left;
+    }
+
+    function getDaysPassed() {
+        if (!startDate) return 0;
+        var start = new Date(startDate);
+        var now = new Date();
+        return Math.floor((now - start) / (1000 * 60 * 60 * 24));
+    }
+
+    function renderStudy() {
+        var content = document.getElementById('studyContent');
+        var prof = null;
+        if (selectedProfession) {
+            for (var i = 0; i < professions.length; i++) {
+                if (professions[i].id === selectedProfession) { prof = professions[i]; break; }
+            }
+        }
+
+        if (selectedProfession && prof) {
+            var daysLeft = getDaysLeft();
+            var daysPassed = getDaysPassed();
+            var finished = daysLeft <= 0;
+
+            var html = `
+                <div class="selected-profession-block">
+                    <div class="prof-name">${prof.name}</div>
+                    <div class="prof-desc">${prof.desc}</div>
+                    <div class="status-text">${finished ? 'Обучение завершено' : 'Профессия выбрана'}</div>
+                    <div class="days-left-big">${finished ? '✅ Обучение завершено' : 'Осталось дней: ' + daysLeft}</div>
+                    <div style="color:#888;font-size:12px;margin-top:4px;">${finished ? 'Вы успешно освоили профессию' : 'День ' + Math.min(daysPassed, 14) + ' из 14'}</div>
+                </div>
+                <div class="profession-detail open">
+                    <div class="row"><span class="label">Время обучения</span><span class="value">${prof.trainingTime} дней</span></div>
+                    <div class="row"><span class="label">Экзамены</span><span class="value">${prof.examDate}</span></div>
+                    <div class="row"><span class="label">Осталось дней</span><span class="value" id="daysCounter">${finished ? 0 : daysLeft}</span></div>
+                    <div class="exam-date">${finished ? 'Обучение завершено' : 'Вы проходите обучение по этой профессии'}</div>
+                </div>
+                <button class="book-btn" onclick="openBook()">📖 Книга для учения</button>
+            `;
+            content.innerHTML = html;
+            return;
+        }
+
+        var html = '<div class="profession-list">';
+        for (var j = 0; j < professions.length; j++) {
+            var p = professions[j];
+            v
