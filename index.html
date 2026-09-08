@@ -151,6 +151,7 @@
             opacity: 0.4;
             transform: none;
             box-shadow: none;
+            cursor: not-allowed;
         }
         .profession-btn.learned {
             background: #2ecc71;
@@ -388,7 +389,6 @@
         if (!state.selectedProfession || state.finished) return;
         const days = getDaysPassed();
         
-        // Проверяем экзамены
         if (days >= 7 && !state.exam1Passed && !state.examMode) {
             showToast('Прошло 7 дней! Пора сдавать первый экзамен!');
         }
@@ -510,7 +510,6 @@
         saveState();
         renderStudy();
         showToast('Обучение началось! Длительность: 14 дней.');
-        // Запускаем проверку каждые 10 секунд
         if (updateInterval) clearInterval(updateInterval);
         updateInterval = setInterval(checkProgress, 10000);
     }
@@ -533,4 +532,5 @@
     }
 
     function renderExam() {
-        const questions = examQuestionsCa
+        const questions = examQuestionsCache;
+        if (!questions || questions.len
