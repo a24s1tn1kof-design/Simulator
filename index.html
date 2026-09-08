@@ -127,9 +127,16 @@
             justify-content: space-between;
             align-items: center;
             transition: 0.2s;
+            cursor: pointer;
         }
+        .profession-card:active { transform: scale(0.97); }
         .profession-card .info h3 { color: #fff; font-size: 15px; font-weight: 600; }
         .profession-card .info p { color: #888; font-size: 12px; margin-top: 2px; }
+        .profession-card .info .detail {
+            color: #4facfe;
+            font-size: 11px;
+            margin-top: 4px;
+        }
 
         .profession-btn {
             background: linear-gradient(135deg, #4facfe, #00f2fe);
@@ -150,6 +157,33 @@
         .empty-bank { text-align: center; padding: 50px 0; color: #555; }
         .empty-bank .big-icon { font-size: 64px; margin-bottom: 16px; }
         .empty-bank p { font-size: 14px; }
+
+        .profession-detail {
+            display: none;
+            background: rgba(255,255,255,0.03);
+            border-radius: 12px;
+            padding: 14px 16px;
+            margin-top: 10px;
+            border: 1px solid rgba(255,255,255,0.06);
+        }
+        .profession-detail.open { display: block; }
+        .profession-detail .row {
+            display: flex;
+            justify-content: space-between;
+            color: #ccc;
+            font-size: 13px;
+            padding: 4px 0;
+        }
+        .profession-detail .row .label { color: #888; }
+        .profession-detail .row .value { color: #fff; font-weight: 500; }
+        .profession-detail .exam-date {
+            color: #f5c842;
+            font-size: 13px;
+            margin-top: 8px;
+            text-align: center;
+            border-top: 1px solid rgba(255,255,255,0.05);
+            padding-top: 8px;
+        }
 
         .phone-screen::-webkit-scrollbar { width: 3px; }
         .phone-screen::-webkit-scrollbar-track { background: transparent; }
@@ -255,53 +289,93 @@
 
     // ===== ПРОФЕССИИ =====
     var professions = [
-        { id: 'mchs', name: 'МЧС', desc: 'Спасатель, пожарный' },
-        { id: 'medic', name: 'Медик', desc: 'Врач, фельдшер' },
-        { id: 'fsb', name: 'ФСБ', desc: 'Сотрудник госбезопасности' },
-        { id: 'mvd', name: 'МВД', desc: 'Полицейский, следователь' },
-        { id: 'teacher', name: 'Учитель', desc: 'Преподаватель, наставник' }
+        { 
+            id: 'fsb', 
+            name: 'ФСБ', 
+            desc: 'Федеральная служба безопасности',
+            trainingTime: '14 дней',
+            examDate: 'Экзамен: 7-й и 14-й день'
+        },
+        { 
+            id: 'mchs', 
+            name: 'МЧС', 
+            desc: 'Спасатель, пожарный',
+            trainingTime: '14 дней',
+            examDate: 'Экзамен: 7-й и 14-й день'
+        },
+        { 
+            id: 'medic', 
+            name: 'Медик', 
+            desc: 'Врач, фельдшер',
+            trainingTime: '14 дней',
+            examDate: 'Экзамен: 7-й и 14-й день'
+        },
+        { 
+            id: 'mvd', 
+            name: 'МВД', 
+            desc: 'Полицейский, следователь',
+            trainingTime: '14 дней',
+            examDate: 'Экзамен: 7-й и 14-й день'
+        },
+        { 
+            id: 'teacher', 
+            name: 'Учитель', 
+            desc: 'Преподаватель, наставник',
+            trainingTime: '14 дней',
+            examDate: 'Экзамен: 7-й и 14-й день'
+        }
     ];
 
     var selectedProfession = null;
+    var openedDetail = null;
 
     function renderStudy() {
         var content = document.getElementById('studyContent');
-        if (!selectedProfession) {
-            var html = '<div class="profession-list">';
-            for (var i = 0; i < professions.length; i++) {
-                var p = professions[i];
-                html += `
-                    <div class="profession-card">
-                        <div class="info">
-                            <h3>${p.name}</h3>
-                            <p>${p.desc}</p>
-                        </div>
-                        <button class="profession-btn" onclick="selectProfession('${p.id}')">Выбрать</button>
+        var html = '<div class="profession-list">';
+        
+        for (var i = 0; i < professions.length; i++) {
+            var p = professions[i];
+            var isOpen = (openedDetail === p.id);
+            var isSelected = (selectedProfession === p.id);
+            
+            html += `
+                <div class="profession-card" onclick="toggleDetail('${p.id}')">
+                    <div class="info">
+                        <h3>${p.name}</h3>
+                        <p>${p.desc}</p>
+                        <div class="detail">${isSelected ? 'Профессия выбрана' : 'Нажмите для выбора'}</div>
                     </div>
-                `;
-            }
-            html += '</div>';
-            content.innerHTML = html;
-            return;
+                    <button class="profession-btn" onclick="event.stopPropagation(); selectProfession('${p.id}')" ${isSelected ? 'disabled style="opacity:0.5;"' : ''}>
+                        ${isSelected ? 'Выбрана' : 'Выбрать'}
+                    </button>
+                </div>
+                <div class="profession-detail ${isOpen ? 'open' : ''}" id="detail-${p.id}">
+                    <div class="row">
+                        <span class="label">Время обучения</span>
+                        <span class="value">${p.trainingTime}</span>
+                    </div>
+                    <div class="row">
+                        <span class="label">Экзамены</span>
+                        <span class="value">${p.examDate}</span>
+                    </div>
+                    <div class="exam-date">
+                        ${isSelected ? 'Вы проходите обучение по этой профессии' : 'Выберите профессию для начала обучения'}
+                    </div>
+                </div>
+            `;
         }
+        
+        html += '</div>';
+        content.innerHTML = html;
+    }
 
-        var prof = null;
-        for (var j = 0; j < professions.length; j++) {
-            if (professions[j].id === selectedProfession) {
-                prof = professions[j];
-                break;
-            }
+    function toggleDetail(id) {
+        if (openedDetail === id) {
+            openedDetail = null;
+        } else {
+            openedDetail = id;
         }
-
-        content.innerHTML = `
-            <div style="background:rgba(46,204,113,0.1);border:1px solid #2ecc71;border-radius:16px;padding:20px;text-align:center;">
-                <div style="font-size:32px;margin-bottom:8px;">🎓</div>
-                <div style="color:#fff;font-size:20px;font-weight:600;">${prof ? prof.name : ''}</div>
-                <div style="color:#aaa;font-size:14px;margin-top:4px;">${prof ? prof.desc : ''}</div>
-                <div style="color:#2ecc71;font-size:13px;margin-top:12px;">✅ Профессия выбрана</div>
-                <button class="profession-btn" onclick="resetProfession()" style="margin-top:16px;background:#e74c3c;box-shadow:none;">Сбросить</button>
-            </div>
-        `;
+        renderStudy();
     }
 
     function selectProfession(id) {
@@ -313,13 +387,8 @@
         renderStudy();
     }
 
-    function resetProfession() {
-        selectedProfession = null;
-        renderStudy();
-    }
-
     // ===== ЗАПУСК =====
     renderStudy();
 </script>
 </body>
-</html>
+    </html>
