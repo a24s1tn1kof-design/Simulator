@@ -49,15 +49,6 @@
             margin-bottom: 16px;
         }
         .status-icons { display: flex; gap: 6px; font-size: 13px; align-items: center; }
-        .battery-icon {
-            display: flex;
-            align-items: center;
-            gap: 4px;
-        }
-        .battery-level {
-            color: #2ecc71;
-            font-weight: 700;
-        }
         .battery-level.low { color: #e74c3c; }
         .battery-level.medium { color: #f5c842; }
 
@@ -258,9 +249,7 @@
             <div class="status-icons">
                 <span>📶</span>
                 <span>📶</span>
-                <span class="battery-icon">
-                    <span id="batteryLevel" class="battery-level">🔋 100%</span>
-                </span>
+                <span id="batteryDisplay">🔋 100%</span>
             </div>
         </div>
 
@@ -305,28 +294,7 @@
 </div>
 
 <script>
-    // ===== БАТАРЕЯ =====
-    function updateBattery() {
-        if (navigator.getBattery) {
-            navigator.getBattery().then(function(battery) {
-                var level = Math.round(battery.level * 100);
-                var el = document.getElementById('batteryLevel');
-                el.textContent = '🔋 ' + level + '%';
-                el.className = 'battery-level';
-                if (level < 20) el.classList.add('low');
-                else if (level < 50) el.classList.add('medium');
-            });
-        } else {
-            // Если API не поддерживается — показываем случайное число от 70 до 100
-            var fakeLevel = Math.floor(Math.random() * 30) + 70;
-            document.getElementById('batteryLevel').textContent = '🔋 ' + fakeLevel + '%';
-        }
-    }
-    updateBattery();
-    // Обновляем батарею каждые 30 секунд
-    setInterval(updateBattery, 30000);
-
-    // ===== ВРЕМЯ =====
+    // ===== НАСТОЯЩЕЕ ВРЕМЯ =====
     function updateTime() {
         var now = new Date();
         var h = String(now.getHours()).padStart(2, '0');
@@ -336,7 +304,27 @@
     updateTime();
     setInterval(updateTime, 10000);
 
-    // ===== ПРИЛОЖЕНИЯ =====
+    // ===== НАСТОЯЩАЯ БАТАРЕЯ =====
+    function updateBattery() {
+        if (navigator.getBattery) {
+            navigator.getBattery().then(function(battery) {
+                var level = Math.round(battery.level * 100);
+                var el = document.getElementById('batteryDisplay');
+                el.textContent = '🔋 ' + level + '%';
+                if (level < 20) el.style.color = '#e74c3c';
+                else if (level < 50) el.style.color = '#f5c842';
+                else el.style.color = '#2ecc71';
+            });
+        } else {
+            // fallback — случайное число от 70 до 100
+            var fake = Math.floor(Math.random() * 30) + 70;
+            document.getElementById('batteryDisplay').textContent = '🔋 ' + fake + '%';
+        }
+    }
+    updateBattery();
+    setInterval(updateBattery, 30000);
+
+    // ===== ОТКРЫТИЕ ПРИЛОЖЕНИЙ =====
     function openStudy() {
         document.getElementById('studyModal').classList.add('active');
         renderStudy();
@@ -345,6 +333,7 @@
 
     function closeStudy() {
         document.getElementById('studyModal').classList.remove('active');
+        if (window.daysInterval) clearInterval(window.daysInterval);
     }
 
     function openBank() {
@@ -356,7 +345,10 @@
     }
 
     document.getElementById('studyModal').addEventListener('click', function(e) {
-        if (e.target === this) this.classList.remove('active');
+        if (e.target === this) {
+            this.classList.remove('active');
+            if (window.daysInterval) clearInterval(window.daysInterval);
+        }
     });
     document.getElementById('bankModal').addEventListener('click', function(e) {
         if (e.target === this) this.classList.remove('active');
@@ -364,44 +356,13 @@
 
     // ===== ПРОФЕССИИ =====
     var professions = [
-        { 
-            id: 'fsb', 
-            name: 'ФСБ', 
-            desc: 'Федеральная служба безопасности',
-            trainingTime: 14,
-            examDate: 'Экзамен: 7-й и 14-й день'
-        },
-        { 
-            id: 'mchs', 
-            name: 'МЧС', 
-            desc: 'Спасатель, пожарный',
-            trainingTime: 14,
-            examDate: 'Экзамен: 7-й и 14-й день'
-        },
-        { 
-            id: 'medic', 
-            name: 'Медик', 
-            desc: 'Врач, фельдшер',
-            trainingTime: 14,
-            examDate: 'Экзамен: 7-й и 14-й день'
-        },
-        { 
-            id: 'mvd', 
-            name: 'МВД', 
-            desc: 'Полицейский, следователь',
-            trainingTime: 14,
-            examDate: 'Экзамен: 7-й и 14-й день'
-        },
-        { 
-            id: 'teacher', 
-            name: 'Учитель', 
-            desc: 'Преподаватель, наставник',
-            trainingTime: 14,
-            examDate: 'Экзамен: 7-й и 14-й день'
-        }
+        { id: 'fsb', name: 'ФСБ', desc: 'Федеральная служба безопасности', trainingTime: 14, examDate: 'Экзамен: 7-й и 14-й день' },
+        { id: 'mchs', name: 'МЧС', desc: 'Спасатель, пожарный', trainingTime: 14, examDate: 'Экзамен: 7-й и 14-й день' },
+        { id: 'medic', name: 'Медик', desc: 'Врач, фельдшер', trainingTime: 14, examDate: 'Экзамен: 7-й и 14-й день' },
+        { id: 'mvd', name: 'МВД', desc: 'Полицейский, следователь', trainingTime: 14, examDate: 'Экзамен: 7-й и 14-й день' },
+        { id: 'teacher', name: 'Учитель', desc: 'Преподаватель, наставник', trainingTime: 14, examDate: 'Экзамен: 7-й и 14-й день' }
     ];
 
-    // Загружаем сохранённую профессию и дату начала
     var selectedProfession = localStorage.getItem('selectedProfession') || null;
     var startDate = localStorage.getItem('startDate') || null;
     var openedDetail = null;
@@ -411,8 +372,8 @@
         var start = new Date(startDate);
         var now = new Date();
         var diff = Math.floor((now - start) / (1000 * 60 * 60 * 24));
-        var daysLeft = 14 - diff;
-        return daysLeft < 0 ? 0 : daysLeft;
+        var left = 14 - diff;
+        return left < 0 ? 0 : left;
     }
 
     function getDaysPassed() {
@@ -423,79 +384,57 @@
     }
 
     function updateDaysCounter() {
+        var days = getDaysLeft();
         var el = document.getElementById('daysCounter');
-        if (el) {
-            var days = getDaysLeft();
-            el.textContent = 'Осталось дней: ' + days;
+        if (el) el.textContent = days;
+        var bigEl = document.querySelector('.days-left-big');
+        if (bigEl) bigEl.textContent = 'Осталось дней: ' + days;
+        if (days <= 0) {
+            var statusEl = document.querySelector('.status-text');
+            if (statusEl) statusEl.textContent = 'Обучение завершено';
+            var examEl = document.querySelector('.exam-date');
+            if (examEl) examEl.textContent = 'Обучение завершено';
+            if (window.daysInterval) clearInterval(window.daysInterval);
         }
-        // Обновляем все элементы с классом days-left
-        document.querySelectorAll('.days-left').forEach(function(el) {
-            var days = getDaysLeft();
-            el.textContent = 'Осталось дней: ' + days;
-        });
-        document.querySelectorAll('.days-left-big').forEach(function(el) {
-            var days = getDaysLeft();
-            el.textContent = 'Осталось дней: ' + days;
-        });
     }
 
     function renderStudy() {
         var content = document.getElementById('studyContent');
 
-        // Если профессия выбрана — показываем только её
         if (selectedProfession) {
             var prof = null;
             for (var i = 0; i < professions.length; i++) {
-                if (professions[i].id === selectedProfession) {
-                    prof = professions[i];
-                    break;
-                }
+                if (professions[i].id === selectedProfession) { prof = professions[i]; break; }
             }
-
             if (prof) {
                 var daysLeft = getDaysLeft();
                 var daysPassed = getDaysPassed();
-                var isFinished = daysLeft <= 0;
+                var finished = daysLeft <= 0;
 
                 content.innerHTML = `
                     <div class="selected-profession-block">
                         <div class="prof-name">${prof.name}</div>
                         <div class="prof-desc">${prof.desc}</div>
-                        <div class="status-text">${isFinished ? 'Обучение завершено' : 'Профессия выбрана'}</div>
-                        <div class="days-left-big">${isFinished ? 'Обучение завершено' : 'Осталось дней: ' + daysLeft}</div>
-                        <div style="color:#888;font-size:12px;margin-top:4px;">${isFinished ? 'Вы успешно освоили профессию' : 'День ' + (daysPassed > 14 ? 14 : daysPassed) + ' из 14'}</div>
+                        <div class="status-text">${finished ? 'Обучение завершено' : 'Профессия выбрана'}</div>
+                        <div class="days-left-big">${finished ? 'Обучение завершено' : 'Осталось дней: ' + daysLeft}</div>
+                        <div style="color:#888;font-size:12px;margin-top:4px;">${finished ? 'Вы успешно освоили профессию' : 'День ' + Math.min(daysPassed, 14) + ' из 14'}</div>
                     </div>
                     <div class="profession-detail open">
-                        <div class="row">
-                            <span class="label">Время обучения</span>
-                            <span class="value">${prof.trainingTime} дней</span>
-                        </div>
-                        <div class="row">
-                            <span class="label">Экзамены</span>
-                            <span class="value">${prof.examDate}</span>
-                        </div>
-                        <div class="row">
-                            <span class="label">Осталось дней</span>
-                            <span class="value" id="daysCounter">${isFinished ? '0' : daysLeft}</span>
-                        </div>
-                        <div class="exam-date">${isFinished ? 'Обучение завершено' : 'Вы проходите обучение по этой профессии'}</div>
+                        <div class="row"><span class="label">Время обучения</span><span class="value">${prof.trainingTime} дней</span></div>
+                        <div class="row"><span class="label">Экзамены</span><span class="value">${prof.examDate}</span></div>
+                        <div class="row"><span class="label">Осталось дней</span><span class="value" id="daysCounter">${finished ? 0 : daysLeft}</span></div>
+                        <div class="exam-date">${finished ? 'Обучение завершено' : 'Вы проходите обучение по этой профессии'}</div>
                     </div>
                 `;
 
-                // Запускаем обновление счётчика каждую секунду
-                if (!isFinished) {
+                if (!finished) {
                     if (window.daysInterval) clearInterval(window.daysInterval);
                     window.daysInterval = setInterval(function() {
                         var newDays = getDaysLeft();
                         var counter = document.getElementById('daysCounter');
-                        if (counter) {
-                            counter.textContent = newDays;
-                        }
-                        var bigEl = document.querySelector('.days-left-big');
-                        if (bigEl) {
-                            bigEl.textContent = 'Осталось дней: ' + newDays;
-                        }
-                        // Если дни закончились — обновляем страницу
+                        if (counter) counter.textContent = newDays;
+                        var big = document.querySelector('.days-left-big');
+                        if (big) big.textContent = 'Осталось дней: ' + newDays;
                         if (newDays <= 0) {
                             clearInterval(window.daysInterval);
                             renderStudy();
@@ -506,13 +445,10 @@
             return;
         }
 
-        // Если профессия не выбрана — показываем все
         var html = '<div class="profession-list">';
-        
         for (var j = 0; j < professions.length; j++) {
             var p = professions[j];
             var isOpen = (openedDetail === p.id);
-            
             html += `
                 <div class="profession-card" onclick="toggleDetail('${p.id}')">
                     <div class="info">
@@ -520,42 +456,36 @@
                         <p>${p.desc}</p>
                         <div class="detail">Нажмите для выбора</div>
                     </div>
-                    <button class="profession-btn" onclick="event.stopPropagation(); selectProfession('${p.id}')">
-                        Выбрать
-                    </button>
+                    <button class="profession-btn" onclick="event.stopPropagation(); selectProfession('${p.id}')">Выбрать</button>
                 </div>
                 <div class="profession-detail ${isOpen ? 'open' : ''}" id="detail-${p.id}">
-                    <div class="row">
-                        <span class="label">Время обучения</span>
-                        <span class="value">${p.trainingTime} дней</span>
-                    </div>
-                    <div class="row">
-                        <span class="label">Экзамены</span>
-                        <span class="value">${p.examDate}</span>
-                    </div>
+                    <div class="row"><span class="label">Время обучения</span><span class="value">${p.trainingTime} дней</span></div>
+                    <div class="row"><span class="label">Экзамены</span><span class="value">${p.examDate}</span></div>
                     <div class="days-left">Выберите профессию для начала обучения</div>
                     <div class="exam-date">Длительность обучения: 14 дней</div>
                 </div>
             `;
         }
-        
         html += '</div>';
         content.innerHTML = html;
     }
 
     function toggleDetail(id) {
-        if (openedDetail === id) {
-            openedDetail = null;
-        } else {
-            openedDetail = id;
-        }
+        openedDetail = (openedDetail === id) ? null : id;
         renderStudy();
     }
 
     function selectProfession(id) {
-        if (selectedProfession) {
-            alert('Профессия уже выбрана!');
-            return;
-        }
+        if (selectedProfession) { alert('Профессия уже выбрана!'); return; }
         selectedProfession = id;
-        startDate = new Dat
+        startDate = new Date().toISOString();
+        localStorage.setItem('selectedProfession', id);
+        localStorage.setItem('startDate', startDate);
+        renderStudy();
+    }
+
+    // ===== ЗАПУСК =====
+    renderStudy();
+</script>
+</body>
+    </html>
