@@ -3,8 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <meta name="theme-color" content="#0a0a0f">
-    <title>Симулятор который ты ждал</title>
+    <title>Симулятор</title>
     <style>
         * {
             margin: 0;
@@ -24,7 +23,6 @@
             padding: 10px;
         }
 
-        /* Телефон */
         .phone {
             width: 375px;
             max-width: 100%;
@@ -48,7 +46,6 @@
             scroll-behavior: smooth;
         }
 
-        /* Статус-бар */
         .status-bar {
             display: flex;
             justify-content: space-between;
@@ -63,32 +60,11 @@
         .status-bar .time { color: #fff; }
         .status-icons { display: flex; gap: 6px; }
 
-        /* Заголовок */
-        .app-title {
-            text-align: center;
-            color: #fff;
-            font-size: 18px;
-            font-weight: 700;
-            letter-spacing: 0.5px;
-            margin-bottom: 6px;
-            background: linear-gradient(90deg, #f7971e, #ffd200);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-        .app-subtitle {
-            text-align: center;
-            color: #555;
-            font-size: 11px;
-            margin-bottom: 20px;
-            letter-spacing: 1px;
-        }
-
-        /* Сетка приложений */
         .apps-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
             gap: 18px 12px;
-            margin-bottom: 24px;
+            margin-top: 20px;
         }
 
         .app-item {
@@ -125,26 +101,6 @@
             text-align: center;
         }
 
-        /* Блок информации */
-        .info-block {
-            background: rgba(255,255,255,0.04);
-            border-radius: 16px;
-            padding: 14px 16px;
-            border: 1px solid rgba(255,255,255,0.05);
-            margin: 6px 0 16px;
-        }
-        .info-row {
-            display: flex;
-            justify-content: space-between;
-            color: #aaa;
-            font-size: 13px;
-            padding: 4px 0;
-        }
-        .info-row .label { color: #666; }
-        .info-row .value { color: #fff; font-weight: 600; }
-        .info-row .value.gold { color: #f5c842; }
-
-        /* Модальное окно */
         .modal {
             display: none;
             position: absolute;
@@ -214,11 +170,6 @@
             font-size: 12px;
             margin-top: 2px;
         }
-        .profession-card .info .req {
-            color: #f5c842;
-            font-size: 11px;
-            font-weight: 500;
-        }
 
         .profession-btn {
             background: linear-gradient(135deg, #4facfe, #00f2fe);
@@ -235,14 +186,14 @@
             white-space: nowrap;
         }
         .profession-btn:active { transform: scale(0.92); }
+        .profession-btn.learned {
+            background: #2ecc71;
+            box-shadow: 0 4px 15px rgba(46,204,113,0.3);
+        }
         .profession-btn:disabled {
             opacity: 0.4;
             transform: none;
             box-shadow: none;
-        }
-        .profession-btn.learned {
-            background: #2ecc71;
-            box-shadow: 0 4px 15px rgba(46,204,113,0.3);
         }
 
         .empty-bank {
@@ -253,12 +204,10 @@
         .empty-bank .big-icon { font-size: 64px; margin-bottom: 16px; }
         .empty-bank p { font-size: 14px; }
 
-        /* Скролл */
         .phone-screen::-webkit-scrollbar { width: 3px; }
         .phone-screen::-webkit-scrollbar-track { background: transparent; }
         .phone-screen::-webkit-scrollbar-thumb { background: #333; border-radius: 10px; }
 
-        /* Адаптив */
         @media (max-width: 400px) {
             .phone { height: 95vh; border-radius: 28px; padding: 12px; }
             .phone-screen { border-radius: 20px; padding: 14px; }
@@ -282,10 +231,6 @@
             </div>
         </div>
 
-        <!-- Заголовок -->
-        <div class="app-title">СИМУЛЯТОР КОТОРЫЙ ТЫ ЖДАЛ</div>
-        <div class="app-subtitle">✦ ЖИЗНЕННЫЙ ПУТЬ ✦</div>
-
         <!-- Сетка приложений -->
         <div class="apps-grid">
             <div class="app-item" id="studyApp">
@@ -302,31 +247,13 @@
             </div>
         </div>
 
-        <!-- Инфо-блок -->
-        <div class="info-block">
-            <div class="info-row">
-                <span class="label">💰 Деньги</span>
-                <span class="value gold" id="moneyDisplay">0</span>
-            </div>
-            <div class="info-row">
-                <span class="label">🎓 Профессия</span>
-                <span class="value" id="professionDisplay">Нет</span>
-            </div>
-            <div class="info-row">
-                <span class="label">⭐ Уровень</span>
-                <span class="value" id="levelDisplay">1</span>
-            </div>
-        </div>
-
         <!-- Модальное окно: Учеба -->
         <div class="modal" id="studyModal">
             <div class="modal-header">
                 <h2>📚 Учеба</h2>
                 <button class="modal-close" id="closeStudy">✕</button>
             </div>
-            <div class="profession-list" id="professionList">
-                <!-- Сгенерируется JS -->
-            </div>
+            <div class="profession-list" id="professionList"></div>
         </div>
 
         <!-- Модальное окно: Банк -->
@@ -338,8 +265,7 @@
             <div class="empty-bank">
                 <div class="big-icon">🏦</div>
                 <p style="color:#888;font-size:15px;font-weight:500;">Банковский отдел</p>
-                <p style="color:#555;font-size:12px;margin-top:6px;">В разработке...<br>Скоро тут будут кредиты, вклады и ипотека</p>
-                <div style="margin-top:20px;font-size:40px;">🔄</div>
+                <p style="color:#555;font-size:12px;margin-top:6px;">В разработке...</p>
             </div>
         </div>
 
@@ -349,47 +275,27 @@
 <script>
     // ===== ДАННЫЕ =====
     const professions = [
-        { id: 'mchs', name: '🚒 МЧС', cost: 500, desc: 'Спасатель, пожарный' },
-        { id: 'medic', name: '🏥 Медик', cost: 800, desc: 'Врач, фельдшер' },
-        { id: 'fsb', name: '🕵️ ФСБ', cost: 1500, desc: 'Сотрудник госбезопасности' },
-        { id: 'mvd', name: '👮 МВД', cost: 1200, desc: 'Полицейский, следователь' },
-        { id: 'teacher', name: '👨‍🏫 Учитель', cost: 600, desc: 'Преподаватель, наставник' }
+        { id: 'mchs', name: '🚒 МЧС', desc: 'Спасатель, пожарный' },
+        { id: 'medic', name: '🏥 Медик', desc: 'Врач, фельдшер' },
+        { id: 'fsb', name: '🕵️ ФСБ', desc: 'Сотрудник госбезопасности' },
+        { id: 'mvd', name: '👮 МВД', desc: 'Полицейский, следователь' },
+        { id: 'teacher', name: '👨‍🏫 Учитель', desc: 'Преподаватель, наставник' }
     ];
 
     // ===== СОСТОЯНИЕ =====
-    let state = {
-        money: 0,
-        profession: null,
-        level: 1,
-        learned: []
-    };
+    let learned = [];
 
     // ===== DOM =====
-    const moneyDisplay = document.getElementById('moneyDisplay');
-    const professionDisplay = document.getElementById('professionDisplay');
-    const levelDisplay = document.getElementById('levelDisplay');
     const studyModal = document.getElementById('studyModal');
     const bankModal = document.getElementById('bankModal');
     const professionList = document.getElementById('professionList');
     const statusTime = document.getElementById('statusTime');
 
     // ===== ФУНКЦИИ =====
-    function updateUI() {
-        moneyDisplay.textContent = state.money;
-        professionDisplay.textContent = state.profession 
-            ? professions.find(p => p.id === state.profession)?.name || 'Нет'
-            : 'Нет';
-        levelDisplay.textContent = state.level;
-        renderProfessions();
-        saveGame();
-    }
-
     function renderProfessions() {
         professionList.innerHTML = '';
         professions.forEach(p => {
-            const isLearned = state.learned.includes(p.id);
-            const isCurrent = state.profession === p.id;
-            const canAfford = state.money >= p.cost;
+            const isLearned = learned.includes(p.id);
 
             const card = document.createElement('div');
             card.className = 'profession-card';
@@ -399,35 +305,26 @@
             infoDiv.innerHTML = `
                 <h3>${p.name}</h3>
                 <p>${p.desc}</p>
-                <span class="req">${isLearned ? '✅ Выучено' : `💰 ${p.cost} $`}</span>
             `;
 
             const btn = document.createElement('button');
             btn.className = 'profession-btn';
             if (isLearned) {
                 btn.classList.add('learned');
-                btn.textContent = isCurrent ? '✅ Активно' : 'Выбрать';
-                btn.disabled = isCurrent;
+                btn.textContent = '✅ Изучено';
+                btn.disabled = true;
             } else {
-                btn.textContent = 'Учиться';
-                btn.disabled = !canAfford;
+                btn.textContent = 'Изучить';
+                btn.disabled = false;
             }
 
             btn.addEventListener('click', (e) => {
                 e.stopPropagation();
-                if (isLearned) {
-                    state.profession = p.id;
-                    updateUI();
-                } else {
-                    if (state.money >= p.cost) {
-                        state.money -= p.cost;
-                        state.learned.push(p.id);
-                        state.profession = p.id;
-                        state.level += 1;
-                        const bonus = Math.floor(p.cost * 0.1);
-                        state.money += bonus;
-                        updateUI();
-                    }
+                if (!isLearned) {
+                    learned.push(p.id);
+                    renderProfessions();
+                    // Показываем уведомление
+                    showToast(`✅ ${p.name} изучена!`);
                 }
             });
 
@@ -437,37 +334,31 @@
         });
     }
 
-    function saveGame() {
-        try {
-            localStorage.setItem('simulatorLife', JSON.stringify(state));
-        } catch(e) {}
-    }
+    function showToast(text) {
+        const old = document.querySelector('.toast-custom');
+        if (old) old.remove();
 
-    function loadGame() {
-        try {
-            const saved = localStorage.getItem('simulatorLife');
-            if (saved) {
-                const data = JSON.parse(saved);
-                state.money = data.money || 0;
-                state.profession = data.profession || null;
-                state.level = data.level || 1;
-                state.learned = data.learned || [];
-            }
-        } catch(e) {}
-    }
-
-    // ===== ЗАРАБОТОК =====
-    function workIncome() {
-        let income = 1;
-        if (state.profession) {
-            const prof = professions.find(p => p.id === state.profession);
-            if (prof) {
-                income = Math.floor(prof.cost / 100) + 2;
-            }
-        }
-        income += state.level;
-        state.money += income;
-        updateUI();
+        const toast = document.createElement('div');
+        toast.className = 'toast-custom';
+        toast.textContent = text;
+        Object.assign(toast.style, {
+            position: 'absolute',
+            bottom: '30px',
+            left: '50%',
+            transform: 'translateX(-50%)',
+            background: 'rgba(0,0,0,0.9)',
+            color: '#fff',
+            padding: '12px 24px',
+            borderRadius: '30px',
+            fontSize: '14px',
+            border: '1px solid #333',
+            backdropFilter: 'blur(10px)',
+            whiteSpace: 'nowrap',
+            zIndex: '200',
+            transition: 'opacity 0.3s'
+        });
+        document.getElementById('phoneScreen').appendChild(toast);
+        setTimeout(() => { toast.remove(); }, 2000);
     }
 
     // ===== ВРЕМЯ =====
@@ -503,22 +394,9 @@
         if (e.target === bankModal) bankModal.classList.remove('active');
     });
 
-    // Тап по экрану для заработка
-    document.getElementById('phoneScreen').addEventListener('click', (e) => {
-        if (!e.target.closest('.modal') && !e.target.closest('.app-item') && !e.target.closest('.profession-btn')) {
-            state.money += 1;
-            updateUI();
-        }
-    });
-
     // ===== ЗАПУСК =====
-    loadGame();
-    updateUI();
     updateTime();
     setInterval(updateTime, 10000);
-    setInterval(workIncome, 3000);
-
-    console.log('🔥 Симулятор запущен! Тапай по экрану для заработка.');
 </script>
 </body>
-                    </html>
+                                                                                        </html>
