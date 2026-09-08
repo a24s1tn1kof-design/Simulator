@@ -359,9 +359,9 @@
     // ===== СОСТОЯНИЕ =====
     let state = {
         money: 0,
-        profession: null, // id профессии
+        profession: null,
         level: 1,
-        learned: [] // массив id выученных профессий
+        learned: []
     };
 
     // ===== DOM =====
@@ -390,7 +390,6 @@
             const isLearned = state.learned.includes(p.id);
             const isCurrent = state.profession === p.id;
             const canAfford = state.money >= p.cost;
-            const alreadyHas = state.learned.includes(p.id);
 
             const card = document.createElement('div');
             card.className = 'profession-card';
@@ -417,17 +416,14 @@
             btn.addEventListener('click', (e) => {
                 e.stopPropagation();
                 if (isLearned) {
-                    // Выбрать профессию
                     state.profession = p.id;
                     updateUI();
                 } else {
-                    // Учиться
                     if (state.money >= p.cost) {
                         state.money -= p.cost;
                         state.learned.push(p.id);
                         state.profession = p.id;
                         state.level += 1;
-                        // Бонус за изучение
                         const bonus = Math.floor(p.cost * 0.1);
                         state.money += bonus;
                         updateUI();
@@ -460,7 +456,7 @@
         } catch(e) {}
     }
 
-    // ===== ЗАРАБОТОК (пассивный) =====
+    // ===== ЗАРАБОТОК =====
     function workIncome() {
         let income = 1;
         if (state.profession) {
@@ -500,7 +496,6 @@
         bankModal.classList.remove('active');
     });
 
-    // Закрытие по клику вне модалки
     studyModal.addEventListener('click', (e) => {
         if (e.target === studyModal) studyModal.classList.remove('active');
     });
@@ -508,26 +503,22 @@
         if (e.target === bankModal) bankModal.classList.remove('active');
     });
 
-    // ===== ЗАПУСК =====
-    loadGame();
-    updateUI();
-    updateTime();
-    setInterval(updateTime, 10000);
-
-    // Пассивный доход каждые 3 секунды
-    setInterval(workIncome, 3000);
-
-    // Кнопка "заработать" скрыта, но можно добавить тап-доход
-    // Добавим тап по экрану для быстрого заработка (как кликер)
+    // Тап по экрану для заработка
     document.getElementById('phoneScreen').addEventListener('click', (e) => {
-        // Если клик не по кнопке и не по модалке
         if (!e.target.closest('.modal') && !e.target.closest('.app-item') && !e.target.closest('.profession-btn')) {
             state.money += 1;
             updateUI();
         }
     });
 
+    // ===== ЗАПУСК =====
+    loadGame();
+    updateUI();
+    updateTime();
+    setInterval(updateTime, 10000);
+    setInterval(workIncome, 3000);
+
     console.log('🔥 Симулятор запущен! Тапай по экрану для заработка.');
 </script>
 </body>
-</html>
+                    </html>
