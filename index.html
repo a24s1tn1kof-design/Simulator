@@ -278,6 +278,7 @@
 </div>
 
 <script>
+    // ДАННЫЕ
     const professions = [
         { id: 'mchs', name: 'МЧС', desc: 'Спасатель, пожарный' },
         { id: 'medic', name: 'Медик', desc: 'Врач, фельдшер' },
@@ -309,6 +310,7 @@
         ]
     };
 
+    // СОСТОЯНИЕ
     let state = {
         selectedProfession: null,
         startDate: null,
@@ -324,10 +326,12 @@
     let examQuestionsCache = [];
     let updateInterval = null;
 
+    // DOM
     const studyModal = document.getElementById('studyModal');
     const bankModal = document.getElementById('bankModal');
     const studyContent = document.getElementById('studyContent');
 
+    // ТОСТ
     function showToast(text) {
         const old = document.querySelector('.toast-custom');
         if (old) old.remove();
@@ -338,6 +342,7 @@
         setTimeout(() => toast.remove(), 3000);
     }
 
+    // СОХРАНЕНИЕ
     function saveState() {
         try { localStorage.setItem('simulatorState', JSON.stringify(state)); } catch(e) {}
     }
@@ -360,6 +365,7 @@
         } catch(e) {}
     }
 
+    // ДНИ
     function getDaysPassed() {
         if (!state.startDate) return 0;
         const start = new Date(state.startDate);
@@ -368,6 +374,7 @@
         return Math.floor(diff / (1000 * 60 * 60 * 24));
     }
 
+    // ПРОВЕРКА ПРОГРЕССА
     function checkProgress() {
         if (!state.selectedProfession || state.finished) return;
         const days = getDaysPassed();
@@ -389,6 +396,7 @@
         }
     }
 
+    // ОТРИСОВКА УЧЕБЫ
     function renderStudy() {
         const prof = professions.find(p => p.id === state.selectedProfession);
         const days = getDaysPassed();
@@ -459,6 +467,7 @@
         document.getElementById('startExam2')?.addEventListener('click', () => startExam(2));
     }
 
+    // СПИСОК ПРОФЕССИЙ
     function renderProfessionList() {
         const list = document.getElementById('professionList');
         if (!list) return;
@@ -480,6 +489,7 @@
         });
     }
 
+    // ВЫБОР ПРОФЕССИИ
     function selectProfession(id) {
         if (state.selectedProfession) {
             showToast('Профессия уже выбрана. Выбрать можно только один раз.');
@@ -497,6 +507,7 @@
         updateInterval = setInterval(checkProgress, 10000);
     }
 
+    // НАЧАЛО ЭКЗАМЕНА
     function startExam(examNumber) {
         if (state.examMode) return;
         const profId = state.selectedProfession;
@@ -514,6 +525,7 @@
         renderStudy();
     }
 
+    // ОТРИСОВКА ЭКЗАМЕНА
     function renderExam() {
         const questions = examQuestionsCache;
         if (!questions || questions.length === 0) {
@@ -528,10 +540,4 @@
 
         const q = questions[idx];
         let html = `
-            <div class="exam-block" style="background:rgba(79,172,254,0.05);border-color:#4facfe;">
-                <div class="title">Вопрос ${idx+1} из ${questions.length}</div>
-                <div class="question">${q.q}</div>
-                <div class="exam-options" id="examOptions">
-        `;
-
-        
+            <div class="exam-block" style="background:rgba(79,172,254,0.05);border-
