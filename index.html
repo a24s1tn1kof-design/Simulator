@@ -38,7 +38,6 @@
             scroll-behavior: smooth;
         }
 
-        /* СТАТУС-БАР */
         .status-bar {
             display: flex;
             justify-content: space-between;
@@ -50,7 +49,6 @@
             border-bottom: 1px solid #1a1a2a;
             margin-bottom: 16px;
         }
-        .status-bar .time { color: #fff; }
         .status-icons { display: flex; gap: 6px; font-size: 13px; }
 
         .apps-grid {
@@ -78,7 +76,6 @@
             justify-content: center;
             font-size: 28px;
             box-shadow: 0 6px 20px rgba(0,0,0,0.4);
-            transition: 0.2s;
         }
         .app-icon.study { background: linear-gradient(135deg, #4facfe, #00f2fe); }
         .app-icon.bank { background: linear-gradient(135deg, #43e97b, #38f9d7); }
@@ -132,7 +129,6 @@
             align-items: center;
             transition: 0.2s;
         }
-        .profession-card:active { transform: scale(0.97); }
         .profession-card .info h3 { color: #fff; font-size: 15px; font-weight: 600; }
         .profession-card .info p { color: #888; font-size: 12px; margin-top: 2px; }
 
@@ -161,7 +157,6 @@
             background: #2ecc71;
             box-shadow: 0 4px 15px rgba(46,204,113,0.3);
         }
-        .profession-btn.hidden { display: none; }
 
         .empty-bank { text-align: center; padding: 50px 0; color: #555; }
         .empty-bank .big-icon { font-size: 64px; margin-bottom: 16px; }
@@ -258,7 +253,7 @@
 
         <!-- СТАТУС-БАР -->
         <div class="status-bar">
-            <span class="time" id="statusTime">12:00</span>
+            <span id="statusTime">12:00</span>
             <div class="status-icons">
                 <span>📶</span>
                 <span>📶</span>
@@ -266,12 +261,13 @@
             </div>
         </div>
 
+        <!-- ПРИЛОЖЕНИЯ -->
         <div class="apps-grid">
-            <div class="app-item" id="studyApp">
+            <div class="app-item" onclick="openStudy()">
                 <div class="app-icon study">📚</div>
                 <span class="app-name">Учеба</span>
             </div>
-            <div class="app-item" id="bankApp">
+            <div class="app-item" onclick="openBank()">
                 <div class="app-icon bank">🏦</div>
                 <span class="app-name">Банк</span>
             </div>
@@ -281,18 +277,20 @@
             </div>
         </div>
 
+        <!-- МОДАЛКА УЧЕБА -->
         <div class="modal" id="studyModal">
             <div class="modal-header">
                 <h2>Учеба</h2>
-                <button class="modal-close" id="closeStudy">✕</button>
+                <button class="modal-close" onclick="closeStudy()">✕</button>
             </div>
             <div id="studyContent"></div>
         </div>
 
+        <!-- МОДАЛКА БАНК -->
         <div class="modal" id="bankModal">
             <div class="modal-header">
                 <h2>Банк</h2>
-                <button class="modal-close" id="closeBank">✕</button>
+                <button class="modal-close" onclick="closeBank()">✕</button>
             </div>
             <div class="empty-bank">
                 <div class="big-icon">🏦</div>
@@ -304,7 +302,43 @@
 </div>
 
 <script>
-    // ДАННЫЕ
+    // ===== ВРЕМЯ =====
+    function updateTime() {
+        const now = new Date();
+        const h = String(now.getHours()).padStart(2, '0');
+        const m = String(now.getMinutes()).padStart(2, '0');
+        document.getElementById('statusTime').textContent = `${h}:${m}`;
+    }
+    updateTime();
+    setInterval(updateTime, 10000);
+
+    // ===== ОТКРЫТИЕ ПРИЛОЖЕНИЙ =====
+    function openStudy() {
+        document.getElementById('studyModal').classList.add('active');
+        renderStudy();
+    }
+
+    function openBank() {
+        document.getElementById('bankModal').classList.add('active');
+    }
+
+    function closeStudy() {
+        document.getElementById('studyModal').classList.remove('active');
+    }
+
+    function closeBank() {
+        document.getElementById('bankModal').classList.remove('active');
+    }
+
+    // Закрытие по клику на фон
+    document.getElementById('studyModal').addEventListener('click', function(e) {
+        if (e.target === this) this.classList.remove('active');
+    });
+    document.getElementById('bankModal').addEventListener('click', function(e) {
+        if (e.target === this) this.classList.remove('active');
+    });
+
+    // ===== ДАННЫЕ =====
     const professions = [
         { id: 'mchs', name: 'МЧС', desc: 'Спасатель, пожарный' },
         { id: 'medic', name: 'Медик', desc: 'Врач, фельдшер' },
@@ -336,7 +370,7 @@
         ]
     };
 
-    // СОСТОЯНИЕ
+    // ===== СОСТОЯНИЕ =====
     let state = {
         selectedProfession: null,
         startDate: null,
@@ -352,21 +386,7 @@
     let examQuestionsCache = [];
     let updateInterval = null;
 
-    // DOM
-    const studyModal = document.getElementById('studyModal');
-    const bankModal = document.getElementById('bankModal');
-    const studyContent = document.getElementById('studyContent');
-    const statusTime = document.getElementById('statusTime');
-
-    // ВРЕМЯ
-    function updateTime() {
-        const now = new Date();
-        const h = String(now.getHours()).padStart(2, '0');
-        const m = String(now.getMinutes()).padStart(2, '0');
-        statusTime.textContent = `${h}:${m}`;
-    }
-
-    // ТОСТ
+    // ===== ФУНКЦИИ =====
     function showToast(text) {
         const old = document.querySelector('.toast-custom');
         if (old) old.remove();
@@ -377,7 +397,6 @@
         setTimeout(() => toast.remove(), 3000);
     }
 
-    // СОХРАНЕНИЕ
     function saveState() {
         try { localStorage.setItem('simulatorState', JSON.stringify(state)); } catch(e) {}
     }
@@ -400,7 +419,6 @@
         } catch(e) {}
     }
 
-    // ДНИ
     function getDaysPassed() {
         if (!state.startDate) return 0;
         const start = new Date(state.startDate);
@@ -409,7 +427,6 @@
         return Math.floor(diff / (1000 * 60 * 60 * 24));
     }
 
-    // ПРОВЕРКА ПРОГРЕССА
     function checkProgress() {
         if (!state.selectedProfession || state.finished) return;
         const days = getDaysPassed();
@@ -424,21 +441,33 @@
             state.finished = true;
             saveState();
             showToast('Обучение завершено! Поздравляем!');
-            if (studyModal.classList.contains('active')) renderStudy();
+            if (document.getElementById('studyModal').classList.contains('active')) renderStudy();
         }
-        if (studyModal.classList.contains('active')) {
+        if (document.getElementById('studyModal').classList.contains('active')) {
             renderStudy();
         }
     }
 
-    // ОТРИСОВКА УЧЕБЫ
     function renderStudy() {
+        const studyContent = document.getElementById('studyContent');
         const prof = professions.find(p => p.id === state.selectedProfession);
         const days = getDaysPassed();
 
         if (!state.selectedProfession) {
-            studyContent.innerHTML = `<div class="profession-list" id="professionList"></div>`;
-            renderProfessionList();
+            let html = `<div class="profession-list">`;
+            professions.forEach(p => {
+                html += `
+                    <div class="profession-card">
+                        <div class="info">
+                            <h3>${p.name}</h3>
+                            <p>${p.desc}</p>
+                        </div>
+                        <button class="profession-btn" onclick="selectProfession('${p.id}')">Выбрать</button>
+                    </div>
+                `;
+            });
+            html += `</div>`;
+            studyContent.innerHTML = html;
             return;
         }
 
@@ -472,7 +501,7 @@
                 <div class="exam-block">
                     <div class="title">Экзамен 1 (неделя 1)</div>
                     <div style="margin-top:10px;">
-                        <button class="profession-btn" id="startExam1" style="width:100%;">Начать экзамен</button>
+                        <button class="profession-btn" onclick="startExam(1)" style="width:100%;">Начать экзамен</button>
                     </div>
                 </div>
             `;
@@ -483,7 +512,7 @@
                 <div class="exam-block">
                     <div class="title">Экзамен 2 (неделя 2)</div>
                     <div style="margin-top:10px;">
-                        <button class="profession-btn" id="startExam2" style="width:100%;">Начать экзамен</button>
+                        <button class="profession-btn" onclick="startExam(2)" style="width:100%;">Начать экзамен</button>
                     </div>
                 </div>
             `;
@@ -498,33 +527,8 @@
         }
 
         studyContent.innerHTML = html;
-        document.getElementById('startExam1')?.addEventListener('click', () => startExam(1));
-        document.getElementById('startExam2')?.addEventListener('click', () => startExam(2));
     }
 
-    // СПИСОК ПРОФЕССИЙ
-    function renderProfessionList() {
-        const list = document.getElementById('professionList');
-        if (!list) return;
-        list.innerHTML = '';
-        professions.forEach(p => {
-            const card = document.createElement('div');
-            card.className = 'profession-card';
-            card.innerHTML = `
-                <div class="info">
-                    <h3>${p.name}</h3>
-                    <p>${p.desc}</p>
-                </div>
-                <button class="profession-btn" data-id="${p.id}">Выбрать</button>
-            `;
-            card.querySelector('button').addEventListener('click', () => {
-                selectProfession(p.id);
-            });
-            list.appendChild(card);
-        });
-    }
-
-    // ВЫБОР ПРОФЕССИИ
     function selectProfession(id) {
         if (state.selectedProfession) {
             showToast('Профессия уже выбрана. Выбрать можно только один раз.');
@@ -537,6 +541,4 @@
         state.finished = false;
         saveState();
         renderStudy();
-        showToast('Обучение началось! Длительность: 14 дней.');
-        if (updateInterval) clearInterval(updateInterval);
-        updateInterval = setInterval(checkProgress
+        showToast('Обучение началось! Длительност
