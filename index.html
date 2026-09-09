@@ -52,7 +52,6 @@
         }
         .status-icons { display: flex; gap: 6px; font-size: 13px; align-items: center; }
 
-        /* СЕТКА 3x3 */
         .apps-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -64,6 +63,28 @@
             touch-action: none;
         }
 
+        /* Сетка для перетаскивания */
+        .drop-zone {
+            border: 2px dashed rgba(255,255,255,0.08);
+            border-radius: 16px;
+            min-height: 120px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: rgba(255,255,255,0.05);
+            font-size: 12px;
+            transition: all 0.2s;
+            background: rgba(255,255,255,0.01);
+        }
+        .drop-zone.drag-over {
+            border-color: #2ecc71;
+            background: rgba(46,204,113,0.05);
+            transform: scale(1.02);
+        }
+        .drop-zone .placeholder-text {
+            pointer-events: none;
+        }
+
         .app-item {
             display: flex;
             flex-direction: column;
@@ -71,29 +92,21 @@
             gap: 6px;
             cursor: grab;
             touch-action: none;
-            transition: transform 0.12s, opacity 0.2s, box-shadow 0.2s, border 0.2s;
+            transition: transform 0.12s, opacity 0.2s;
             z-index: 1;
             padding: 10px 8px;
             border-radius: 14px;
             background: transparent;
-            border: 2px solid transparent;
+            border: none;
             -webkit-tap-highlight-color: transparent;
             position: relative;
         }
         .app-item:active { transform: scale(0.92); }
         .app-item.dragging {
-            opacity: 0.35;
-            transform: scale(0.9);
-            z-index: 999;
-            background: rgba(255,255,255,0.04);
-            border-radius: 14px;
-            box-shadow: 0 8px 30px rgba(0,0,0,0.4);
-        }
-        .app-item.drag-over {
-            border: 2px dashed rgba(79,172,254,0.6);
-            background: rgba(79,172,254,0.08);
-            transform: scale(1.04);
-            border-radius: 14px;
+            opacity: 0;
+            transform: scale(0.8);
+            z-index: 0;
+            pointer-events: none;
         }
         .app-icon {
             width: 62px;
@@ -120,6 +133,43 @@
             text-align: center;
             line-height: 1.2;
             text-shadow: 0 1px 4px rgba(0,0,0,0.5);
+        }
+
+        /* Клон при перетаскивании */
+        .drag-clone {
+            position: fixed;
+            pointer-events: none;
+            z-index: 9999;
+            opacity: 0.9;
+            transform: scale(1.08);
+            background: rgba(255,255,255,0.05);
+            border-radius: 14px;
+            padding: 10px 8px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.6);
+            border: 2px solid rgba(46,204,113,0.3);
+            transition: none;
+        }
+
+        .apply-btn {
+            background: #2ecc71;
+            border: none;
+            color: #fff;
+            padding: 12px 24px;
+            border-radius: 30px;
+            font-weight: 700;
+            font-size: 16px;
+            cursor: pointer;
+            touch-action: manipulation;
+            transition: 0.2s;
+            box-shadow: 0 4px 20px rgba(46,204,113,0.3);
+            width: 100%;
+            margin-top: 16px;
+        }
+        .apply-btn:active { transform: scale(0.96); }
+        .apply-btn:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+            box-shadow: none;
         }
 
         .modal {
@@ -315,7 +365,7 @@
             .app-item { padding: 6px; }
         }
 
-        /* ===== БАНК В СТИЛЕ СБЕРБАНКА ===== */
+        /* ===== БАНК ===== */
         .sber-card {
             background: linear-gradient(135deg, #1a6d3e, #0d4a2a);
             border-radius: 16px;
@@ -527,21 +577,12 @@
             </div>
         </div>
 
-        <!-- СЕТКА 3x3 -->
         <div class="apps-grid" id="appsGrid">
-            <div class="app-item" id="studyAppBtn">
-                <div class="app-icon study">📚</div>
-                <span class="app-name">Учеба</span>
-            </div>
-            <div class="app-item" id="bankAppBtn">
-                <div class="app-icon bank">🏦</div>
-                <span class="app-name">Банк</span>
-            </div>
-            <div class="app-item">
-                <div class="app-icon locked">🔒</div>
-                <span class="app-name">Скоро</span>
-            </div>
+            <!-- Иконки будут вставляться сюда через JS -->
         </div>
+
+        <!-- Кнопка "Применить" -->
+        <button class="apply-btn" id="applyBtn" disabled>✅ Применить</button>
 
         <div class="modal" id="studyModal">
             <div class="modal-header">
@@ -598,15 +639,66 @@
     setInterval(updateBattery, 5000);
 
     // ============================================================
-    // DRAG-AND-DROP (СЕТКА 3x3)
+    // DRAG-AND-DROP С СЕТКОЙ И КНОПКОЙ "ПРИМЕНИТЬ"
     // ============================================================
     var dragData = {
         dragEl: null,
         offsetX: 0,
         offsetY: 0,
         clone: null,
-        isDragging: false
+        isDragging: false,
+        targetIndex: -1,
+        startIndex: -1
     };
+
+    var appItems = [
+        { id: 'studyAppBtn', icon: 'study', label: 'Учеба', emoji: '📚' },
+        { id: 'bankAppBtn', icon: 'bank', label: 'Банк', emoji: '🏦' },
+        { id: 'lockedAppBtn', icon: 'locked', label: 'Скоро', emoji: '🔒' }
+    ];
+
+    var currentOrder = [];
+
+    function renderGrid(order) {
+        var grid = document.getElementById('appsGrid');
+        grid.innerHTML = '';
+
+        // Добавляем 3 пустые зоны для перетаскивания
+        var totalSlots = 9;
+        var itemsToShow = order || ['studyAppBtn', 'bankAppBtn', 'lockedAppBtn'];
+
+        for (var i = 0; i < totalSlots; i++) {
+            var slot = document.createElement('div');
+            slot.className = 'drop-zone';
+            slot.dataset.index = i;
+
+            if (i < itemsToShow.length) {
+                var appId = itemsToShow[i];
+                var app = appItems.find(function(a) { return a.id === appId; });
+                if (app) {
+                    var itemDiv = document.createElement('div');
+                    itemDiv.className = 'app-item';
+                    itemDiv.id = app.id;
+                    itemDiv.draggable = false;
+                    itemDiv.innerHTML = `
+                        <div class="app-icon ${app.icon}">${app.emoji}</div>
+                        <span class="app-name">${app.label}</span>
+                    `;
+                    slot.appendChild(itemDiv);
+                    slot.style.border = 'none';
+                    slot.style.background = 'none';
+                    slot.style.minHeight = 'auto';
+                }
+            } else {
+                slot.innerHTML = '<span class="placeholder-text">⬜</span>';
+            }
+
+            grid.appendChild(slot);
+        }
+
+        initDrag();
+        updateApplyBtn();
+    }
 
     function initDrag() {
         document.querySelectorAll('.app-item').forEach(function(item) {
@@ -619,8 +711,20 @@
             });
         });
 
+        // Подсветка зон при перетаскивании
         document.addEventListener('pointermove', function(e) {
-            if (dragData.isDragging) moveDrag(e);
+            if (dragData.isDragging) {
+                document.querySelectorAll('.drop-zone').forEach(function(zone) {
+                    var rect = zone.getBoundingClientRect();
+                    var cx = rect.left + rect.width/2, cy = rect.top + rect.height/2;
+                    var dist = Math.sqrt(Math.pow(e.clientX - cx, 2) + Math.pow(e.clientY - cy, 2));
+                    if (dist < 80 && !zone.querySelector('.app-item')) {
+                        zone.classList.add('drag-over');
+                    } else {
+                        zone.classList.remove('drag-over');
+                    }
+                });
+            }
         });
 
         document.addEventListener('pointerup', function(e) {
@@ -630,111 +734,126 @@
 
     function startDrag(e, item) {
         var rect = item.getBoundingClientRect();
+        var parentZone = item.closest('.drop-zone');
         dragData.dragEl = item;
         dragData.offsetX = e.clientX - rect.left;
         dragData.offsetY = e.clientY - rect.top;
         dragData.isDragging = true;
+        dragData.startIndex = parseInt(parentZone.dataset.index);
 
+        // Создаём клон
         var clone = item.cloneNode(true);
-        clone.style.position = 'fixed';
+        clone.className = 'drag-clone';
         clone.style.width = rect.width + 'px';
         clone.style.left = (e.clientX - dragData.offsetX) + 'px';
         clone.style.top = (e.clientY - dragData.offsetY) + 'px';
-        clone.style.pointerEvents = 'none';
-        clone.style.zIndex = '9999';
-        clone.style.opacity = '0.85';
-        clone.style.transform = 'scale(1.04)';
-        clone.style.background = 'rgba(255,255,255,0.04)';
-        clone.style.borderRadius = '14px';
-        clone.style.padding = '10px 8px';
-        clone.style.boxShadow = '0 20px 60px rgba(0,0,0,0.5)';
         document.body.appendChild(clone);
         dragData.clone = clone;
+
+        // Скрываем оригинал
         item.classList.add('dragging');
-    }
 
-    function moveDrag(e) {
-        if (!dragData.clone) return;
-        dragData.clone.style.left = (e.clientX - dragData.offsetX) + 'px';
-        dragData.clone.style.top = (e.clientY - dragData.offsetY) + 'px';
-
-        document.querySelectorAll('.app-item:not(.dragging)').forEach(function(item) {
-            var rect = item.getBoundingClientRect();
-            var cx = rect.left + rect.width/2, cy = rect.top + rect.height/2;
-            var dist = Math.sqrt(Math.pow(e.clientX - cx, 2) + Math.pow(e.clientY - cy, 2));
-            if (dist < 80) item.classList.add('drag-over');
-            else item.classList.remove('drag-over');
-        });
+        // Активируем кнопку "Применить"
+        document.getElementById('applyBtn').disabled = false;
     }
 
     function endDrag(e) {
         if (!dragData.isDragging) return;
         if (dragData.clone) { dragData.clone.remove(); dragData.clone = null; }
 
-        var items = document.querySelectorAll('.app-item:not(.dragging)');
-        var target = null, minDist = Infinity;
-        items.forEach(function(item) {
-            var rect = item.getBoundingClientRect();
+        // Находим целевую зону
+        var targetZone = null;
+        document.querySelectorAll('.drop-zone').forEach(function(zone) {
+            var rect = zone.getBoundingClientRect();
             var cx = rect.left + rect.width/2, cy = rect.top + rect.height/2;
             var dist = Math.sqrt(Math.pow(e.clientX - cx, 2) + Math.pow(e.clientY - cy, 2));
-            if (dist < 80 && dist < minDist) { minDist = dist; target = item; }
+            if (dist < 80 && !zone.querySelector('.app-item')) {
+                targetZone = zone;
+            }
         });
 
         var dragEl = dragData.dragEl;
         dragEl.classList.remove('dragging');
-        items.forEach(function(item) { item.classList.remove('drag-over'); });
 
-        if (target && target !== dragEl) {
-            var grid = document.getElementById('appsGrid');
-            var dragIndex = Array.from(grid.children).indexOf(dragEl);
-            var targetIndex = Array.from(grid.children).indexOf(target);
+        // Если есть целевая зона — перемещаем иконку
+        if (targetZone) {
+            var targetIndex = parseInt(targetZone.dataset.index);
+            var startIndex = dragData.startIndex;
 
-            if (dragIndex < targetIndex) {
-                grid.insertBefore(dragEl, target.nextSibling);
-            } else {
-                grid.insertBefore(dragEl, target);
+            // Обновляем порядок
+            var order = getCurrentOrder();
+            var movedItem = order.splice(startIndex, 1)[0];
+            if (movedItem) {
+                order.splice(targetIndex, 0, movedItem);
+                currentOrder = order;
+                renderGrid(order);
             }
-
-            saveOrder();
+        } else {
+            // Возвращаем на место
+            var grid = document.getElementById('appsGrid');
+            var zones = grid.querySelectorAll('.drop-zone');
+            var startZone = zones[dragData.startIndex];
+            if (startZone && !startZone.querySelector('.app-item')) {
+                startZone.appendChild(dragEl);
+                startZone.style.border = 'none';
+                startZone.style.background = 'none';
+                startZone.style.minHeight = 'auto';
+                startZone.querySelector('.placeholder-text')?.remove();
+            }
         }
 
         dragData.isDragging = false;
         dragData.dragEl = null;
+        document.getElementById('applyBtn').disabled = true;
     }
 
-    function saveOrder() {
-        var grid = document.getElementById('appsGrid');
+    function getCurrentOrder() {
         var order = [];
-        grid.querySelectorAll('.app-item').forEach(function(item) {
-            order.push(item.id || '');
+        document.querySelectorAll('.drop-zone').forEach(function(zone) {
+            var item = zone.querySelector('.app-item');
+            if (item) order.push(item.id);
         });
-        localStorage.setItem('appOrder', JSON.stringify(order));
+        return order;
     }
 
+    function updateApplyBtn() {
+        var btn = document.getElementById('applyBtn');
+        btn.disabled = true;
+    }
+
+    // Сохранение порядка
+    function saveOrder() {
+        var order = getCurrentOrder();
+        localStorage.setItem('appOrder', JSON.stringify(order));
+        document.getElementById('applyBtn').disabled = true;
+        showToast('✅ Порядок сохранён!');
+    }
+
+    // Загрузка порядка
     function loadOrder() {
         try {
             var saved = localStorage.getItem('appOrder');
             if (saved) {
                 var order = JSON.parse(saved);
-                var grid = document.getElementById('appsGrid');
-                var items = grid.querySelectorAll('.app-item');
-                var map = {};
-                items.forEach(function(item) { if (item.id) map[item.id] = item; });
-                grid.innerHTML = '';
-                order.forEach(function(id) { if (map[id]) grid.appendChild(map[id]); });
-                var allIds = ['studyAppBtn', 'bankAppBtn'];
-                allIds.forEach(function(id) { if (!order.includes(id) && map[id]) grid.appendChild(map[id]); });
-                var locked = document.querySelector('.app-item .locked');
-                if (locked) {
-                    var parent = locked.closest('.app-item');
-                    if (parent && !grid.contains(parent)) grid.appendChild(parent);
-                }
-                initDrag();
+                // Проверяем, что все иконки есть
+                var allIds = ['studyAppBtn', 'bankAppBtn', 'lockedAppBtn'];
+                var validOrder = order.filter(function(id) { return allIds.includes(id); });
+                var missing = allIds.filter(function(id) { return !validOrder.includes(id); });
+                validOrder = validOrder.concat(missing);
+                currentOrder = validOrder;
+                renderGrid(validOrder);
+                return;
             }
         } catch(e) {}
+        // По умолчанию
+        currentOrder = ['studyAppBtn', 'bankAppBtn', 'lockedAppBtn'];
+        renderGrid(currentOrder);
     }
 
-    setTimeout(function() { loadOrder(); initDrag(); }, 100);
+    // Кнопка "Применить"
+    document.getElementById('applyBtn').addEventListener('click', saveOrder);
+
+    setTimeout(loadOrder, 100);
 
     // ============================================================
     // ПРОФЕССИИ
@@ -1320,12 +1439,13 @@
         if (e.target === this) closeBook();
     });
 
-    document.getElementById('studyAppBtn').addEventListener('click', function(e) {
-        if (!dragData.isDragging) openStudy();
-    });
-
-    document.getElementById('bankAppBtn').addEventListener('click', function(e) {
-        if (!dragData.isDragging) openBank();
+    // Используем делегирование для кликов по иконкам
+    document.getElementById('appsGrid').addEventListener('click', function(e) {
+        var item = e.target.closest('.app-item');
+        if (item) {
+            if (item.id === 'studyAppBtn') openStudy();
+            else if (item.id === 'bankAppBtn') openBank();
+        }
     });
 
     // ============================================================
