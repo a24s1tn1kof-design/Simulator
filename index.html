@@ -36,6 +36,7 @@
             overflow-y: auto;
             position: relative;
             scroll-behavior: smooth;
+            -webkit-tap-highlight-color: transparent;
         }
         .status-bar {
             display: flex;
@@ -47,70 +48,77 @@
             padding-bottom: 12px;
             border-bottom: 1px solid #1a1a2a;
             margin-bottom: 16px;
+            -webkit-tap-highlight-color: transparent;
         }
         .status-icons { display: flex; gap: 6px; font-size: 13px; align-items: center; }
 
-        .apps-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 18px 12px;
-            margin-top: 20px;
+        .apps-container {
             position: relative;
-            min-height: 350px;
+            width: 100%;
+            height: 520px;
+            min-height: 380px;
+            -webkit-tap-highlight-color: transparent;
+            touch-action: none;
         }
+
         .app-item {
+            position: absolute;
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 6px;
-            cursor: pointer;
+            gap: 4px;
+            cursor: grab;
             touch-action: none;
-            transition: transform 0.15s;
-            position: relative;
+            transition: transform 0.12s, opacity 0.2s, box-shadow 0.2s;
             z-index: 1;
-            padding: 8px;
-            border-radius: 12px;
+            padding: 6px 10px;
+            border-radius: 14px;
+            background: transparent;
+            border: none;
+            -webkit-tap-highlight-color: transparent;
+            width: 74px;
         }
-        .app-item:active { transform: scale(0.95); }
+        .app-item:active { transform: scale(0.92); }
         .app-item.dragging {
-            opacity: 0.5;
-            transform: scale(0.9);
+            opacity: 0.35;
+            transform: scale(0.92);
             z-index: 999;
+            background: rgba(255,255,255,0.04);
+            border-radius: 14px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.4);
         }
         .app-item.drag-over {
-            transform: scale(1.05);
+            transform: scale(1.06);
             background: rgba(255,255,255,0.05);
-            border-radius: 12px;
+            border-radius: 14px;
         }
-        .app-item .drag-handle {
-            font-size: 10px;
-            opacity: 0.3;
-            cursor: grab;
-            margin-bottom: 2px;
-            padding: 4px 8px;
-            user-select: none;
-            touch-action: none;
-            border-radius: 4px;
-            transition: 0.2s;
-        }
-        .app-item .drag-handle:hover { opacity: 0.6; background: rgba(255,255,255,0.05); }
-        .app-item .drag-handle:active { cursor: grabbing; opacity: 0.8; }
         .app-icon {
-            width: 62px;
-            height: 62px;
-            border-radius: 16px;
+            width: 52px;
+            height: 52px;
+            border-radius: 14px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 28px;
-            box-shadow: 0 6px 20px rgba(0,0,0,0.4);
+            font-size: 24px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
             pointer-events: none;
-            transition: transform 0.15s;
+            flex-shrink: 0;
+            -webkit-tap-highlight-color: transparent;
         }
         .app-icon.study { background: linear-gradient(135deg, #4facfe, #00f2fe); }
         .app-icon.bank { background: linear-gradient(135deg, #43e97b, #38f9d7); }
         .app-icon.locked { background: linear-gradient(135deg, #2d2d44, #3d3d5c); opacity: 0.5; }
-        .app-name { color: #bbb; font-size: 11px; font-weight: 500; text-align: center; pointer-events: none; }
+        .app-name {
+            color: #ddd;
+            font-size: 10px;
+            font-weight: 500;
+            pointer-events: none;
+            -webkit-tap-highlight-color: transparent;
+            text-align: center;
+            line-height: 1.2;
+            text-shadow: 0 1px 4px rgba(0,0,0,0.5);
+        }
+        .app-item .drag-indicator { display: none; }
 
         .modal {
             display: none;
@@ -293,11 +301,16 @@
         .phone-screen::-webkit-scrollbar { width: 3px; }
         .phone-screen::-webkit-scrollbar-track { background: transparent; }
         .phone-screen::-webkit-scrollbar-thumb { background: #333; border-radius: 10px; }
+
+        * { -webkit-tap-highlight-color: transparent; }
+        *:focus { outline: none; }
+
         @media (max-width: 400px) {
             .phone { height: 95vh; border-radius: 28px; padding: 12px; }
             .phone-screen { border-radius: 20px; padding: 14px; }
-            .app-icon { width: 54px; height: 54px; font-size: 24px; }
-            .apps-grid { gap: 14px 8px; }
+            .app-icon { width: 44px; height: 44px; font-size: 20px; }
+            .app-name { font-size: 9px; }
+            .app-item { width: 64px; }
         }
     </style>
 </head>
@@ -314,19 +327,16 @@
             </div>
         </div>
 
-        <div class="apps-grid" id="appsGrid">
-            <div class="app-item" id="studyAppBtn" onclick="openStudy()">
-                <div class="drag-handle" id="dragStudy">⠿</div>
+        <div class="apps-container" id="appsContainer">
+            <div class="app-item" id="studyAppBtn" style="left: 20px; top: 10px;">
                 <div class="app-icon study">📚</div>
                 <span class="app-name">Учеба</span>
             </div>
-            <div class="app-item" id="bankAppBtn" onclick="openBank()">
-                <div class="drag-handle" id="dragBank">⠿</div>
+            <div class="app-item" id="bankAppBtn" style="left: 110px; top: 10px;">
                 <div class="app-icon bank">🏦</div>
                 <span class="app-name">Банк</span>
             </div>
-            <div class="app-item">
-                <div class="drag-handle">⠿</div>
+            <div class="app-item" style="left: 200px; top: 10px;">
                 <div class="app-icon locked">🔒</div>
                 <span class="app-name">Скоро</span>
             </div>
@@ -357,9 +367,9 @@
         </div>
 
     </div>
-</div>
-<script>
-    // ===== DRAG-AND-DROP ДЛЯ ИКОНОК =====
+    </div>
+    <script>
+    // ===== DRAG-AND-DROP С АБСОЛЮТНЫМ ПОЗИЦИОНИРОВАНИЕМ =====
     var dragData = {
         dragEl: null,
         offsetX: 0,
@@ -369,13 +379,15 @@
     };
 
     function initDrag() {
-        var handles = document.querySelectorAll('.drag-handle');
-        handles.forEach(function(handle) {
-            handle.addEventListener('pointerdown', function(e) {
-                e.preventDefault();
-                e.stopPropagation();
-                var item = handle.closest('.app-item');
-                if (item) startDrag(e, item);
+        var items = document.querySelectorAll('.app-item');
+        items.forEach(function(item) {
+            item.addEventListener('pointerdown', function(e) {
+                var target = e.target;
+                if (target.closest('.app-icon') || target.closest('.app-name') || target.closest('.app-item')) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    startDrag(e, item);
+                }
             });
         });
 
@@ -390,6 +402,9 @@
 
     function startDrag(e, item) {
         var rect = item.getBoundingClientRect();
+        var container = document.getElementById('appsContainer');
+        var containerRect = container.getBoundingClientRect();
+
         dragData.dragEl = item;
         dragData.offsetX = e.clientX - rect.left;
         dragData.offsetY = e.clientY - rect.top;
@@ -403,16 +418,15 @@
         clone.style.pointerEvents = 'none';
         clone.style.zIndex = '9999';
         clone.style.opacity = '0.85';
-        clone.style.transform = 'scale(1.05)';
-        clone.style.background = 'rgba(255,255,255,0.05)';
-        clone.style.borderRadius = '12px';
-        clone.style.padding = '8px';
+        clone.style.transform = 'scale(1.04)';
+        clone.style.background = 'rgba(255,255,255,0.04)';
+        clone.style.borderRadius = '14px';
+        clone.style.padding = '6px 10px';
         clone.style.boxShadow = '0 20px 60px rgba(0,0,0,0.5)';
         document.body.appendChild(clone);
         dragData.clone = clone;
 
         item.classList.add('dragging');
-        item.style.opacity = '0.3';
     }
 
     function moveDrag(e) {
@@ -426,7 +440,7 @@
             var centerX = rect.left + rect.width / 2;
             var centerY = rect.top + rect.height / 2;
             var dist = Math.sqrt(Math.pow(e.clientX - centerX, 2) + Math.pow(e.clientY - centerY, 2));
-            if (dist < 80) item.classList.add('drag-over');
+            if (dist < 60) item.classList.add('drag-over');
             else item.classList.remove('drag-over');
         });
     }
@@ -444,60 +458,80 @@
             var centerX = rect.left + rect.width / 2;
             var centerY = rect.top + rect.height / 2;
             var dist = Math.sqrt(Math.pow(e.clientX - centerX, 2) + Math.pow(e.clientY - centerY, 2));
-            if (dist < 80 && dist < minDist) { minDist = dist; targetItem = item; }
+            if (dist < 60 && dist < minDist) { minDist = dist; targetItem = item; }
         });
 
         var dragEl = dragData.dragEl;
         dragEl.classList.remove('dragging');
-        dragEl.style.opacity = '1';
         items.forEach(function(item) { item.classList.remove('drag-over'); });
 
         if (targetItem && targetItem !== dragEl) {
-            var grid = document.getElementById('appsGrid');
-            var dragIndex = Array.from(grid.children).indexOf(dragEl);
-            var targetIndex = Array.from(grid.children).indexOf(targetItem);
-            if (dragIndex < targetIndex) grid.insertBefore(dragEl, targetItem.nextSibling);
-            else grid.insertBefore(dragEl, targetItem);
-            saveAppOrder();
+            var container = document.getElementById('appsContainer');
+
+            var dragLeft = dragEl.style.left;
+            var dragTop = dragEl.style.top;
+            var targetLeft = targetItem.style.left;
+            var targetTop = targetItem.style.top;
+
+            dragEl.style.left = targetLeft;
+            dragEl.style.top = targetTop;
+            targetItem.style.left = dragLeft;
+            targetItem.style.top = dragTop;
+
+            var dragIndex = Array.from(container.children).indexOf(dragEl);
+            var targetIndex = Array.from(container.children).indexOf(targetItem);
+
+            if (dragIndex < targetIndex) {
+                container.insertBefore(dragEl, targetItem.nextSibling);
+            } else {
+                container.insertBefore(dragEl, targetItem);
+            }
+
+            saveAppPositions();
         }
 
         dragData.isDragging = false;
         dragData.dragEl = null;
     }
 
-    function saveAppOrder() {
-        var grid = document.getElementById('appsGrid');
-        var order = [];
-        grid.querySelectorAll('.app-item').forEach(function(item) {
-            order.push(item.id || '');
+    function saveAppPositions() {
+        var container = document.getElementById('appsContainer');
+        var positions = [];
+        container.querySelectorAll('.app-item').forEach(function(item) {
+            positions.push({
+                id: item.id || '',
+                left: item.style.left,
+                top: item.style.top
+            });
         });
-        localStorage.setItem('appOrder', JSON.stringify(order));
+        localStorage.setItem('appPositions', JSON.stringify(positions));
     }
 
-    function loadAppOrder() {
+    function loadAppPositions() {
         try {
-            var saved = localStorage.getItem('appOrder');
+            var saved = localStorage.getItem('appPositions');
             if (saved) {
-                var order = JSON.parse(saved);
-                var grid = document.getElementById('appsGrid');
-                var items = grid.querySelectorAll('.app-item');
+                var positions = JSON.parse(saved);
+                var container = document.getElementById('appsContainer');
+                var items = container.querySelectorAll('.app-item');
                 var map = {};
                 items.forEach(function(item) { if (item.id) map[item.id] = item; });
-                grid.innerHTML = '';
-                order.forEach(function(id) { if (map[id]) grid.appendChild(map[id]); });
-                var allIds = ['studyAppBtn', 'bankAppBtn'];
-                allIds.forEach(function(id) { if (!order.includes(id) && map[id]) grid.appendChild(map[id]); });
-                var locked = document.querySelector('.app-item .locked');
-                if (locked) {
-                    var parent = locked.closest('.app-item');
-                    if (parent && !grid.contains(parent)) grid.appendChild(parent);
-                }
-                initDrag();
+
+                positions.forEach(function(pos) {
+                    if (pos.id && map[pos.id]) {
+                        map[pos.id].style.left = pos.left || '20px';
+                        map[pos.id].style.top = pos.top || '10px';
+                    }
+                });
+                setTimeout(initDrag, 50);
             }
         } catch(e) {}
     }
 
-    setTimeout(function() { loadAppOrder(); initDrag(); }, 100);
+    setTimeout(function() {
+        loadAppPositions();
+        initDrag();
+    }, 100);
     </script>
     <style>
     /* ===== БАНК В СТИЛЕ СБЕРБАНКА ===== */
@@ -510,6 +544,7 @@
         box-shadow: 0 8px 30px rgba(26,109,62,0.3);
         position: relative;
         overflow: hidden;
+        -webkit-tap-highlight-color: transparent;
     }
     .sber-card::before {
         content: '★';
@@ -529,7 +564,6 @@
     }
     .sber-card .card-bottom span { font-size: 10px; opacity: 0.5; }
 
-    /* НОМЕР КАРТЫ — 4 ГРУППЫ ПО 4 ЦИФРЫ */
     .card-number-box {
         background: rgba(0,0,0,0.35);
         border-radius: 10px;
@@ -541,6 +575,7 @@
         border: 1px solid rgba(255,255,255,0.06);
         transition: all 0.3s ease;
         overflow: hidden;
+        -webkit-tap-highlight-color: transparent;
     }
     .card-number-box.collapsed {
         padding: 4px 14px;
@@ -576,6 +611,7 @@
         display: flex;
         justify-content: space-between;
         align-items: center;
+        -webkit-tap-highlight-color: transparent;
     }
     .sber-balance .label { color: #888; font-size: 13px; }
     .sber-balance .amount { color: #f5c842; font-size: 24px; font-weight: 700; }
@@ -588,6 +624,7 @@
         border: 1px solid rgba(255,255,255,0.06);
         max-height: 200px;
         overflow-y: auto;
+        -webkit-tap-highlight-color: transparent;
     }
     .sber-history .history-title {
         color: #aaa;
@@ -621,6 +658,7 @@
         grid-template-columns: repeat(2, 1fr);
         gap: 8px;
         margin: 12px 0;
+        -webkit-tap-highlight-color: transparent;
     }
     .sber-menu-item {
         background: rgba(255,255,255,0.04);
@@ -631,6 +669,7 @@
         cursor: pointer;
         transition: 0.2s;
         color: #ddd;
+        -webkit-tap-highlight-color: transparent;
     }
     .sber-menu-item:active { transform: scale(0.95); background: rgba(255,255,255,0.08); }
     .sber-menu-item .icon { font-size: 24px; display: block; margin-bottom: 4px; }
@@ -646,6 +685,7 @@
         width: 100%;
         outline: none;
         margin-bottom: 10px;
+        -webkit-tap-highlight-color: transparent;
     }
     .sber-input::placeholder { color: #555; }
     .sber-input:focus { border-color: #1a6d3e; }
@@ -663,6 +703,7 @@
         transition: 0.2s;
         width: 100%;
         margin-top: 4px;
+        -webkit-tap-highlight-color: transparent;
     }
     .sber-btn:active { transform: scale(0.96); }
     .sber-btn.green { background: linear-gradient(135deg, #2ecc71, #27ae60); }
@@ -679,6 +720,7 @@
         cursor: pointer;
         touch-action: manipulation;
         transition: 0.2s;
+        -webkit-tap-highlight-color: transparent;
     }
     .sber-back:active { transform: scale(0.92); }
 
@@ -686,6 +728,7 @@
         display: flex;
         gap: 8px;
         margin-bottom: 12px;
+        -webkit-tap-highlight-color: transparent;
     }
     .transfer-method button {
         flex: 1;
@@ -698,6 +741,7 @@
         cursor: pointer;
         transition: 0.2s;
         touch-action: manipulation;
+        -webkit-tap-highlight-color: transparent;
     }
     .transfer-method button:active { transform: scale(0.95); }
     .transfer-method button.active {
@@ -908,7 +952,6 @@
     };
 
     function generateCardNumber() {
-        // 16 цифр, разбитых на 4 группы по 4
         var groups = [];
         for (var g = 0; g < 4; g++) {
             var group = '';
@@ -1107,7 +1150,6 @@
         var daysLeft = getDaysLeft();
         var prof = getProfessionFromStudy();
 
-        // Разбиваем номер карты на 4 группы по 4 цифры
         var groups = bankData.cardNumber.split(' ');
         var displayNumber = '';
         for (var i = 0; i < groups.length; i++) {
@@ -1446,6 +1488,19 @@
     });
     document.getElementById('bookModal').addEventListener('click', function(e) {
         if (e.target === this) closeBook();
+    });
+
+    // Открытие приложений по клику на иконку
+    document.getElementById('studyAppBtn').addEventListener('click', function(e) {
+        if (!dragData.isDragging) {
+            openStudy();
+        }
+    });
+
+    document.getElementById('bankAppBtn').addEventListener('click', function(e) {
+        if (!dragData.isDragging) {
+            openBank();
+        }
     });
 
     // ===== ЗАПУСК =====
