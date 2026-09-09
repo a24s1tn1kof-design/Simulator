@@ -311,6 +311,204 @@
             .app-name { font-size: 10px; }
             .app-item { width: 70px; }
         }
+
+        /* ===== БАНК В СТИЛЕ СБЕРБАНКА ===== */
+        .sber-card {
+            background: linear-gradient(135deg, #1a6d3e, #0d4a2a);
+            border-radius: 16px;
+            padding: 20px;
+            color: #fff;
+            margin-bottom: 12px;
+            box-shadow: 0 8px 30px rgba(26,109,62,0.3);
+            position: relative;
+            overflow: hidden;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .sber-card::before {
+            content: '★';
+            position: absolute;
+            top: -20px;
+            right: -10px;
+            font-size: 80px;
+            opacity: 0.08;
+            color: #fff;
+        }
+        .sber-card .bank-name { font-size: 12px; opacity: 0.7; letter-spacing: 1px; }
+        .sber-card .card-holder { font-size: 11px; opacity: 0.6; margin-top: 6px; text-transform: uppercase; }
+        .sber-card .card-bottom { display: flex; justify-content: space-between; margin-top: 6px; }
+        .sber-card .card-bottom span { font-size: 10px; opacity: 0.5; }
+
+        .card-number-box {
+            background: rgba(0,0,0,0.35);
+            border-radius: 10px;
+            padding: 14px 18px;
+            margin: 10px 0 8px 0;
+            text-align: center;
+            cursor: pointer;
+            user-select: none;
+            border: 1px solid rgba(255,255,255,0.06);
+            transition: all 0.3s ease;
+            overflow: hidden;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .card-number-box.collapsed { padding: 4px 14px; background: rgba(0,0,0,0.15); }
+        .card-number-box .number {
+            font-size: 20px;
+            font-weight: 600;
+            letter-spacing: 3px;
+            font-family: 'Courier New', monospace;
+            color: #fff;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+            display: flex;
+            justify-content: center;
+            gap: 6px;
+        }
+        .card-number-box .number .group { display: inline-block; }
+        .card-number-box .number.collapsed { font-size: 13px; letter-spacing: 2px; gap: 4px; }
+
+        .sber-balance {
+            background: rgba(255,255,255,0.04);
+            border-radius: 12px;
+            padding: 14px 18px;
+            margin-bottom: 16px;
+            border: 1px solid rgba(255,255,255,0.06);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .sber-balance .label { color: #888; font-size: 13px; }
+        .sber-balance .amount { color: #f5c842; font-size: 24px; font-weight: 700; }
+
+        .sber-history {
+            background: rgba(255,255,255,0.04);
+            border-radius: 12px;
+            padding: 14px 16px;
+            margin-top: 12px;
+            border: 1px solid rgba(255,255,255,0.06);
+            max-height: 200px;
+            overflow-y: auto;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .sber-history .history-title {
+            color: #aaa;
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            padding-bottom: 6px;
+        }
+        .sber-history .history-empty { color: #555; font-size: 13px; text-align: center; padding: 16px 0; }
+        .sber-history .history-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.03);
+            font-size: 13px;
+        }
+        .sber-history .history-item .h-left { color: #ccc; }
+        .sber-history .history-item .h-left .h-detail { color: #888; font-size: 11px; }
+        .sber-history .history-item .h-amount { color: #f5c842; font-weight: 600; }
+        .sber-history .history-item .h-amount.minus { color: #e74c3c; }
+
+        .sber-menu {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 8px;
+            margin: 12px 0;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .sber-menu-item {
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(255,255,255,0.06);
+            border-radius: 12px;
+            padding: 14px 10px;
+            text-align: center;
+            cursor: pointer;
+            transition: 0.2s;
+            color: #ddd;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .sber-menu-item:active { transform: scale(0.95); background: rgba(255,255,255,0.08); }
+        .sber-menu-item .icon { font-size: 24px; display: block; margin-bottom: 4px; }
+        .sber-menu-item .label { font-size: 11px; font-weight: 500; }
+
+        .sber-input {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 12px;
+            padding: 12px 14px;
+            color: #fff;
+            font-size: 15px;
+            width: 100%;
+            outline: none;
+            margin-bottom: 10px;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .sber-input::placeholder { color: #555; }
+        .sber-input:focus { border-color: #1a6d3e; }
+
+        .sber-btn {
+            background: linear-gradient(135deg, #1a6d3e, #0d4a2a);
+            border: none;
+            color: #fff;
+            padding: 12px 20px;
+            border-radius: 30px;
+            font-weight: 700;
+            font-size: 15px;
+            cursor: pointer;
+            touch-action: manipulation;
+            transition: 0.2s;
+            width: 100%;
+            margin-top: 4px;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .sber-btn:active { transform: scale(0.96); }
+        .sber-btn.green { background: linear-gradient(135deg, #2ecc71, #27ae60); }
+        .sber-btn.red { background: linear-gradient(135deg, #e74c3c, #c0392b); }
+        .sber-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+        .sber-back {
+            background: rgba(255,255,255,0.06);
+            border: none;
+            color: #4facfe;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 13px;
+            cursor: pointer;
+            touch-action: manipulation;
+            transition: 0.2s;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .sber-back:active { transform: scale(0.92); }
+
+        .transfer-method {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 12px;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .transfer-method button {
+            flex: 1;
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(255,255,255,0.08);
+            color: #aaa;
+            padding: 10px;
+            border-radius: 10px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: 0.2s;
+            touch-action: manipulation;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .transfer-method button:active { transform: scale(0.95); }
+        .transfer-method button.active { border-color: #1a6d3e; color: #fff; background: rgba(26,109,62,0.2); }
+
+        .sber-history::-webkit-scrollbar { width: 3px; }
+        .sber-history::-webkit-scrollbar-track { background: transparent; }
+        .sber-history::-webkit-scrollbar-thumb { background: #333; border-radius: 10px; }
     </style>
 </head>
 <body>
@@ -327,15 +525,15 @@
         </div>
 
         <div class="apps-container" id="appsContainer">
-            <div class="app-item" id="studyAppBtn" style="left: 20px; top: 10px;">
+            <div class="app-item" id="studyAppBtn">
                 <div class="app-icon study">📚</div>
                 <span class="app-name">Учеба</span>
             </div>
-            <div class="app-item" id="bankAppBtn" style="left: 120px; top: 10px;">
+            <div class="app-item" id="bankAppBtn">
                 <div class="app-icon bank">🏦</div>
                 <span class="app-name">Банк</span>
             </div>
-            <div class="app-item" style="left: 220px; top: 10px;">
+            <div class="app-item">
                 <div class="app-icon locked">🔒</div>
                 <span class="app-name">Скоро</span>
             </div>
@@ -366,9 +564,38 @@
         </div>
 
     </div>
-    </div>
-    <script>
-    // ===== DRAG-AND-DROP =====
+</div>
+
+<script>
+    // ============================================================
+    // ВРЕМЯ И БАТАРЕЯ
+    // ============================================================
+    function updateTime() {
+        var now = new Date();
+        document.getElementById('statusTime').textContent =
+            String(now.getHours()).padStart(2,'0') + ':' + String(now.getMinutes()).padStart(2,'0');
+    }
+    updateTime();
+    setInterval(updateTime, 5000);
+
+    function updateBattery() {
+        if (navigator.getBattery) {
+            navigator.getBattery().then(function(battery) {
+                var level = Math.round(battery.level * 100);
+                var el = document.getElementById('batteryDisplay');
+                el.textContent = '🔋 ' + level + '%';
+                el.style.color = level < 20 ? '#e74c3c' : level < 50 ? '#f5c842' : '#2ecc71';
+            }).catch(function() { document.getElementById('batteryDisplay').textContent = '🔋 72%'; });
+        } else {
+            document.getElementById('batteryDisplay').textContent = '🔋 68%';
+        }
+    }
+    updateBattery();
+    setInterval(updateBattery, 5000);
+
+    // ============================================================
+    // DRAG-AND-DROP
+    // ============================================================
     var dragData = {
         dragEl: null,
         offsetX: 0,
@@ -419,7 +646,6 @@
         clone.style.boxShadow = '0 20px 60px rgba(0,0,0,0.5)';
         document.body.appendChild(clone);
         dragData.clone = clone;
-
         item.classList.add('dragging');
     }
 
@@ -458,10 +684,10 @@
             var dragLeft = dragEl.style.left, dragTop = dragEl.style.top;
             var targetLeft = target.style.left, targetTop = target.style.top;
 
-            dragEl.style.left = targetLeft;
-            dragEl.style.top = targetTop;
-            target.style.left = dragLeft;
-            target.style.top = dragTop;
+            dragEl.style.left = targetLeft || '20px';
+            dragEl.style.top = targetTop || '10px';
+            target.style.left = dragLeft || '20px';
+            target.style.top = dragTop || '10px';
 
             var di = Array.from(container.children).indexOf(dragEl);
             var ti = Array.from(container.children).indexOf(target);
@@ -479,7 +705,11 @@
         var container = document.getElementById('appsContainer');
         var data = [];
         container.querySelectorAll('.app-item').forEach(function(item) {
-            data.push({ id: item.id || '', left: item.style.left, top: item.style.top });
+            data.push({
+                id: item.id || '',
+                left: item.style.left || '20px',
+                top: item.style.top || '10px'
+            });
         });
         localStorage.setItem('appPositions', JSON.stringify(data));
     }
@@ -500,235 +730,23 @@
                         map[p.id].style.top = p.top || '10px';
                     }
                 });
-                setTimeout(initDrag, 50);
             }
         } catch(e) {}
-    }
-
-    setTimeout(function() { loadPositions(); initDrag(); }, 100);
-    </script>
-    <style>
-    .sber-card {
-        background: linear-gradient(135deg, #1a6d3e, #0d4a2a);
-        border-radius: 16px;
-        padding: 20px;
-        color: #fff;
-        margin-bottom: 12px;
-        box-shadow: 0 8px 30px rgba(26,109,62,0.3);
-        position: relative;
-        overflow: hidden;
-        -webkit-tap-highlight-color: transparent;
-    }
-    .sber-card::before {
-        content: '★';
-        position: absolute;
-        top: -20px;
-        right: -10px;
-        font-size: 80px;
-        opacity: 0.08;
-        color: #fff;
-    }
-    .sber-card .bank-name { font-size: 12px; opacity: 0.7; letter-spacing: 1px; }
-    .sber-card .card-holder { font-size: 11px; opacity: 0.6; margin-top: 6px; text-transform: uppercase; }
-    .sber-card .card-bottom { display: flex; justify-content: space-between; margin-top: 6px; }
-    .sber-card .card-bottom span { font-size: 10px; opacity: 0.5; }
-
-    .card-number-box {
-        background: rgba(0,0,0,0.35);
-        border-radius: 10px;
-        padding: 14px 18px;
-        margin: 10px 0 8px 0;
-        text-align: center;
-        cursor: pointer;
-        user-select: none;
-        border: 1px solid rgba(255,255,255,0.06);
-        transition: all 0.3s ease;
-        overflow: hidden;
-        -webkit-tap-highlight-color: transparent;
-    }
-    .card-number-box.collapsed { padding: 4px 14px; background: rgba(0,0,0,0.15); }
-    .card-number-box .number {
-        font-size: 20px;
-        font-weight: 600;
-        letter-spacing: 3px;
-        font-family: 'Courier New', monospace;
-        color: #fff;
-        transition: all 0.3s ease;
-        white-space: nowrap;
-        display: flex;
-        justify-content: center;
-        gap: 6px;
-    }
-    .card-number-box .number .group { display: inline-block; }
-    .card-number-box .number.collapsed { font-size: 13px; letter-spacing: 2px; gap: 4px; }
-
-    .sber-balance {
-        background: rgba(255,255,255,0.04);
-        border-radius: 12px;
-        padding: 14px 18px;
-        margin-bottom: 16px;
-        border: 1px solid rgba(255,255,255,0.06);
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        -webkit-tap-highlight-color: transparent;
-    }
-    .sber-balance .label { color: #888; font-size: 13px; }
-    .sber-balance .amount { color: #f5c842; font-size: 24px; font-weight: 700; }
-
-    .sber-history {
-        background: rgba(255,255,255,0.04);
-        border-radius: 12px;
-        padding: 14px 16px;
-        margin-top: 12px;
-        border: 1px solid rgba(255,255,255,0.06);
-        max-height: 200px;
-        overflow-y: auto;
-        -webkit-tap-highlight-color: transparent;
-    }
-    .sber-history .history-title {
-        color: #aaa;
-        font-size: 13px;
-        font-weight: 600;
-        margin-bottom: 10px;
-        border-bottom: 1px solid rgba(255,255,255,0.05);
-        padding-bottom: 6px;
-    }
-    .sber-history .history-empty { color: #555; font-size: 13px; text-align: center; padding: 16px 0; }
-    .sber-history .history-item {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 8px 0;
-        border-bottom: 1px solid rgba(255,255,255,0.03);
-        font-size: 13px;
-    }
-    .sber-history .history-item .h-left { color: #ccc; }
-    .sber-history .history-item .h-left .h-detail { color: #888; font-size: 11px; }
-    .sber-history .history-item .h-amount { color: #f5c842; font-weight: 600; }
-    .sber-history .history-item .h-amount.minus { color: #e74c3c; }
-
-    .sber-menu {
-        display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        gap: 8px;
-        margin: 12px 0;
-        -webkit-tap-highlight-color: transparent;
-    }
-    .sber-menu-item {
-        background: rgba(255,255,255,0.04);
-        border: 1px solid rgba(255,255,255,0.06);
-        border-radius: 12px;
-        padding: 14px 10px;
-        text-align: center;
-        cursor: pointer;
-        transition: 0.2s;
-        color: #ddd;
-        -webkit-tap-highlight-color: transparent;
-    }
-    .sber-menu-item:active { transform: scale(0.95); background: rgba(255,255,255,0.08); }
-    .sber-menu-item .icon { font-size: 24px; display: block; margin-bottom: 4px; }
-    .sber-menu-item .label { font-size: 11px; font-weight: 500; }
-
-    .sber-input {
-        background: rgba(255,255,255,0.05);
-        border: 1px solid rgba(255,255,255,0.08);
-        border-radius: 12px;
-        padding: 12px 14px;
-        color: #fff;
-        font-size: 15px;
-        width: 100%;
-        outline: none;
-        margin-bottom: 10px;
-        -webkit-tap-highlight-color: transparent;
-    }
-    .sber-input::placeholder { color: #555; }
-    .sber-input:focus { border-color: #1a6d3e; }
-
-    .sber-btn {
-        background: linear-gradient(135deg, #1a6d3e, #0d4a2a);
-        border: none;
-        color: #fff;
-        padding: 12px 20px;
-        border-radius: 30px;
-        font-weight: 700;
-        font-size: 15px;
-        cursor: pointer;
-        touch-action: manipulation;
-        transition: 0.2s;
-        width: 100%;
-        margin-top: 4px;
-        -webkit-tap-highlight-color: transparent;
-    }
-    .sber-btn:active { transform: scale(0.96); }
-    .sber-btn.green { background: linear-gradient(135deg, #2ecc71, #27ae60); }
-    .sber-btn.red { background: linear-gradient(135deg, #e74c3c, #c0392b); }
-    .sber-btn:disabled { opacity: 0.4; cursor: not-allowed; }
-
-    .sber-back {
-        background: rgba(255,255,255,0.06);
-        border: none;
-        color: #4facfe;
-        padding: 8px 16px;
-        border-radius: 20px;
-        font-size: 13px;
-        cursor: pointer;
-        touch-action: manipulation;
-        transition: 0.2s;
-        -webkit-tap-highlight-color: transparent;
-    }
-    .sber-back:active { transform: scale(0.92); }
-
-    .transfer-method {
-        display: flex;
-        gap: 8px;
-        margin-bottom: 12px;
-        -webkit-tap-highlight-color: transparent;
-    }
-    .transfer-method button {
-        flex: 1;
-        background: rgba(255,255,255,0.04);
-        border: 1px solid rgba(255,255,255,0.08);
-        color: #aaa;
-        padding: 10px;
-        border-radius: 10px;
-        font-size: 12px;
-        cursor: pointer;
-        transition: 0.2s;
-        touch-action: manipulation;
-        -webkit-tap-highlight-color: transparent;
-    }
-    .transfer-method button:active { transform: scale(0.95); }
-    .transfer-method button.active { border-color: #1a6d3e; color: #fff; background: rgba(26,109,62,0.2); }
-
-    .sber-history::-webkit-scrollbar { width: 3px; }
-    .sber-history::-webkit-scrollbar-track { background: transparent; }
-    .sber-history::-webkit-scrollbar-thumb { background: #333; border-radius: 10px; }
-    </style>
-    <script>
-    function updateTime() {
-        var now = new Date();
-        document.getElementById('statusTime').textContent =
-            String(now.getHours()).padStart(2,'0') + ':' + String(now.getMinutes()).padStart(2,'0');
-    }
-    updateTime();
-    setInterval(updateTime, 5000);
-
-    function updateBattery() {
-        if (navigator.getBattery) {
-            navigator.getBattery().then(function(battery) {
-                var level = Math.round(battery.level * 100);
-                var el = document.getElementById('batteryDisplay');
-                el.textContent = '🔋 ' + level + '%';
-                el.style.color = level < 20 ? '#e74c3c' : level < 50 ? '#f5c842' : '#2ecc71';
-            }).catch(function() { document.getElementById('batteryDisplay').textContent = '🔋 72%'; });
-        } else {
-            document.getElementById('batteryDisplay').textContent = '🔋 68%';
+        var container = document.getElementById('appsContainer');
+        var items = container.querySelectorAll('.app-item');
+        var locked = null;
+        items.forEach(function(item) {
+            if (!item.id) locked = item;
+        });
+        if (locked && items.length > 0 && items[items.length-1] !== locked) {
+            container.appendChild(locked);
         }
+        initDrag();
     }
-    updateBattery();
-    setInterval(updateBattery, 5000);
 
+    // ============================================================
+    // ПРОФЕССИИ
+    // ============================================================
     var professions = [
         { id: 'fsb', name: 'ФСБ', desc: 'Федеральная служба безопасности' },
         { id: 'mchs', name: 'МЧС', desc: 'Спасатель, пожарный' },
@@ -808,8 +826,10 @@
         document.getElementById('phoneScreen').appendChild(toast);
         setTimeout(function() { toast.remove(); }, 2500);
     }
-    </script>
-    <script>
+
+    // ============================================================
+    // КНИГА
+    // ============================================================
     var bookQuestions = {
         fsb: [
             { q: 'В ТЦ стрельба. Вы ФСБ. Ваши действия?', a: 'Набрать 112, 102, 101. Координировать эвакуацию, перекрыть выходы, организовать группы людей, укрыть раненых.' },
@@ -845,6 +865,9 @@
         document.getElementById('bookContent').innerHTML = html;
     }
 
+    // ============================================================
+    // БАНК
+    // ============================================================
     var bankData = {
         registered: false, name: '', password: '', balance: 0, deposit: 0, depositDate: null,
         credit: 0, creditDate: null, creditAmount: 0, profession: '', loggedIn: false,
@@ -891,8 +914,7 @@
         var map = { fsb: 'ФСБ', mchs: 'МЧС', medic: 'Медик', mvd: 'МВД', teacher: 'Учитель' };
         return map[prof] || prof;
     }
-    </script>
-    <script>
+
     function renderBank() {
         var content = document.getElementById('bankContent');
         if (!bankData.registered) {
@@ -986,8 +1008,7 @@
         renderBank();
         showToast('👋 Вы вышли');
     }
-    </script>
-    <script>
+
     function renderBankMain() {
         var content = document.getElementById('bankContent');
         var daysLeft = getDaysLeft();
@@ -1050,8 +1071,10 @@
         saveBankData();
         renderBankMain();
     }
-    </script>
-    <script>
+
+    // ============================================================
+    // ВКЛАД
+    // ============================================================
     function showDeposit() {
         var content = document.getElementById('bankContent');
         var daysLeft = getDaysLeft();
@@ -1114,8 +1137,10 @@
         renderBank();
         showToast('💰 Вклад закрыт. Получено: ' + total + ' ₽');
     }
-    </script>
-    <script>
+
+    // ============================================================
+    // КРЕДИТ
+    // ============================================================
     function showCredit() {
         var content = document.getElementById('bankContent');
         var daysLeft = getDaysLeft();
@@ -1182,8 +1207,10 @@
         renderBank();
         showToast('✅ Кредит погашен!');
     }
-    </script>
-    <script>
+
+    // ============================================================
+    // ПЕРЕВОД
+    // ============================================================
     var transferMethod = 'card';
 
     function showTransfer() {
@@ -1260,7 +1287,9 @@
         showToast('✅ Перевод выполнен! Сумма: ' + amount + ' ₽');
     }
 
-    // ===== ОТКРЫТИЕ ПРИЛОЖЕНИЙ (ТОЛЬКО ЧЕРЕЗ addEventListener) =====
+    // ============================================================
+    // ОТКРЫТИЕ/ЗАКРЫТИЕ ПРИЛОЖЕНИЙ
+    // ============================================================
     function openStudy() {
         document.getElementById('studyModal').classList.add('active');
         renderStudy();
@@ -1282,7 +1311,9 @@
         document.getElementById('bankModal').classList.remove('active');
     }
 
-    // ===== СОБЫТИЯ =====
+    // ============================================================
+    // НАЗНАЧЕНИЕ СОБЫТИЙ
+    // ============================================================
     document.getElementById('closeStudyBtn').addEventListener('click', closeStudy);
     document.getElementById('closeBankBtn').addEventListener('click', closeBank);
     document.getElementById('closeBookBtn').addEventListener('click', closeBook);
@@ -1297,20 +1328,18 @@
         if (e.target === this) closeBook();
     });
 
-    // ===== КЛИК ПО ИКОНКЕ (БЕЗ onclick В HTML) =====
     document.getElementById('studyAppBtn').addEventListener('click', function(e) {
-        if (!dragData.isDragging) {
-            openStudy();
-        }
+        if (!dragData.isDragging) openStudy();
     });
 
     document.getElementById('bankAppBtn').addEventListener('click', function(e) {
-        if (!dragData.isDragging) {
-            openBank();
-        }
+        if (!dragData.isDragging) openBank();
     });
 
-    // ===== ЗАПУСК =====
+    // ============================================================
+    // ЗАПУСК
+    // ============================================================
+    loadPositions();
     renderStudy();
 
     setInterval(function() {
@@ -1330,4 +1359,4 @@
     }, 1000);
 </script>
 </body>
-</html>
+    </html>
