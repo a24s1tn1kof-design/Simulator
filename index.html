@@ -309,12 +309,12 @@
         </div>
 
         <div class="apps-grid" id="appsGrid">
-            <div class="app-item" data-id="study">
+            <div class="app-item" data-id="study" id="studyAppBtn">
                 <div class="drag-handle">⠿</div>
                 <div class="app-icon study">📚</div>
                 <span class="app-name">Учеба</span>
             </div>
-            <div class="app-item" data-id="bank">
+            <div class="app-item" data-id="bank" id="bankAppBtn">
                 <div class="drag-handle">⠿</div>
                 <div class="app-icon bank">🏦</div>
                 <span class="app-name">Банк</span>
@@ -370,23 +370,20 @@
         var grid = document.getElementById('appsGrid');
 
         items.forEach(function(item) {
-            // Начало перетаскивания
             item.addEventListener('pointerdown', function(e) {
-                if (e.target.closest('.drag-handle')) {
+                if (e.target.closest('.drag-handle') || e.target.closest('.app-icon') || e.target.closest('.app-name')) {
                     e.preventDefault();
                     startDrag(e, item);
                 }
             });
         });
 
-        // Движение
         document.addEventListener('pointermove', function(e) {
             if (dragData.isDragging) {
                 moveDrag(e);
             }
         });
 
-        // Отпускание
         document.addEventListener('pointerup', function(e) {
             if (dragData.isDragging) {
                 endDrag(e);
@@ -396,7 +393,6 @@
 
     function startDrag(e, item) {
         var rect = item.getBoundingClientRect();
-        var gridRect = document.getElementById('appsGrid').getBoundingClientRect();
 
         dragData.dragEl = item;
         dragData.dragId = item.dataset.id;
@@ -406,7 +402,6 @@
         dragData.offsetY = e.clientY - rect.top;
         dragData.isDragging = true;
 
-        // Создаём клон для перетаскивания
         var clone = item.cloneNode(true);
         clone.style.position = 'fixed';
         clone.style.width = rect.width + 'px';
@@ -429,43 +424,24 @@
 
     function moveDrag(e) {
         if (!dragData.clone) return;
-
-        // Перемещаем клон
         dragData.clone.style.left = (e.clientX - dragData.offsetX) + 'px';
         dragData.clone.style.top = (e.clientY - dragData.offsetY) + 'px';
 
-        // Поиск ближайшей иконки для замены
         var items = document.querySelectorAll('.app-item:not(.dragging)');
-        var grid = document.getElementById('appsGrid');
-        var gridRect = grid.getBoundingClientRect();
-
         items.forEach(function(item) {
             var rect = item.getBoundingClientRect();
             var centerX = rect.left + rect.width / 2;
             var centerY = rect.top + rect.height / 2;
-            var dist = Math.sqrt(
-                Math.pow(e.clientX - centerX, 2) +
-                Math.pow(e.clientY - centerY, 2)
-            );
-
-            if (dist < 80) {
-                item.classList.add('drag-over');
-            } else {
-                item.classList.remove('drag-over');
-            }
+            var dist = Math.sqrt(Math.pow(e.clientX - centerX, 2) + Math.pow(e.clientY - centerY, 2));
+            if (dist < 80) { item.classList.add('drag-over'); }
+            else { item.classList.remove('drag-over'); }
         });
     }
 
     function endDrag(e) {
         if (!dragData.isDragging) return;
+        if (dragData.clone) { dragData.clone.remove(); dragData.clone = null; }
 
-        // Удаляем клон
-        if (dragData.clone) {
-            dragData.clone.remove();
-            dragData.clone = null;
-        }
-
-        // Находим элемент для замены
         var items = document.querySelectorAll('.app-item:not(.dragging)');
         var targetItem = null;
         var minDist = Infinity;
@@ -474,38 +450,21 @@
             var rect = item.getBoundingClientRect();
             var centerX = rect.left + rect.width / 2;
             var centerY = rect.top + rect.height / 2;
-            var dist = Math.sqrt(
-                Math.pow(e.clientX - centerX, 2) +
-                Math.pow(e.clientY - centerY, 2)
-            );
-
-            if (dist < 80 && dist < minDist) {
-                minDist = dist;
-                targetItem = item;
-            }
+            var dist = Math.sqrt(Math.pow(e.clientX - centerX, 2) + Math.pow(e.clientY - centerY, 2));
+            if (dist < 80 && dist < minDist) { minDist = dist; targetItem = item; }
         });
 
         var dragEl = dragData.dragEl;
         dragEl.classList.remove('dragging');
         dragEl.style.opacity = '1';
+        items.forEach(function(item) { item.classList.remove('drag-over'); });
 
-        items.forEach(function(item) {
-            item.classList.remove('drag-over');
-        });
-
-        // Если есть цель — меняем местами
         if (targetItem && targetItem !== dragEl) {
             var grid = document.getElementById('appsGrid');
             var dragIndex = Array.from(grid.children).indexOf(dragEl);
             var targetIndex = Array.from(grid.children).indexOf(targetItem);
-
-            if (dragIndex < targetIndex) {
-                grid.insertBefore(dragEl, targetItem.nextSibling);
-            } else {
-                grid.insertBefore(dragEl, targetItem);
-            }
-
-            // Сохраняем порядок
+            if (dragIndex < targetIndex) { grid.insertBefore(dragEl, targetItem.nextSibling); }
+            else { grid.insertBefore(dragEl, targetItem); }
             saveAppOrder();
         }
 
@@ -530,38 +489,19 @@
                 var grid = document.getElementById('appsGrid');
                 var items = grid.querySelectorAll('.app-item');
                 var map = {};
-                items.forEach(function(item) {
-                    map[item.dataset.id] = item;
-                });
-
-                // Очищаем сетку
+                items.forEach(function(item) { map[item.dataset.id] = item; });
                 grid.innerHTML = '';
-                // Вставляем в правильном порядке
-                order.forEach(function(id) {
-                    if (map[id]) {
-                        grid.appendChild(map[id]);
-                    }
-                });
-                // Добавляем недостающие
+                order.forEach(function(id) { if (map[id]) grid.appendChild(map[id]); });
                 var allIds = ['study', 'bank', 'locked'];
-                allIds.forEach(function(id) {
-                    if (!order.includes(id) && map[id]) {
-                        grid.appendChild(map[id]);
-                    }
-                });
-                // Переинициализируем drag
+                allIds.forEach(function(id) { if (!order.includes(id) && map[id]) grid.appendChild(map[id]); });
                 initDrag();
             }
         } catch(e) {}
     }
 
-    // Запускаем drag после загрузки
-    setTimeout(function() {
-        loadAppOrder();
-        initDrag();
-    }, 100);
-    </script>
-    <style>
+    setTimeout(function() { loadAppOrder(); initDrag(); }, 100);
+                    </script>
+                    <style>
     /* ===== БАНК В СТИЛЕ СБЕРБАНКА ===== */
     .sber-card {
         background: linear-gradient(135deg, #1a6d3e, #0d4a2a);
@@ -591,7 +531,6 @@
     }
     .sber-card .card-bottom span { font-size: 10px; opacity: 0.5; }
 
-    /* Прямоугольное окошко для номера карты — СВОРАЧИВАЕТСЯ */
     .card-number-box {
         background: rgba(0,0,0,0.35);
         border-radius: 10px;
@@ -604,7 +543,6 @@
         transition: all 0.3s ease;
         overflow: hidden;
     }
-    /* СВЁРНУТОЕ СОСТОЯНИЕ — окошко сжимается */
     .card-number-box.collapsed {
         padding: 4px 14px;
         background: rgba(0,0,0,0.15);
@@ -618,7 +556,6 @@
         transition: all 0.3s ease;
         white-space: nowrap;
     }
-    /* СВЁРНУТЫЙ НОМЕР — меньше шрифт, пробелы остаются */
     .card-number-box .number.collapsed {
         font-size: 13px;
         letter-spacing: 2px;
@@ -1160,8 +1097,7 @@
         var daysLeft = getDaysLeft();
         var prof = getProfessionFromStudy();
 
-        // Номер карты ВСЕГДА с пробелами
-        var displayNumber = bankData.cardNumber; // 1234 5678 9012 3456
+        var displayNumber = bankData.cardNumber;
 
         content.innerHTML = `
             <div class="sber-card">
@@ -1482,8 +1418,9 @@
     }
 
     // ===== СОБЫТИЯ =====
-    document.getElementById('studyAppBtn').addEventListener('click', openStudy);
-    document.getElementById('bankAppBtn').addEventListener('click', openBank);
+    // Используем onclick из HTML, поэтому addEventListener не нужен для кнопок приложений
+    // Но для модалок используем addEventListener
+
     document.getElementById('closeStudyBtn').addEventListener('click', closeStudy);
     document.getElementById('closeBankBtn').addEventListener('click', closeBank);
     document.getElementById('closeBookBtn').addEventListener('click', closeBook);
