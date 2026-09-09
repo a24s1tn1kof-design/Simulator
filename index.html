@@ -5,7 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Симулятор</title>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; user-select: none; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            user-select: none;
+        }
         body {
             background: #1a1a2e;
             display: flex;
@@ -22,29 +27,66 @@
         }
         body.light-theme .phone {
             background: #f0f0f0;
-            box-shadow: 0 30px 80px rgba(0,0,0,0.15), inset 0 0 0 2px #ccc;
+            box-shadow: 0 30px 80px rgba(0, 0, 0, 0.15), inset 0 0 0 2px #ccc;
         }
         body.light-theme .phone-screen {
             background: linear-gradient(180deg, #f5f5f5 0%, #e0e0e0 100%);
         }
-        body.light-theme .phone-screen.default-dark { background: #f0f0f0 !important; }
-        body.light-theme .phone-screen.default-light { background: #f0f0f0 !important; }
-        body.light-theme .status-bar { color: #333; border-bottom-color: #ccc; }
-        body.light-theme .status-bar .time { color: #333; }
-        body.light-theme .app-name { color: #333; text-shadow: none; }
-        body.light-theme .app-icon { box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
-        body.light-theme .settings-modal { background: rgba(255,255,255,0.95); }
-        body.light-theme .settings-modal h2 { color: #333; }
-        body.light-theme .settings-modal .setting-label { color: #333; }
-        body.light-theme .settings-modal .setting-desc { color: #666; }
-        body.light-theme .settings-modal .modal-close { background: rgba(0,0,0,0.05); color: #333; }
-        body.light-theme .settings-modal .modal-close:active { background: rgba(0,0,0,0.1); }
-        body.light-theme .settings-modal select { background: #fff; color: #333; border-color: #ccc; }
-        body.light-theme .settings-modal .wallpaper-item { background: rgba(0,0,0,0.03); color: #333; }
-        body.light-theme .settings-modal .wallpaper-item.active { border-color: #2ecc71; background: rgba(46,204,113,0.1); color: #333; }
-        body.light-theme .settings-modal .setting-group { background: rgba(0,0,0,0.02); border-color: rgba(0,0,0,0.06); }
+        body.light-theme .phone-screen.default-light {
+            background: #f0f0f0 !important;
+        }
+        body.light-theme .status-bar {
+            color: #333;
+            border-bottom-color: #ccc;
+        }
+        body.light-theme .status-bar .time {
+            color: #333;
+        }
+        body.light-theme .app-name {
+            color: #333;
+            text-shadow: none;
+        }
+        body.light-theme .app-icon {
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        body.light-theme .settings-modal {
+            background: rgba(255, 255, 255, 0.95);
+        }
+        body.light-theme .settings-modal h2 {
+            color: #333;
+        }
+        body.light-theme .settings-modal .setting-label {
+            color: #333;
+        }
+        body.light-theme .settings-modal .setting-desc {
+            color: #666;
+        }
+        body.light-theme .settings-modal .modal-close {
+            background: rgba(0, 0, 0, 0.05);
+            color: #333;
+        }
+        body.light-theme .settings-modal .modal-close:active {
+            background: rgba(0, 0, 0, 0.1);
+        }
+        body.light-theme .settings-modal select {
+            background: #fff;
+            color: #333;
+            border-color: #ccc;
+        }
+        body.light-theme .settings-modal .wallpaper-item {
+            background: rgba(0, 0, 0, 0.03);
+            color: #333;
+        }
+        body.light-theme .settings-modal .wallpaper-item.active {
+            border-color: #2ecc71;
+            background: rgba(46, 204, 113, 0.1);
+            color: #333;
+        }
+        body.light-theme .settings-modal .setting-group {
+            background: rgba(0, 0, 0, 0.02);
+            border-color: rgba(0, 0, 0, 0.06);
+        }
 
-        /* ЗАСТАВКИ (БЕЗ РАЗМЫТИЯ) */
         body.wallpaper-space .phone-screen {
             background-image: url('https://i.ibb.co/JFKZZrPh/i-1.jpg') !important;
             background-size: cover !important;
@@ -64,7 +106,6 @@
             background-repeat: no-repeat !important;
         }
 
-        /* СИСТЕМНАЯ ЗАСТАВКА ПО УМОЛЧАНИЮ */
         body.wallpaper-default .phone-screen {
             background: linear-gradient(145deg, #0f0f1a 0%, #1a1a3e 50%, #0f0f1a 100%) !important;
             background-size: cover !important;
@@ -80,7 +121,7 @@
             background: #0a0a0f;
             border-radius: 40px;
             padding: 18px;
-            box-shadow: 0 30px 80px rgba(0,0,0,0.8), inset 0 0 0 2px #2a2a3a;
+            box-shadow: 0 30px 80px rgba(0, 0, 0, 0.8), inset 0 0 0 2px #2a2a3a;
             position: relative;
             overflow: hidden;
             transition: background 0.3s;
@@ -106,8 +147,10 @@
         .phone-screen.default-light {
             background: #f0f0f0 !important;
         }
-
-        .phone-screen > * { position: relative; z-index: 1; }
+        .phone-screen>* {
+            position: relative;
+            z-index: 1;
+        }
 
         .status-bar {
             display: flex;
@@ -117,14 +160,18 @@
             font-size: 12px;
             font-weight: 600;
             padding-bottom: 6px;
-            border-bottom: 1px solid rgba(255,255,255,0.05);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
             margin-bottom: 6px;
             -webkit-tap-highlight-color: transparent;
             transition: color 0.3s, border-color 0.3s;
         }
-        .status-icons { display: flex; gap: 6px; font-size: 13px; align-items: center; }
+        .status-icons {
+            display: flex;
+            gap: 6px;
+            font-size: 13px;
+            align-items: center;
+        }
 
-        /* СЕТКА — ПРИ УВЕЛИЧЕНИИ ИКОНКИ ПЕРЕНОСЯТСЯ НА СЛЕДУЮЩУЮ СТРОКУ */
         .apps-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(60px, 1fr));
@@ -148,7 +195,9 @@
             border-radius: 8px;
             -webkit-tap-highlight-color: transparent;
         }
-        .app-item:active { transform: scale(0.88); }
+        .app-item:active {
+            transform: scale(0.88);
+        }
         .app-icon {
             width: 52px;
             height: 52px;
@@ -157,18 +206,35 @@
             align-items: center;
             justify-content: center;
             font-size: 24px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
             pointer-events: none;
             flex-shrink: 0;
             -webkit-tap-highlight-color: transparent;
             transition: width 0.3s, height 0.3s, font-size 0.3s;
         }
-        .app-icon.small { width: 40px; height: 40px; font-size: 18px; }
-        .app-icon.large { width: 70px; height: 70px; font-size: 32px; }
-        .app-icon.study { background: linear-gradient(135deg, #4facfe, #00f2fe); }
-        .app-icon.bank { background: linear-gradient(135deg, #43e97b, #38f9d7); }
-        .app-icon.settings-icon { background: linear-gradient(135deg, #6b7280, #4b5563); }
-        .app-icon.locked { background: linear-gradient(135deg, #2d2d44, #3d3d5c); opacity: 0.5; }
+        .app-icon.small {
+            width: 40px;
+            height: 40px;
+            font-size: 18px;
+        }
+        .app-icon.large {
+            width: 70px;
+            height: 70px;
+            font-size: 32px;
+        }
+        .app-icon.study {
+            background: linear-gradient(135deg, #4facfe, #00f2fe);
+        }
+        .app-icon.bank {
+            background: linear-gradient(135deg, #43e97b, #38f9d7);
+        }
+        .app-icon.settings-icon {
+            background: linear-gradient(135deg, #6b7280, #4b5563);
+        }
+        .app-icon.locked {
+            background: linear-gradient(135deg, #2d2d44, #3d3d5c);
+            opacity: 0.5;
+        }
         .app-name {
             color: #ddd;
             font-size: 9px;
@@ -183,10 +249,13 @@
             text-overflow: ellipsis;
             white-space: nowrap;
         }
-        .app-name.small { font-size: 7px; }
-        .app-name.large { font-size: 12px; }
+        .app-name.small {
+            font-size: 7px;
+        }
+        .app-name.large {
+            font-size: 12px;
+        }
 
-        /* Остальные стили без изменений */
         .settings-modal {
             display: none;
             position: absolute;
@@ -194,161 +263,833 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0,0,0,0.92);
+            background: rgba(0, 0, 0, 0.92);
             backdrop-filter: blur(16px);
             border-radius: 28px;
             padding: 30px 22px;
             z-index: 300;
             overflow-y: auto;
         }
-        .settings-modal.active { display: block; }
-        .settings-modal h2 { color: #fff; font-size: 20px; font-weight: 700; margin-bottom: 20px; text-align: center; }
-        .settings-modal .setting-group { margin-bottom: 14px; padding: 12px 14px; background: rgba(255,255,255,0.04); border-radius: 14px; border: 1px solid rgba(255,255,255,0.06); }
-        .settings-modal .setting-label { color: #ddd; font-size: 14px; font-weight: 600; margin-bottom: 3px; }
-        .settings-modal .setting-desc { color: #888; font-size: 11px; margin-bottom: 6px; }
-        .settings-modal select { background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; padding: 8px 14px; color: #fff; font-size: 14px; width: 100%; outline: none; cursor: pointer; }
-        .settings-modal select:focus { border-color: #4facfe; }
-        .settings-modal select option { background: #1a1a2e; color: #fff; }
-
-        .theme-toggle { display: flex; align-items: center; gap: 12px; padding: 4px 0; }
-        .theme-toggle .toggle-track { width: 44px; height: 24px; background: #333; border-radius: 30px; cursor: pointer; transition: 0.3s; position: relative; flex-shrink: 0; }
-        .theme-toggle .toggle-track .toggle-thumb { width: 18px; height: 18px; background: #fff; border-radius: 50%; position: absolute; top: 3px; left: 3px; transition: 0.3s; }
-        .theme-toggle .toggle-track.active { background: #2ecc71; }
-        .theme-toggle .toggle-track.active .toggle-thumb { left: 23px; }
-        .theme-toggle .toggle-label { color: #ddd; font-size: 13px; font-weight: 500; }
-
-        .wallpaper-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin-top: 4px; }
-        .wallpaper-item { padding: 8px 4px; border-radius: 12px; text-align: center; cursor: pointer; border: 2px solid transparent; transition: 0.2s; background: rgba(255,255,255,0.04); color: #aaa; font-size: 11px; }
-        .wallpaper-item:active { transform: scale(0.95); }
-        .wallpaper-item.active { border-color: #2ecc71; background: rgba(46,204,113,0.1); color: #fff; }
-        .wallpaper-item .preview { width: 100%; height: 40px; border-radius: 8px; margin-bottom: 3px; background-size: cover !important; background-position: center !important; }
-
-        .reset-btn { background: #e74c3c; border: none; color: #fff; padding: 12px 20px; border-radius: 30px; font-weight: 700; font-size: 14px; cursor: pointer; touch-action: manipulation; transition: 0.2s; width: 100%; margin-top: 4px; box-shadow: 0 4px 15px rgba(231,76,60,0.3); }
-        .reset-btn:active { transform: scale(0.96); }
-
-        .reset-confirm-modal { display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); backdrop-filter: blur(12px); border-radius: 28px; padding: 30px 22px; z-index: 400; overflow-y: auto; align-items: center; justify-content: center; }
-        .reset-confirm-modal.active { display: flex; flex-direction: column; justify-content: center; align-items: center; }
-        .reset-confirm-modal .icon { font-size: 48px; margin-bottom: 10px; }
-        .reset-confirm-modal .title { color: #fff; font-size: 18px; font-weight: 700; text-align: center; margin-bottom: 4px; }
-        .reset-confirm-modal .desc { color: #aaa; font-size: 13px; text-align: center; margin-bottom: 16px; line-height: 1.4; }
-        .reset-confirm-modal .btn-group { display: flex; gap: 12px; width: 100%; }
-        .reset-confirm-modal .btn-group button { flex: 1; padding: 10px 16px; border: none; border-radius: 30px; font-weight: 700; font-size: 15px; cursor: pointer; touch-action: manipulation; transition: 0.2s; }
-        .reset-confirm-modal .btn-group button:active { transform: scale(0.96); }
-        .reset-confirm-modal .btn-group .btn-yes { background: #e74c3c; color: #fff; box-shadow: 0 4px 15px rgba(231,76,60,0.3); }
-        .reset-confirm-modal .btn-group .btn-no { background: #2ecc71; color: #fff; box-shadow: 0 4px 15px rgba(46,204,113,0.3); }
-
-        .modal { display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); backdrop-filter: blur(12px); border-radius: 28px; padding: 30px 22px; z-index: 100; overflow-y: auto; }
-        .modal.active { display: block; }
-        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
-        .modal-header h2 { color: #fff; font-size: 20px; font-weight: 700; }
-        .modal-close { background: rgba(255,255,255,0.08); border: none; color: #fff; width: 34px; height: 34px; border-radius: 50%; font-size: 18px; cursor: pointer; touch-action: manipulation; transition: 0.2s; }
-        .modal-close:active { transform: scale(0.9); background: rgba(255,0,0,0.2); }
-
-        .profession-list { display: flex; flex-direction: column; gap: 10px; margin-top: 6px; }
-        .profession-card { background: rgba(255,255,255,0.05); border-radius: 14px; padding: 14px 16px; border: 1px solid rgba(255,255,255,0.06); display: flex; justify-content: space-between; align-items: center; transition: 0.2s; cursor: pointer; }
-        .profession-card:active { transform: scale(0.97); }
-        .profession-card .info h3 { color: #fff; font-size: 14px; font-weight: 600; }
-        .profession-card .info p { color: #888; font-size: 12px; margin-top: 2px; }
-        .profession-btn { background: linear-gradient(135deg, #4facfe, #00f2fe); border: none; color: #fff; padding: 6px 16px; border-radius: 30px; font-weight: 700; font-size: 12px; cursor: pointer; touch-action: manipulation; transition: 0.2s; box-shadow: 0 4px 15px rgba(79,172,254,0.3); white-space: nowrap; }
-        .profession-btn:active { transform: scale(0.92); }
-        .profession-btn:disabled { opacity: 0.5; cursor: not-allowed; }
-
-        .profession-detail { display: none; background: rgba(255,255,255,0.03); border-radius: 12px; padding: 12px 14px; margin-top: 8px; border: 1px solid rgba(255,255,255,0.06); }
-        .profession-detail.open { display: block; }
-        .profession-detail .row { display: flex; justify-content: space-between; color: #ccc; font-size: 12px; padding: 3px 0; }
-        .profession-detail .row .label { color: #888; }
-        .profession-detail .row .value { color: #fff; font-weight: 500; }
-
-        .selected-profession-block { background: rgba(46,204,113,0.1); border: 1px solid #2ecc71; border-radius: 14px; padding: 16px; text-align: center; margin-bottom: 14px; }
-        .selected-profession-block .prof-name { color: #fff; font-size: 18px; font-weight: 600; }
-        .selected-profession-block .prof-desc { color: #aaa; font-size: 12px; margin-top: 3px; }
-        .selected-profession-block .status-text { color: #2ecc71; font-size: 12px; margin-top: 6px; }
-        .selected-profession-block .days-left-big { color: #4facfe; font-size: 16px; font-weight: 700; margin-top: 4px; }
-
-        .book-btn { background: #2ecc71; border: none; color: #fff; padding: 12px 20px; border-radius: 30px; font-weight: 700; font-size: 14px; cursor: pointer; touch-action: manipulation; transition: 0.2s; box-shadow: 0 4px 20px rgba(46,204,113,0.4); width: 100%; margin-top: 12px; }
-        .book-btn:active { transform: scale(0.96); }
-
-        .book-modal { display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.92); backdrop-filter: blur(16px); border-radius: 28px; padding: 30px 22px; z-index: 200; overflow-y: auto; }
-        .book-modal.active { display: block; }
-        .book-modal .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
-        .book-modal .modal-header h2 { color: #2ecc71; font-size: 18px; font-weight: 700; }
-        .book-modal .modal-close { background: rgba(255,255,255,0.08); border: none; color: #fff; width: 34px; height: 34px; border-radius: 50%; font-size: 18px; cursor: pointer; }
-        .book-content { color: #ddd; font-size: 13px; line-height: 1.5; }
-        .book-content .question-block { background: rgba(255,255,255,0.04); border-radius: 12px; padding: 14px; margin-bottom: 12px; border-left: 3px solid #2ecc71; }
-        .book-content .question-block .q { color: #fff; font-weight: 600; margin-bottom: 4px; font-size: 13px; }
-        .book-content .question-block .a { color: #aaa; font-size: 12px; }
-
-        .toast-custom { position: absolute; bottom: 30px; left: 50%; transform: translateX(-50%); background: rgba(0,0,0,0.9); color: #fff; padding: 10px 20px; border-radius: 30px; font-size: 13px; border: 1px solid #333; backdrop-filter: blur(10px); white-space: nowrap; z-index: 200; transition: opacity 0.3s; }
-
-        .phone-screen::-webkit-scrollbar { width: 3px; }
-        .phone-screen::-webkit-scrollbar-track { background: transparent; }
-        .phone-screen::-webkit-scrollbar-thumb { background: #333; border-radius: 10px; }
-
-        * { -webkit-tap-highlight-color: transparent; }
-        *:focus { outline: none; }
-
-        @media (max-width: 400px) {
-            .phone { height: 95vh; border-radius: 28px; padding: 12px; }
-            .phone-screen { border-radius: 20px; padding: 14px; }
-            .app-icon { width: 44px; height: 44px; font-size: 20px; }
-            .app-name { font-size: 8px; }
-            .app-item { padding: 2px 1px; }
+        .settings-modal.active {
+            display: block;
+        }
+        .settings-modal h2 {
+            color: #fff;
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .settings-modal .setting-group {
+            margin-bottom: 14px;
+            padding: 12px 14px;
+            background: rgba(255, 255, 255, 0.04);
+            border-radius: 14px;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+        }
+        .settings-modal .setting-label {
+            color: #ddd;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 3px;
+        }
+        .settings-modal .setting-desc {
+            color: #888;
+            font-size: 11px;
+            margin-bottom: 6px;
+        }
+        .settings-modal select {
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 8px 14px;
+            color: #fff;
+            font-size: 14px;
+            width: 100%;
+            outline: none;
+            cursor: pointer;
+        }
+        .settings-modal select:focus {
+            border-color: #4facfe;
+        }
+        .settings-modal select option {
+            background: #1a1a2e;
+            color: #fff;
         }
 
-        /* ===== БАНК ===== */
-        .sber-card { background: linear-gradient(135deg, #1a6d3e, #0d4a2a); border-radius: 16px; padding: 18px; color: #fff; margin-bottom: 12px; box-shadow: 0 8px 30px rgba(26,109,62,0.3); position: relative; overflow: hidden; -webkit-tap-highlight-color: transparent; }
-        .sber-card::before { content: '★'; position: absolute; top: -20px; right: -10px; font-size: 70px; opacity: 0.08; color: #fff; }
-        .sber-card .bank-name { font-size: 11px; opacity: 0.7; letter-spacing: 1px; }
-        .sber-card .card-holder { font-size: 10px; opacity: 0.6; margin-top: 4px; text-transform: uppercase; }
-        .sber-card .card-bottom { display: flex; justify-content: space-between; margin-top: 4px; }
-        .sber-card .card-bottom span { font-size: 9px; opacity: 0.5; }
+        .theme-toggle {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 4px 0;
+        }
+        .theme-toggle .toggle-track {
+            width: 44px;
+            height: 24px;
+            background: #333;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: 0.3s;
+            position: relative;
+            flex-shrink: 0;
+        }
+        .theme-toggle .toggle-track .toggle-thumb {
+            width: 18px;
+            height: 18px;
+            background: #fff;
+            border-radius: 50%;
+            position: absolute;
+            top: 3px;
+            left: 3px;
+            transition: 0.3s;
+        }
+        .theme-toggle .toggle-track.active {
+            background: #2ecc71;
+        }
+        .theme-toggle .toggle-track.active .toggle-thumb {
+            left: 23px;
+        }
+        .theme-toggle .toggle-label {
+            color: #ddd;
+            font-size: 13px;
+            font-weight: 500;
+        }
 
-        .card-number-box { background: rgba(0,0,0,0.35); border-radius: 10px; padding: 12px 16px; margin: 8px 0 6px 0; text-align: center; cursor: pointer; user-select: none; border: 1px solid rgba(255,255,255,0.06); transition: all 0.3s ease; overflow: hidden; -webkit-tap-highlight-color: transparent; }
-        .card-number-box.collapsed { padding: 3px 14px; background: rgba(0,0,0,0.15); }
-        .card-number-box .number { font-size: 18px; font-weight: 600; letter-spacing: 2px; font-family: 'Courier New', monospace; color: #fff; transition: all 0.3s ease; white-space: nowrap; display: flex; justify-content: center; gap: 4px; }
-        .card-number-box .number .group { display: inline-block; }
-        .card-number-box .number.collapsed { font-size: 12px; letter-spacing: 1px; gap: 2px; }
+        .wallpaper-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 6px;
+            margin-top: 4px;
+        }
+        .wallpaper-item {
+            padding: 8px 4px;
+            border-radius: 12px;
+            text-align: center;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: 0.2s;
+            background: rgba(255, 255, 255, 0.04);
+            color: #aaa;
+            font-size: 11px;
+        }
+        .wallpaper-item:active {
+            transform: scale(0.95);
+        }
+        .wallpaper-item.active {
+            border-color: #2ecc71;
+            background: rgba(46, 204, 113, 0.1);
+            color: #fff;
+        }
+        .wallpaper-item .preview {
+            width: 100%;
+            height: 40px;
+            border-radius: 8px;
+            margin-bottom: 3px;
+            background-size: cover !important;
+            background-position: center !important;
+        }
 
-        .sber-balance { background: rgba(255,255,255,0.04); border-radius: 12px; padding: 12px 16px; margin-bottom: 14px; border: 1px solid rgba(255,255,255,0.06); display: flex; justify-content: space-between; align-items: center; -webkit-tap-highlight-color: transparent; }
-        .sber-balance .label { color: #888; font-size: 12px; }
-        .sber-balance .amount { color: #f5c842; font-size: 22px; font-weight: 700; }
+        .reset-btn {
+            background: #e74c3c;
+            border: none;
+            color: #fff;
+            padding: 12px 20px;
+            border-radius: 30px;
+            font-weight: 700;
+            font-size: 14px;
+            cursor: pointer;
+            touch-action: manipulation;
+            transition: 0.2s;
+            width: 100%;
+            margin-top: 4px;
+            box-shadow: 0 4px 15px rgba(231, 76, 60, 0.3);
+        }
+        .reset-btn:active {
+            transform: scale(0.96);
+        }
 
-        .sber-history { background: rgba(255,255,255,0.04); border-radius: 12px; padding: 12px 14px; margin-top: 10px; border: 1px solid rgba(255,255,255,0.06); max-height: 180px; overflow-y: auto; -webkit-tap-highlight-color: transparent; }
-        .sber-history .history-title { color: #aaa; font-size: 12px; font-weight: 600; margin-bottom: 8px; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 4px; }
-        .sber-history .history-empty { color: #555; font-size: 12px; text-align: center; padding: 14px 0; }
-        .sber-history .history-item { display: flex; justify-content: space-between; align-items: center; padding: 6px 0; border-bottom: 1px solid rgba(255,255,255,0.03); font-size: 12px; }
-        .sber-history .history-item .h-left { color: #ccc; }
-        .sber-history .history-item .h-left .h-detail { color: #888; font-size: 10px; }
-        .sber-history .history-item .h-amount { color: #f5c842; font-weight: 600; }
-        .sber-history .history-item .h-amount.minus { color: #e74c3c; }
+        .reset-confirm-modal {
+            display: none;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(12px);
+            border-radius: 28px;
+            padding: 30px 22px;
+            z-index: 400;
+            overflow-y: auto;
+            align-items: center;
+            justify-content: center;
+        }
+        .reset-confirm-modal.active {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        .reset-confirm-modal .icon {
+            font-size: 48px;
+            margin-bottom: 10px;
+        }
+        .reset-confirm-modal .title {
+            color: #fff;
+            font-size: 18px;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 4px;
+        }
+        .reset-confirm-modal .desc {
+            color: #aaa;
+            font-size: 13px;
+            text-align: center;
+            margin-bottom: 16px;
+            line-height: 1.4;
+        }
+        .reset-confirm-modal .btn-group {
+            display: flex;
+            gap: 12px;
+            width: 100%;
+        }
+        .reset-confirm-modal .btn-group button {
+            flex: 1;
+            padding: 10px 16px;
+            border: none;
+            border-radius: 30px;
+            font-weight: 700;
+            font-size: 15px;
+            cursor: pointer;
+            touch-action: manipulation;
+            transition: 0.2s;
+        }
+        .reset-confirm-modal .btn-group button:active {
+            transform: scale(0.96);
+        }
+        .reset-confirm-modal .btn-group .btn-yes {
+            background: #e74c3c;
+            color: #fff;
+            box-shadow: 0 4px 15px rgba(231, 76, 60, 0.3);
+        }
+        .reset-confirm-modal .btn-group .btn-no {
+            background: #2ecc71;
+            color: #fff;
+            box-shadow: 0 4px 15px rgba(46, 204, 113, 0.3);
+        }
 
-        .sber-menu { display: grid; grid-template-columns: repeat(2, 1fr); gap: 6px; margin: 10px 0; -webkit-tap-highlight-color: transparent; }
-        .sber-menu-item { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.06); border-radius: 12px; padding: 12px 8px; text-align: center; cursor: pointer; transition: 0.2s; color: #ddd; -webkit-tap-highlight-color: transparent; }
-        .sber-menu-item:active { transform: scale(0.95); background: rgba(255,255,255,0.08); }
-        .sber-menu-item .icon { font-size: 20px; display: block; margin-bottom: 2px; }
-        .sber-menu-item .label { font-size: 10px; font-weight: 500; }
+        .modal {
+            display: none;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(12px);
+            border-radius: 28px;
+            padding: 30px 22px;
+            z-index: 100;
+            overflow-y: auto;
+        }
+        .modal.active {
+            display: block;
+        }
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+        .modal-header h2 {
+            color: #fff;
+            font-size: 20px;
+            font-weight: 700;
+        }
+        .modal-close {
+            background: rgba(255, 255, 255, 0.08);
+            border: none;
+            color: #fff;
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            font-size: 18px;
+            cursor: pointer;
+            touch-action: manipulation;
+            transition: 0.2s;
+        }
+        .modal-close:active {
+            transform: scale(0.9);
+            background: rgba(255, 0, 0, 0.2);
+        }
 
-        .sber-input { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 10px 14px; color: #fff; font-size: 14px; width: 100%; outline: none; margin-bottom: 8px; -webkit-tap-highlight-color: transparent; }
-        .sber-input::placeholder { color: #555; }
-        .sber-input:focus { border-color: #1a6d3e; }
+        .profession-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 6px;
+        }
+        .profession-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 14px;
+            padding: 14px 16px;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: 0.2s;
+            cursor: pointer;
+        }
+        .profession-card:active {
+            transform: scale(0.97);
+        }
+        .profession-card .info h3 {
+            color: #fff;
+            font-size: 14px;
+            font-weight: 600;
+        }
+        .profession-card .info p {
+            color: #888;
+            font-size: 12px;
+            margin-top: 2px;
+        }
+        .profession-btn {
+            background: linear-gradient(135deg, #4facfe, #00f2fe);
+            border: none;
+            color: #fff;
+            padding: 6px 16px;
+            border-radius: 30px;
+            font-weight: 700;
+            font-size: 12px;
+            cursor: pointer;
+            touch-action: manipulation;
+            transition: 0.2s;
+            box-shadow: 0 4px 15px rgba(79, 172, 254, 0.3);
+            white-space: nowrap;
+        }
+        .profession-btn:active {
+            transform: scale(0.92);
+        }
+        .profession-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
 
-        .sber-btn { background: linear-gradient(135deg, #1a6d3e, #0d4a2a); border: none; color: #fff; padding: 10px 20px; border-radius: 30px; font-weight: 700; font-size: 14px; cursor: pointer; touch-action: manipulation; transition: 0.2s; width: 100%; margin-top: 4px; -webkit-tap-highlight-color: transparent; }
-        .sber-btn:active { transform: scale(0.96); }
-        .sber-btn.green { background: linear-gradient(135deg, #2ecc71, #27ae60); }
-        .sber-btn.red { background: linear-gradient(135deg, #e74c3c, #c0392b); }
-        .sber-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+        .category-btn {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 12px;
+            padding: 10px 14px;
+            color: #ddd;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            touch-action: manipulation;
+            transition: 0.2s;
+            text-align: left;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .category-btn:active {
+            transform: scale(0.97);
+            background: rgba(255, 255, 255, 0.06);
+        }
+        .category-btn .arrow {
+            font-size: 12px;
+            opacity: 0.5;
+            transition: transform 0.3s;
+        }
+        .category-btn .arrow.open {
+            transform: rotate(180deg);
+        }
 
-        .sber-back { background: rgba(255,255,255,0.06); border: none; color: #4facfe; padding: 6px 14px; border-radius: 20px; font-size: 12px; cursor: pointer; touch-action: manipulation; transition: 0.2s; -webkit-tap-highlight-color: transparent; }
-        .sber-back:active { transform: scale(0.92); }
+        .category-content {
+            display: none;
+            flex-direction: column;
+            gap: 8px;
+            margin-top: 6px;
+            padding-left: 6px;
+            border-left: 2px solid rgba(255, 255, 255, 0.05);
+        }
+        .category-content.open {
+            display: flex;
+        }
 
-        .transfer-method { display: flex; gap: 6px; margin-bottom: 10px; -webkit-tap-highlight-color: transparent; }
-        .transfer-method button { flex: 1; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); color: #aaa; padding: 8px; border-radius: 10px; font-size: 11px; cursor: pointer; transition: 0.2s; touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
-        .transfer-method button:active { transform: scale(0.95); }
-        .transfer-method button.active { border-color: #1a6d3e; color: #fff; background: rgba(26,109,62,0.2); }
+        .profession-detail {
+            display: none;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 12px;
+            padding: 12px 14px;
+            margin-top: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+        }
+        .profession-detail.open {
+            display: block;
+        }
+        .profession-detail .row {
+            display: flex;
+            justify-content: space-between;
+            color: #ccc;
+            font-size: 12px;
+            padding: 3px 0;
+        }
+        .profession-detail .row .label {
+            color: #888;
+        }
+        .profession-detail .row .value {
+            color: #fff;
+            font-weight: 500;
+        }
 
-        .sber-history::-webkit-scrollbar { width: 3px; }
-        .sber-history::-webkit-scrollbar-track { background: transparent; }
-        .sber-history::-webkit-scrollbar-thumb { background: #333; border-radius: 10px; }
+        .selected-profession-block {
+            background: rgba(46, 204, 113, 0.1);
+            border: 1px solid #2ecc71;
+            border-radius: 14px;
+            padding: 16px;
+            text-align: center;
+            margin-bottom: 14px;
+        }
+        .selected-profession-block .prof-name {
+            color: #fff;
+            font-size: 18px;
+            font-weight: 600;
+        }
+        .selected-profession-block .prof-desc {
+            color: #aaa;
+            font-size: 12px;
+            margin-top: 3px;
+        }
+        .selected-profession-block .status-text {
+            color: #2ecc71;
+            font-size: 12px;
+            margin-top: 6px;
+        }
+        .selected-profession-block .days-left-big {
+            color: #4facfe;
+            font-size: 16px;
+            font-weight: 700;
+            margin-top: 4px;
+        }
+
+        .book-btn {
+            background: #2ecc71;
+            border: none;
+            color: #fff;
+            padding: 12px 20px;
+            border-radius: 30px;
+            font-weight: 700;
+            font-size: 14px;
+            cursor: pointer;
+            touch-action: manipulation;
+            transition: 0.2s;
+            box-shadow: 0 4px 20px rgba(46, 204, 113, 0.4);
+            width: 100%;
+            margin-top: 12px;
+        }
+        .book-btn:active {
+            transform: scale(0.96);
+        }
+
+        .book-modal {
+            display: none;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.92);
+            backdrop-filter: blur(16px);
+            border-radius: 28px;
+            padding: 30px 22px;
+            z-index: 200;
+            overflow-y: auto;
+        }
+        .book-modal.active {
+            display: block;
+        }
+        .book-modal .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+        .book-modal .modal-header h2 {
+            color: #2ecc71;
+            font-size: 18px;
+            font-weight: 700;
+        }
+        .book-modal .modal-close {
+            background: rgba(255, 255, 255, 0.08);
+            border: none;
+            color: #fff;
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            font-size: 18px;
+            cursor: pointer;
+        }
+        .book-content {
+            color: #ddd;
+            font-size: 13px;
+            line-height: 1.5;
+        }
+        .book-content .question-block {
+            background: rgba(255, 255, 255, 0.04);
+            border-radius: 12px;
+            padding: 14px;
+            margin-bottom: 12px;
+            border-left: 3px solid #2ecc71;
+        }
+        .book-content .question-block .q {
+            color: #fff;
+            font-weight: 600;
+            margin-bottom: 4px;
+            font-size: 13px;
+        }
+        .book-content .question-block .a {
+            color: #aaa;
+            font-size: 12px;
+        }
+
+        .toast-custom {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.9);
+            color: #fff;
+            padding: 10px 20px;
+            border-radius: 30px;
+            font-size: 13px;
+            border: 1px solid #333;
+            backdrop-filter: blur(10px);
+            white-space: nowrap;
+            z-index: 200;
+            transition: opacity 0.3s;
+        }
+
+        .phone-screen::-webkit-scrollbar {
+            width: 3px;
+        }
+        .phone-screen::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .phone-screen::-webkit-scrollbar-thumb {
+            background: #333;
+            border-radius: 10px;
+        }
+        * {
+            -webkit-tap-highlight-color: transparent;
+        }
+        *:focus {
+            outline: none;
+        }
+
+        @media (max-width: 400px) {
+            .phone {
+                height: 95vh;
+                border-radius: 28px;
+                padding: 12px;
+            }
+            .phone-screen {
+                border-radius: 20px;
+                padding: 14px;
+            }
+            .app-icon {
+                width: 44px;
+                height: 44px;
+                font-size: 20px;
+            }
+            .app-name {
+                font-size: 8px;
+            }
+            .app-item {
+                padding: 2px 1px;
+            }
+        }
+
+        .sber-card {
+            background: linear-gradient(135deg, #1a6d3e, #0d4a2a);
+            border-radius: 16px;
+            padding: 18px;
+            color: #fff;
+            margin-bottom: 12px;
+            box-shadow: 0 8px 30px rgba(26, 109, 62, 0.3);
+            position: relative;
+            overflow: hidden;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .sber-card::before {
+            content: '★';
+            position: absolute;
+            top: -20px;
+            right: -10px;
+            font-size: 70px;
+            opacity: 0.08;
+            color: #fff;
+        }
+        .sber-card .bank-name {
+            font-size: 11px;
+            opacity: 0.7;
+            letter-spacing: 1px;
+        }
+        .sber-card .card-holder {
+            font-size: 10px;
+            opacity: 0.6;
+            margin-top: 4px;
+            text-transform: uppercase;
+        }
+        .sber-card .card-bottom {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 4px;
+        }
+        .sber-card .card-bottom span {
+            font-size: 9px;
+            opacity: 0.5;
+        }
+
+        .card-number-box {
+            background: rgba(0, 0, 0, 0.35);
+            border-radius: 10px;
+            padding: 12px 16px;
+            margin: 8px 0 6px 0;
+            text-align: center;
+            cursor: pointer;
+            user-select: none;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            transition: all 0.3s ease;
+            overflow: hidden;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .card-number-box.collapsed {
+            padding: 3px 14px;
+            background: rgba(0, 0, 0, 0.15);
+        }
+        .card-number-box .number {
+            font-size: 18px;
+            font-weight: 600;
+            letter-spacing: 2px;
+            font-family: 'Courier New', monospace;
+            color: #fff;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+            display: flex;
+            justify-content: center;
+            gap: 4px;
+        }
+        .card-number-box .number .group {
+            display: inline-block;
+        }
+        .card-number-box .number.collapsed {
+            font-size: 12px;
+            letter-spacing: 1px;
+            gap: 2px;
+        }
+
+        .sber-balance {
+            background: rgba(255, 255, 255, 0.04);
+            border-radius: 12px;
+            padding: 12px 16px;
+            margin-bottom: 14px;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .sber-balance .label {
+            color: #888;
+            font-size: 12px;
+        }
+        .sber-balance .amount {
+            color: #f5c842;
+            font-size: 22px;
+            font-weight: 700;
+        }
+
+        .sber-history {
+            background: rgba(255, 255, 255, 0.04);
+            border-radius: 12px;
+            padding: 12px 14px;
+            margin-top: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            max-height: 180px;
+            overflow-y: auto;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .sber-history .history-title {
+            color: #aaa;
+            font-size: 12px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            padding-bottom: 4px;
+        }
+        .sber-history .history-empty {
+            color: #555;
+            font-size: 12px;
+            text-align: center;
+            padding: 14px 0;
+        }
+        .sber-history .history-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 6px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+            font-size: 12px;
+        }
+        .sber-history .history-item .h-left {
+            color: #ccc;
+        }
+        .sber-history .history-item .h-left .h-detail {
+            color: #888;
+            font-size: 10px;
+        }
+        .sber-history .history-item .h-amount {
+            color: #f5c842;
+            font-weight: 600;
+        }
+        .sber-history .history-item .h-amount.minus {
+            color: #e74c3c;
+        }
+
+        .sber-menu {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 6px;
+            margin: 10px 0;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .sber-menu-item {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 12px;
+            padding: 12px 8px;
+            text-align: center;
+            cursor: pointer;
+            transition: 0.2s;
+            color: #ddd;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .sber-menu-item:active {
+            transform: scale(0.95);
+            background: rgba(255, 255, 255, 0.08);
+        }
+        .sber-menu-item .icon {
+            font-size: 20px;
+            display: block;
+            margin-bottom: 2px;
+        }
+        .sber-menu-item .label {
+            font-size: 10px;
+            font-weight: 500;
+        }
+
+        .sber-input {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 12px;
+            padding: 10px 14px;
+            color: #fff;
+            font-size: 14px;
+            width: 100%;
+            outline: none;
+            margin-bottom: 8px;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .sber-input::placeholder {
+            color: #555;
+        }
+        .sber-input:focus {
+            border-color: #1a6d3e;
+        }
+
+        .sber-btn {
+            background: linear-gradient(135deg, #1a6d3e, #0d4a2a);
+            border: none;
+            color: #fff;
+            padding: 10px 20px;
+            border-radius: 30px;
+            font-weight: 700;
+            font-size: 14px;
+            cursor: pointer;
+            touch-action: manipulation;
+            transition: 0.2s;
+            width: 100%;
+            margin-top: 4px;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .sber-btn:active {
+            transform: scale(0.96);
+        }
+        .sber-btn.green {
+            background: linear-gradient(135deg, #2ecc71, #27ae60);
+        }
+        .sber-btn.red {
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+        }
+        .sber-btn:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+
+        .sber-back {
+            background: rgba(255, 255, 255, 0.06);
+            border: none;
+            color: #4facfe;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 12px;
+            cursor: pointer;
+            touch-action: manipulation;
+            transition: 0.2s;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .sber-back:active {
+            transform: scale(0.92);
+        }
+
+        .transfer-method {
+            display: flex;
+            gap: 6px;
+            margin-bottom: 10px;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .transfer-method button {
+            flex: 1;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            color: #aaa;
+            padding: 8px;
+            border-radius: 10px;
+            font-size: 11px;
+            cursor: pointer;
+            transition: 0.2s;
+            touch-action: manipulation;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .transfer-method button:active {
+            transform: scale(0.95);
+        }
+        .transfer-method button.active {
+            border-color: #1a6d3e;
+            color: #fff;
+            background: rgba(26, 109, 62, 0.2);
+        }
+
+        .sber-history::-webkit-scrollbar {
+            width: 3px;
+        }
+        .sber-history::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .sber-history::-webkit-scrollbar-thumb {
+            background: #333;
+            border-radius: 10px;
+        }
     </style>
 </head>
 <body>
@@ -412,7 +1153,6 @@
                 <h2>⚙️ Настройки</h2>
                 <button class="modal-close" id="closeSettingsBtn">✕</button>
             </div>
-
             <div class="setting-group">
                 <div class="setting-label">Тема</div>
                 <div class="setting-desc">Выберите оформление приложения</div>
@@ -423,7 +1163,6 @@
                     <span class="toggle-label" id="themeLabel">Тёмная</span>
                 </div>
             </div>
-
             <div class="setting-group">
                 <div class="setting-label">Заставка</div>
                 <div class="setting-desc">Выберите фоновое изображение</div>
@@ -446,7 +1185,6 @@
                     </div>
                 </div>
             </div>
-
             <div class="setting-group">
                 <div class="setting-label">Размер шрифта</div>
                 <div class="setting-desc">Выберите удобный размер текста</div>
@@ -456,7 +1194,6 @@
                     <option value="large">Большой</option>
                 </select>
             </div>
-
             <div class="setting-group">
                 <div class="setting-label">Размер иконок</div>
                 <div class="setting-desc">Выберите удобный размер иконок</div>
@@ -466,7 +1203,6 @@
                     <option value="large">Большой</option>
                 </select>
             </div>
-
             <button class="reset-btn" onclick="openResetConfirm()">🗑️ Сбросить все</button>
         </div>
 
@@ -504,13 +1240,11 @@
 
             applyTheme(theme, false);
             setWallpaper(wallpaper, true);
-
             document.getElementById('fontSizeSelect').value = fontSize;
             applyFontSize(fontSize);
-
             document.getElementById('iconSizeSelect').value = iconSize;
             applyIconSize(iconSize);
-        } catch(e) {}
+        } catch (e) {}
     }
 
     function applyTheme(theme, save) {
@@ -518,7 +1252,6 @@
         document.body.classList.toggle('light-theme', isLight);
         var toggle = document.getElementById('themeToggle');
         var label = document.getElementById('themeLabel');
-
         if (isLight) {
             toggle.classList.add('active');
             label.textContent = 'Светлая';
@@ -526,18 +1259,11 @@
             toggle.classList.remove('active');
             label.textContent = 'Тёмная';
         }
-
         var screen = document.getElementById('phoneScreen');
         screen.classList.remove('default-dark', 'default-light');
-        if (isLight) {
-            screen.classList.add('default-light');
-        } else {
-            screen.classList.add('default-dark');
-        }
-
-        if (save) {
-            localStorage.setItem('appTheme', theme);
-        }
+        if (isLight) screen.classList.add('default-light');
+        else screen.classList.add('default-dark');
+        if (save) localStorage.setItem('appTheme', theme);
     }
 
     function toggleTheme() {
@@ -545,32 +1271,23 @@
         var newTheme = isLight ? 'dark' : 'light';
         applyTheme(newTheme, true);
         var wallpaper = localStorage.getItem('appWallpaper') || 'default';
-        if (wallpaper === 'default') {
-            setWallpaper('default', true);
-        }
+        if (wallpaper === 'default') setWallpaper('default', true);
     }
 
     function setWallpaper(name, noSave) {
         var screen = document.getElementById('phoneScreen');
-
         document.body.classList.remove('wallpaper-default', 'wallpaper-space', 'wallpaper-flowers', 'wallpaper-city');
-
         if (name === 'default' || !name) {
             document.body.classList.add('wallpaper-default');
             screen.style.backgroundImage = 'none';
             screen.style.background = '';
         } else {
             document.body.classList.add('wallpaper-' + name);
-            // Картинка уже задана в CSS
         }
-
         document.querySelectorAll('.wallpaper-item').forEach(function(el) {
             el.classList.toggle('active', el.dataset.wallpaper === name);
         });
-
-        if (!noSave) {
-            localStorage.setItem('appWallpaper', name);
-        }
+        if (!noSave) localStorage.setItem('appWallpaper', name);
     }
 
     function applyFontSize(size) {
@@ -622,7 +1339,7 @@
     function updateTime() {
         var now = new Date();
         document.getElementById('statusTime').textContent =
-            String(now.getHours()).padStart(2,'0') + ':' + String(now.getMinutes()).padStart(2,'0');
+            String(now.getHours()).padStart(2, '0') + ':' + String(now.getMinutes()).padStart(2, '0');
     }
     updateTime();
     setInterval(updateTime, 5000);
@@ -643,40 +1360,117 @@
     setInterval(updateBattery, 5000);
 
     // ============================================================
-    // ПРОФЕССИИ
+    // УЧЁБА (С КАТЕГОРИЯМИ)
     // ============================================================
-    var professions = [
-        { id: 'fsb', name: 'ФСБ', desc: 'Федеральная служба безопасности' },
-        { id: 'mchs', name: 'МЧС', desc: 'Спасатель, пожарный' },
-        { id: 'medic', name: 'Медик', desc: 'Врач, фельдшер' },
-        { id: 'mvd', name: 'МВД', desc: 'Полицейский, следователь' },
-        { id: 'teacher', name: 'Учитель', desc: 'Преподаватель, наставник' }
-    ];
+    var categories = [{
+        id: 'government',
+        name: '🏛️ Правительство',
+        professions: [
+            { id: 'advocate', name: 'Адвокат', desc: 'Защита прав граждан в суде' },
+            { id: 'lawyer', name: 'Юрист', desc: 'Правовое консультирование, составление документов' },
+            { id: 'judge', name: 'Судья', desc: 'Правосудие, вынесение решений' },
+            { id: 'prosecutor', name: 'Прокурор', desc: 'Надзор за исполнением законов' },
+            { id: 'notary', name: 'Нотариус', desc: 'Заверение документов, сделок' }
+        ]
+    }, {
+        id: 'security',
+        name: '🛡️ Силовые структуры',
+        professions: [
+            { id: 'mvd_police', name: 'Полицейский (МВД)', desc: 'Охрана общественного порядка' },
+            { id: 'mvd_investigator', name: 'Следователь (МВД)', desc: 'Расследование преступлений' },
+            { id: 'fsb_officer', name: 'Оперативник (ФСБ)', desc: 'Контрразведка, борьба с терроризмом' },
+            { id: 'mchs_rescuer', name: 'Спасатель (МЧС)', desc: 'Ликвидация ЧС, спасение людей' },
+            { id: 'mchs_fireman', name: 'Пожарный (МЧС)', desc: 'Тушение пожаров' }
+        ]
+    }, {
+        id: 'medicine',
+        name: '🏥 Медицина',
+        professions: [
+            { id: 'doctor', name: 'Врач', desc: 'Лечение и диагностика заболеваний' },
+            { id: 'surgeon', name: 'Хирург', desc: 'Проведение операций' },
+            { id: 'pediatrician', name: 'Педиатр', desc: 'Детский врач' },
+            { id: 'dentist', name: 'Стоматолог', desc: 'Лечение зубов' },
+            { id: 'pharmacist', name: 'Фармацевт', desc: 'Изготовление и отпуск лекарств' }
+        ]
+    }, {
+        id: 'it',
+        name: '💻 IT и Технологии',
+        professions: [
+            { id: 'programmer', name: 'Программист', desc: 'Разработка ПО' },
+            { id: 'tester', name: 'Тестировщик', desc: 'Проверка качества ПО' },
+            { id: 'analyst', name: 'Аналитик', desc: 'Анализ данных и требований' },
+            { id: 'designer', name: 'Дизайнер', desc: 'UI/UX, графический дизайн' },
+            { id: 'sysadmin', name: 'Системный администратор', desc: 'Администрирование IT-систем' }
+        ]
+    }, {
+        id: 'construction',
+        name: '🏗️ Строительство и Архитектура',
+        professions: [
+            { id: 'architect', name: 'Архитектор', desc: 'Проектирование зданий' },
+            { id: 'engineer', name: 'Инженер', desc: 'Расчёт конструкций' },
+            { id: 'builder', name: 'Строитель', desc: 'Возведение объектов' },
+            { id: 'surveyor', name: 'Геодезист', desc: 'Измерения на местности' },
+            { id: 'project_manager', name: 'Проектировщик', desc: 'Разработка проектной документации' }
+        ]
+    }, {
+        id: 'education',
+        name: '📚 Образование',
+        professions: [
+            { id: 'teacher', name: 'Учитель', desc: 'Преподавание в школе' },
+            { id: 'professor', name: 'Преподаватель', desc: 'Обучение в вузе' },
+            { id: 'tutor', name: 'Тьютор', desc: 'Индивидуальное сопровождение' },
+            { id: 'methodologist', name: 'Методист', desc: 'Разработка программ' }
+        ]
+    }];
+
     var selectedProfession = localStorage.getItem('selectedProfession') || null;
     var startDate = localStorage.getItem('startDate') || null;
+    var expandedCategories = {};
 
     function getDaysLeft() {
         if (!startDate) return 14;
-        var diff = Math.floor((new Date() - new Date(startDate)) / (1000*60*60*24));
+        var diff = Math.floor((new Date() - new Date(startDate)) / (1000 * 60 * 60 * 24));
         return Math.max(0, 14 - diff);
     }
+
     function getDaysPassed() {
         if (!startDate) return 0;
-        return Math.floor((new Date() - new Date(startDate)) / (1000*60*60*24));
+        return Math.floor((new Date() - new Date(startDate)) / (1000 * 60 * 60 * 24));
+    }
+
+    function toggleCategory(categoryId) {
+        expandedCategories[categoryId] = !expandedCategories[categoryId];
+        renderStudy();
     }
 
     function renderStudy() {
         var content = document.getElementById('studyContent');
+
         if (selectedProfession) {
-            var prof = professions.find(function(p) { return p.id === selectedProfession; });
-            var daysLeft = getDaysLeft(), daysPassed = getDaysPassed(), finished = daysLeft <= 0;
+            var foundProf = null;
+            var foundCat = null;
+            for (var c = 0; c < categories.length; c++) {
+                for (var p = 0; p < categories[c].professions.length; p++) {
+                    if (categories[c].professions[p].id === selectedProfession) {
+                        foundProf = categories[c].professions[p];
+                        foundCat = categories[c];
+                        break;
+                    }
+                }
+                if (foundProf) break;
+            }
+
+            var daysLeft = getDaysLeft();
+            var daysPassed = getDaysPassed();
+            var finished = daysLeft <= 0;
+
             content.innerHTML = `
                 <div class="selected-profession-block">
-                    <div class="prof-name">${prof ? prof.name : ''}</div>
-                    <div class="prof-desc">${prof ? prof.desc : ''}</div>
+                    <div class="prof-name">${foundProf ? foundProf.name : ''}</div>
+                    <div class="prof-desc">${foundProf ? foundProf.desc : ''}</div>
                     <div class="status-text">${finished ? 'Обучение завершено' : 'Профессия выбрана'}</div>
                     <div class="days-left-big">${finished ? 'Обучение завершено' : 'Осталось дней: ' + daysLeft}</div>
-                    <div style="color:#888;font-size:11px;margin-top:3px;">${finished ? 'Вы успешно освоили профессию' : 'День ' + Math.min(daysPassed,14) + ' из 14'}</div>
+                    <div style="color:#888;font-size:11px;margin-top:3px;">${finished ? 'Вы успешно освоили профессию' : 'День ' + Math.min(daysPassed, 14) + ' из 14'}</div>
                 </div>
                 <div class="profession-detail open">
                     <div class="row"><span class="label">Время обучения</span><span class="value">14 дней</span></div>
@@ -687,16 +1481,31 @@
             `;
             return;
         }
+
         var html = '<div class="profession-list">';
-        professions.forEach(function(p) {
+        for (var c = 0; c < categories.length; c++) {
+            var cat = categories[c];
+            var isOpen = expandedCategories[cat.id] || false;
             html += `
-                <div class="profession-card" onclick="selectProfession('${p.id}')">
-                    <div class="info"><h3>${p.name}</h3><p>${p.desc}</p></div>
-                    <button class="profession-btn">Выбрать</button>
+                <div class="category-btn" onclick="toggleCategory('${cat.id}')">
+                    <span>${cat.name}</span>
+                    <span class="arrow ${isOpen ? 'open' : ''}">▼</span>
                 </div>
+                <div class="category-content ${isOpen ? 'open' : ''}">
             `;
-        });
-        content.innerHTML = html + '</div>';
+            for (var p = 0; p < cat.professions.length; p++) {
+                var prof = cat.professions[p];
+                html += `
+                    <div class="profession-card" onclick="selectProfession('${prof.id}')">
+                        <div class="info"><h3>${prof.name}</h3><p>${prof.desc}</p></div>
+                        <button class="profession-btn">Выбрать</button>
+                    </div>
+                `;
+            }
+            html += '</div>';
+        }
+        html += '</div>';
+        content.innerHTML = html;
     }
 
     function selectProfession(id) {
@@ -713,7 +1522,10 @@
         document.getElementById('bookModal').classList.add('active');
         renderBook();
     }
-    function closeBook() { document.getElementById('bookModal').classList.remove('active'); }
+
+    function closeBook() {
+        document.getElementById('bookModal').classList.remove('active');
+    }
 
     function showToast(text) {
         var old = document.querySelector('.toast-custom');
@@ -726,39 +1538,141 @@
     }
 
     // ============================================================
-    // КНИГА
+    // КНИГА ДЛЯ УЧЕНИЯ
     // ============================================================
     var bookQuestions = {
-        fsb: [
-            { q: 'В ТЦ стрельба. Вы ФСБ. Ваши действия?', a: 'Набрать 112, 102, 101. Координировать эвакуацию, перекрыть выходы, организовать группы людей, укрыть раненых.' },
-            { q: 'Сообщение о бомбе в школе. Ваши действия?', a: 'Набрать 112, 102, 101. Эвакуация по плану, проверка подозрительных мест, оцепление.' }
+        advocate: [
+            { q: 'Что такое адвокатская тайна?', a: 'Это информация, которую адвокат не может разглашать ни при каких условиях.' },
+            { q: 'Как адвокат защищает права клиента в суде?', a: 'Представляет интересы, собирает доказательства, подаёт ходатайства.' }
         ],
-        mchs: [
-            { q: 'Землетрясение 7 баллов. Ваши действия?', a: 'Набрать 112, 101. Лечь на пол, защитить голову. После толчков покинуть здание.' },
-            { q: 'Пожар в многоэтажке. Ваши действия?', a: 'Набрать 101, 112. Потушить огнетушителем, если слабый. При сильном — покинуть помещение.' }
+        lawyer: [
+            { q: 'Чем юрист отличается от адвоката?', a: 'Юрист не имеет статуса адвоката и не может представлять в суде.' },
+            { q: 'Что делает юрист в компании?', a: 'Проверяет договоры, консультирует сотрудников.' }
         ],
-        medic: [
-            { q: 'Остановка сердца. Ваши действия?', a: 'Набрать 103, 112. Начать СЛР: 30 компрессий, 2 вдоха.' },
-            { q: 'Инсульт. Ваши действия?', a: 'Набрать 103, 112. Уложить с приподнятой головой, не давать еду и воду.' }
+        judge: [
+            { q: 'Как судья принимает решение?', a: 'На основе законов и внутреннего убеждения.' },
+            { q: 'Каковы требования к судье?', a: 'Высшее юридическое образование, стаж, независимость.' }
         ],
-        mvd: [
-            { q: 'Ограбление с оружием. Ваши действия?', a: 'Набрать 102, 112. Сообщить приметы, не вступать в конфликт.' },
-            { q: 'Подозрительный предмет в автобусе. Ваши действия?', a: 'Набрать 102, 112. Вывести людей, не трогать предмет.' }
+        prosecutor: [
+            { q: 'Какова роль прокурора в суде?', a: 'Поддерживает обвинение, надзирает за законностью.' },
+            { q: 'Что делает прокурор в досудебном производстве?', a: 'Утверждает обвинительное заключение.' }
+        ],
+        notary: [
+            { q: 'Что заверяет нотариус?', a: 'Договоры, доверенности, копии документов.' },
+            { q: 'Как стать нотариусом?', a: 'Сдать экзамен, получить лицензию.' }
+        ],
+        mvd_police: [
+            { q: 'Что делает полицейский?', a: 'Охраняет общественный порядок, задерживает нарушителей.' },
+            { q: 'Как реагировать на вызов?', a: 'Быстро прибыть, оценить обстановку, действовать по инструкции.' }
+        ],
+        mvd_investigator: [
+            { q: 'Что расследует следователь?', a: 'Уголовные дела, собирает доказательства.' },
+            { q: 'Как взаимодействовать с прокурором?', a: 'Предоставлять материалы для утверждения.' }
+        ],
+        fsb_officer: [
+            { q: 'Чем занимается ФСБ?', a: 'Обеспечивает государственную безопасность.' },
+            { q: 'Как действовать при угрозе теракта?', a: 'Действовать по инструкции, сообщить руководству.' }
+        ],
+        mchs_rescuer: [
+            { q: 'Что делать при землетрясении?', a: 'Лечь на пол, защитить голову, покинуть здание после толчков.' },
+            { q: 'Как спасать людей из завалов?', a: 'Использовать спецоборудование, действовать аккуратно.' }
+        ],
+        mchs_fireman: [
+            { q: 'Что делать при пожаре?', a: 'Вызвать 101, эвакуировать людей, тушить огонь.' },
+            { q: 'Как использовать огнетушитель?', a: 'Сорвать пломбу, направить на очаг возгорания.' }
+        ],
+        doctor: [
+            { q: 'Что делать при остановке сердца?', a: 'Начать СЛР: 30 нажатий, 2 вдоха.' },
+            { q: 'Как лечить простуду?', a: 'Покой, тёплое питьё, жаропонижающие.' }
+        ],
+        surgeon: [
+            { q: 'Что делать при открытом переломе?', a: 'Остановить кровь, наложить шину, вызвать скорую.' },
+            { q: 'Каковы правила стерилизации?', a: 'Обработка инструментов, использование перчаток.' }
+        ],
+        pediatrician: [
+            { q: 'Как лечить детскую простуду?', a: 'Покой, обильное питьё, безопасные лекарства.' },
+            { q: 'Как ухаживать за новорождённым?', a: 'Гигиена, кормление, вакцинация.' }
+        ],
+        dentist: [
+            { q: 'Как лечить кариес?', a: 'Удалить поражённую ткань, поставить пломбу.' },
+            { q: 'Как предотвратить кариес?', a: 'Чистка зубов, использование нити, фторирование.' }
+        ],
+        pharmacist: [
+            { q: 'Как изготавливать лекарства?', a: 'По рецепту, с соблюдением пропорций.' },
+            { q: 'Как отпускать лекарства?', a: 'Проверить рецепт, выдать препарат.' }
+        ],
+        programmer: [
+            { q: 'Как писать чистый код?', a: 'Следовать стандартам, использовать комментарии.' },
+            { q: 'Что такое отладка?', a: 'Поиск и исправление ошибок.' }
+        ],
+        tester: [
+            { q: 'Как тестировать ПО?', a: 'Находить баги, составлять отчёты.' },
+            { q: 'Какие виды тестирования бывают?', a: 'Функциональное, нагрузочное, регрессионное.' }
+        ],
+        analyst: [
+            { q: 'Как анализировать данные?', a: 'Использовать статистику, визуализацию.' },
+            { q: 'Что такое бизнес-требования?', a: 'Описание потребностей заказчика.' }
+        ],
+        designer: [
+            { q: 'Как создавать дизайн?', a: 'Изучить пользователей, создать прототип.' },
+            { q: 'Что такое UX?', a: 'Опыт пользователя, удобство интерфейса.' }
+        ],
+        sysadmin: [
+            { q: 'Как настраивать сервер?', a: 'Установить ОС, настроить безопасность.' },
+            { q: 'Что делать при сбое системы?', a: 'Найти причину, восстановить работу.' }
+        ],
+        architect: [
+            { q: 'Как создать проект здания?', a: 'Разработать чертежи, рассчитать нагрузки.' },
+            { q: 'Каковы правила строительства?', a: 'Соблюдать СНиПы и ГОСТы.' }
+        ],
+        engineer: [
+            { q: 'Как делать расчёты конструкций?', a: 'Использовать формулы, проверять прочность.' },
+            { q: 'Как контролировать качество?', a: 'Проверять материалы, тестировать.' }
+        ],
+        builder: [
+            { q: 'Как класть кирпич?', a: 'Раствор, выравнивание, проверка уровня.' },
+            { q: 'Как работать с бетоном?', a: 'Смешивать, заливать, утрамбовывать.' }
+        ],
+        surveyor: [
+            { q: 'Что такое геодезия?', a: 'Наука об измерениях на местности.' },
+            { q: 'Как делать разбивку участка?', a: 'Использовать теодолит, мерную ленту.' }
+        ],
+        project_manager: [
+            { q: 'Как управлять проектом?', a: 'Планировать, контролировать сроки.' },
+            { q: 'Как работать с заказчиком?', a: 'Уточнять требования, презентовать решения.' }
         ],
         teacher: [
-            { q: 'Паника в классе из-за стрельбы. Ваши действия?', a: 'Набрать 112, 102. Успокоить детей, закрыть двери, выключить свет.' },
-            { q: 'Буллинг с ножом. Ваши действия?', a: 'Набрать 102, 112. Вмешаться, развести учеников.' }
+            { q: 'Как вести урок?', a: 'Объяснять материал, задавать вопросы.' },
+            { q: 'Как работать с трудными учениками?', a: 'Находить подход, мотивировать.' }
+        ],
+        professor: [
+            { q: 'Как читать лекции?', a: 'Структурированно, с примерами.' },
+            { q: 'Как принимать экзамены?', a: 'Оценивать знания объективно.' }
+        ],
+        tutor: [
+            { q: 'Как помогать ученику?', a: 'Объяснять материал, делать упражнения.' },
+            { q: 'Как мотивировать ученика?', a: 'Хвалить, показывать прогресс.' }
+        ],
+        methodologist: [
+            { q: 'Как создать учебную программу?', a: 'Определить цели, разработать план.' },
+            { q: 'Как оценить эффективность?', a: 'Собрать обратную связь.' }
         ]
     };
 
     function renderBook() {
         var prof = selectedProfession;
-        if (!prof) { document.getElementById('bookContent').innerHTML = '<div style="color:#888;">Сначала выберите профессию</div>'; return; }
+        if (!prof) {
+            document.getElementById('bookContent').innerHTML = '<div style="color:#888;">Сначала выберите профессию</div>';
+            return;
+        }
         var questions = bookQuestions[prof];
-        if (!questions) { document.getElementById('bookContent').innerHTML = '<div style="color:#888;">Нет вопросов</div>'; return; }
+        if (!questions) {
+            document.getElementById('bookContent').innerHTML = '<div style="color:#888;">Нет вопросов для этой профессии</div>';
+            return;
+        }
         var html = '';
         questions.forEach(function(q) {
-            html += `<div class="question-block"><div class="q">❓ ${q.q}</div><div class="a">${q.a}</div></div>`;
+            html += '<div class="question-block"><div class="q">❓ ' + q.q + '</div><div class="a">' + q.a + '</div></div>';
         });
         document.getElementById('bookContent').innerHTML = html;
     }
@@ -767,9 +1681,20 @@
     // БАНК
     // ============================================================
     var bankData = {
-        registered: false, name: '', phone: '', password: '', balance: 0,
-        deposit: 0, depositDate: null, credit: 0, creditDate: null,
-        creditAmount: 0, loggedIn: false, cardNumber: '', history: [], cardHidden: false
+        registered: false,
+        name: '',
+        phone: '',
+        password: '',
+        balance: 0,
+        deposit: 0,
+        depositDate: null,
+        credit: 0,
+        creditDate: null,
+        creditAmount: 0,
+        loggedIn: false,
+        cardNumber: '',
+        history: [],
+        cardHidden: false
     };
 
     function generateCardNumber() {
@@ -791,7 +1716,7 @@
                 bankData.loggedIn = false;
                 if (!bankData.cardNumber) bankData.cardNumber = generateCardNumber();
             }
-        } catch(e) {}
+        } catch (e) {}
     }
 
     function saveBankData() {
@@ -799,7 +1724,7 @@
             var data = Object.assign({}, bankData);
             data.loggedIn = false;
             localStorage.setItem('bankData', JSON.stringify(data));
-        } catch(e) {}
+        } catch (e) {}
     }
 
     function renderBank() {
@@ -844,7 +1769,10 @@
     }
 
     function showLogin() { renderBank(); }
-    function showRegistration() { bankData.loggedIn = false; saveBankData(); renderBank(); }
+
+    function showRegistration() { bankData.loggedIn = false;
+        saveBankData();
+        renderBank(); }
 
     function registerBank() {
         var name = document.getElementById('regName').value.trim();
@@ -1156,22 +2084,27 @@
         document.getElementById('studyModal').classList.add('active');
         renderStudy();
     }
+
     function closeStudy() {
         document.getElementById('studyModal').classList.remove('active');
     }
+
     function openBank() {
         document.getElementById('bankModal').classList.add('active');
         loadBankData();
         renderBank();
     }
+
     function closeBank() {
         bankData.loggedIn = false;
         saveBankData();
         document.getElementById('bankModal').classList.remove('active');
     }
+
     function openSettings() {
         document.getElementById('settingsModal').classList.add('active');
     }
+
     function closeSettings() {
         document.getElementById('settingsModal').classList.remove('active');
     }
@@ -1227,4 +2160,4 @@
     }, 1000);
 </script>
 </body>
-                                                              </html>
+    </html>
