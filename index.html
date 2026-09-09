@@ -63,7 +63,7 @@
             flex-direction: column;
             align-items: center;
             gap: 6px;
-            cursor: grab;
+            cursor: pointer;
             touch-action: none;
             transition: transform 0.15s;
             position: relative;
@@ -71,12 +71,11 @@
             padding: 8px;
             border-radius: 12px;
         }
-        .app-item:active { cursor: grabbing; }
+        .app-item:active { transform: scale(0.95); }
         .app-item.dragging {
             opacity: 0.5;
             transform: scale(0.9);
             z-index: 999;
-            position: relative;
         }
         .app-item.drag-over {
             transform: scale(1.05);
@@ -88,7 +87,11 @@
             opacity: 0.2;
             cursor: grab;
             margin-bottom: 2px;
+            padding: 4px 8px;
+            user-select: none;
+            touch-action: none;
         }
+        .app-item .drag-handle:active { cursor: grabbing; }
         .app-icon {
             width: 62px;
             height: 62px;
@@ -309,17 +312,17 @@
         </div>
 
         <div class="apps-grid" id="appsGrid">
-            <div class="app-item" data-id="study" id="studyAppBtn">
-                <div class="drag-handle">⠿</div>
+            <div class="app-item" id="studyAppBtn" onclick="openStudy()">
+                <div class="drag-handle" id="dragStudy">⠿</div>
                 <div class="app-icon study">📚</div>
                 <span class="app-name">Учеба</span>
             </div>
-            <div class="app-item" data-id="bank" id="bankAppBtn">
-                <div class="drag-handle">⠿</div>
+            <div class="app-item" id="bankAppBtn" onclick="openBank()">
+                <div class="drag-handle" id="dragBank">⠿</div>
                 <div class="app-icon bank">🏦</div>
                 <span class="app-name">Банк</span>
             </div>
-            <div class="app-item" data-id="locked">
+            <div class="app-item">
                 <div class="drag-handle">⠿</div>
                 <div class="app-icon locked">🔒</div>
                 <span class="app-name">Скоро</span>
@@ -351,14 +354,12 @@
         </div>
 
     </div>
-</div>
-<script>
+    </div>
+    <script>
     // ===== DRAG-AND-DROP ДЛЯ ИКОНОК =====
     var dragData = {
         dragEl: null,
         dragId: null,
-        startX: 0,
-        startY: 0,
         offsetX: 0,
         offsetY: 0,
         clone: null,
@@ -366,38 +367,29 @@
     };
 
     function initDrag() {
-        var items = document.querySelectorAll('.app-item');
-        var grid = document.getElementById('appsGrid');
-
-        items.forEach(function(item) {
-            item.addEventListener('pointerdown', function(e) {
-                if (e.target.closest('.drag-handle') || e.target.closest('.app-icon') || e.target.closest('.app-name')) {
-                    e.preventDefault();
-                    startDrag(e, item);
-                }
+        var handles = document.querySelectorAll('.drag-handle');
+        handles.forEach(function(handle) {
+            handle.addEventListener('pointerdown', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                var item = handle.closest('.app-item');
+                if (item) startDrag(e, item);
             });
         });
 
         document.addEventListener('pointermove', function(e) {
-            if (dragData.isDragging) {
-                moveDrag(e);
-            }
+            if (dragData.isDragging) moveDrag(e);
         });
 
         document.addEventListener('pointerup', function(e) {
-            if (dragData.isDragging) {
-                endDrag(e);
-            }
+            if (dragData.isDragging) endDrag(e);
         });
     }
 
     function startDrag(e, item) {
         var rect = item.getBoundingClientRect();
-
         dragData.dragEl = item;
-        dragData.dragId = item.dataset.id;
-        dragData.startX = e.clientX;
-        dragData.startY = e.clientY;
+        dragData.dragId = item.dataset.id || item.id;
         dragData.offsetX = e.clientX - rect.left;
         dragData.offsetY = e.clientY - rect.top;
         dragData.isDragging = true;
@@ -411,7 +403,7 @@
         clone.style.zIndex = '9999';
         clone.style.opacity = '0.85';
         clone.style.transform = 'scale(1.05)';
-        clone.style.background = 'rgba(255,255,255,0.03)';
+        clone.style.background = 'rgba(255,255,255,0.05)';
         clone.style.borderRadius = '12px';
         clone.style.padding = '8px';
         clone.style.boxShadow = '0 20px 60px rgba(0,0,0,0.5)';
@@ -433,8 +425,8 @@
             var centerX = rect.left + rect.width / 2;
             var centerY = rect.top + rect.height / 2;
             var dist = Math.sqrt(Math.pow(e.clientX - centerX, 2) + Math.pow(e.clientY - centerY, 2));
-            if (dist < 80) { item.classList.add('drag-over'); }
-            else { item.classList.remove('drag-over'); }
+            if (dist < 80) item.classList.add('drag-over');
+            else item.classList.remove('drag-over');
         });
     }
 
@@ -463,8 +455,8 @@
             var grid = document.getElementById('appsGrid');
             var dragIndex = Array.from(grid.children).indexOf(dragEl);
             var targetIndex = Array.from(grid.children).indexOf(targetItem);
-            if (dragIndex < targetIndex) { grid.insertBefore(dragEl, targetItem.nextSibling); }
-            else { grid.insertBefore(dragEl, targetItem); }
+            if (dragIndex < targetIndex) grid.insertBefore(dragEl, targetItem.nextSibling);
+            else grid.insertBefore(dragEl, targetItem);
             saveAppOrder();
         }
 
@@ -476,7 +468,7 @@
         var grid = document.getElementById('appsGrid');
         var order = [];
         grid.querySelectorAll('.app-item').forEach(function(item) {
-            order.push(item.dataset.id);
+            order.push(item.id || '');
         });
         localStorage.setItem('appOrder', JSON.stringify(order));
     }
@@ -489,19 +481,25 @@
                 var grid = document.getElementById('appsGrid');
                 var items = grid.querySelectorAll('.app-item');
                 var map = {};
-                items.forEach(function(item) { map[item.dataset.id] = item; });
+                items.forEach(function(item) { if (item.id) map[item.id] = item; });
                 grid.innerHTML = '';
                 order.forEach(function(id) { if (map[id]) grid.appendChild(map[id]); });
-                var allIds = ['study', 'bank', 'locked'];
+                var allIds = ['studyAppBtn', 'bankAppBtn'];
                 allIds.forEach(function(id) { if (!order.includes(id) && map[id]) grid.appendChild(map[id]); });
+                // Добавляем locked если его нет
+                var locked = document.querySelector('.app-item .locked');
+                if (locked) {
+                    var parent = locked.closest('.app-item');
+                    if (parent && !grid.contains(parent)) grid.appendChild(parent);
+                }
                 initDrag();
             }
         } catch(e) {}
     }
 
     setTimeout(function() { loadAppOrder(); initDrag(); }, 100);
-                    </script>
-                    <style>
+    </script>
+    <style>
     /* ===== БАНК В СТИЛЕ СБЕРБАНКА ===== */
     .sber-card {
         background: linear-gradient(135deg, #1a6d3e, #0d4a2a);
@@ -1418,9 +1416,6 @@
     }
 
     // ===== СОБЫТИЯ =====
-    // Используем onclick из HTML, поэтому addEventListener не нужен для кнопок приложений
-    // Но для модалок используем addEventListener
-
     document.getElementById('closeStudyBtn').addEventListener('click', closeStudy);
     document.getElementById('closeBankBtn').addEventListener('click', closeBank);
     document.getElementById('closeBookBtn').addEventListener('click', closeBook);
