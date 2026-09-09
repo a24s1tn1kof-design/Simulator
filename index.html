@@ -410,8 +410,8 @@
         </div>
 
     </div>
-    </div>
-    <script>
+                </div>
+  <script>
     // ===== НАСТОЯЩЕЕ ВРЕМЯ =====
     function updateTime() {
         var now = new Date();
@@ -583,7 +583,7 @@
         }
         document.getElementById('bookContent').innerHTML = html;
     }
-    </script>
+    </script>              
     <script>
     // ===== БАНК =====
     var bankData = {
@@ -596,7 +596,8 @@
         credit: 0,
         creditDate: null,
         creditAmount: 0,
-        profession: ''
+        profession: '',
+        loggedIn: false
     };
 
     function loadBankData() {
@@ -614,6 +615,7 @@
                 bankData.creditDate = data.creditDate || null;
                 bankData.creditAmount = data.creditAmount || 0;
                 bankData.profession = data.profession || '';
+                bankData.loggedIn = data.loggedIn || false;
             }
         } catch(e) {}
     }
@@ -653,6 +655,7 @@
     function renderBank() {
         var content = document.getElementById('bankContent');
 
+        // Если не зарегистрирован — показываем регистрацию
         if (!bankData.registered) {
             var prof = getProfessionFromStudy();
             if (!prof) {
@@ -678,10 +681,33 @@
                     <input class="bank-input" id="regPassword" placeholder="Пароль (4 цифры)" type="password" maxlength="4" inputmode="numeric">
                     <button class="bank-btn green" onclick="registerBank()">Зарегистрироваться</button>
                 </div>
+                <div style="text-align:center;margin-top:12px;color:#888;font-size:13px;">
+                    Уже есть аккаунт? <span style="color:#4facfe;cursor:pointer;" onclick="showLogin()">Войти</span>
+                </div>
             `;
             return;
         }
 
+        // Если зарегистрирован, но не залогинен — показываем вход
+        if (!bankData.loggedIn) {
+            content.innerHTML = `
+                <div style="text-align:center;margin-bottom:20px;">
+                    <div style="font-size:48px;">🏦</div>
+                    <div style="color:#fff;font-size:18px;font-weight:600;margin-top:8px;">Здравствуйте, ${bankData.name}!</div>
+                    <div style="color:#888;font-size:13px;margin-top:4px;">Введите пин-код для входа</div>
+                </div>
+                <div style="display:flex;flex-direction:column;gap:12px;">
+                    <input class="bank-input" id="loginPassword" placeholder="Пин-код (4 цифры)" type="password" maxlength="4" inputmode="numeric">
+                    <button class="bank-btn green" onclick="loginBank()">Войти</button>
+                </div>
+                <div style="text-align:center;margin-top:12px;color:#888;font-size:13px;">
+                    <span style="color:#4facfe;cursor:pointer;" onclick="showRegistration()">Вернуться к регистрации</span>
+                </div>
+            `;
+            return;
+        }
+
+        // Если залогинен — показываем главный экран
         var prof = getProfessionFromStudy();
         var daysLeft = getDaysLeft();
 
@@ -715,6 +741,18 @@
         `;
     }
 
+    // ===== ПЕРЕКЛЮЧЕНИЕ МЕЖДУ ВХОДОМ И РЕГИСТРАЦИЕЙ =====
+    function showLogin() {
+        // Сохраняем данные, просто показываем экран входа
+        renderBank();
+    }
+
+    function showRegistration() {
+        bankData.loggedIn = false;
+        saveBankData();
+        renderBank();
+    }
+
     // ===== РЕГИСТРАЦИЯ =====
     function registerBank() {
         var name = document.getElementById('regName').value.trim();
@@ -732,9 +770,29 @@
         bankData.password = password;
         bankData.balance = 100;
         bankData.profession = getProfessionFromStudy();
+        bankData.loggedIn = true; // после регистрации сразу входим
         saveBankData();
         renderBank();
         showToast('✅ Регистрация успешна! Получен бонус 100 $');
+    }
+
+    // ===== ВХОД =====
+    function loginBank() {
+        var password = document.getElementById('loginPassword').value.trim();
+
+        if (!password || password.length !== 4 || isNaN(password)) {
+            showToast('Введите пин-код (4 цифры)');
+            return;
+        }
+
+        if (password === bankData.password) {
+            bankData.loggedIn = true;
+            saveBankData();
+            renderBank();
+            showToast('✅ Добро пожаловать, ' + bankData.name + '!');
+        } else {
+            showToast('❌ Неверный пин-код');
+        }
     }
 
     // ===== ВКЛАД =====
@@ -895,9 +953,7 @@
 
     // ===== ВЫХОД =====
     function logoutBank() {
-        bankData.registered = false;
-        bankData.name = '';
-        bankData.password = '';
+        bankData.loggedIn = false;
         saveBankData();
         renderBank();
         showToast('👋 Вы вышли из банка');
