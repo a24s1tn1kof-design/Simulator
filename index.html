@@ -52,44 +52,47 @@
         }
         .status-icons { display: flex; gap: 6px; font-size: 13px; align-items: center; }
 
-        .apps-container {
+        /* СЕТКА 3x3 */
+        .apps-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 18px 12px;
+            margin-top: 20px;
             position: relative;
-            width: 100%;
-            height: 520px;
-            min-height: 380px;
+            min-height: 350px;
             -webkit-tap-highlight-color: transparent;
             touch-action: none;
         }
 
         .app-item {
-            position: absolute;
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 4px;
+            gap: 6px;
             cursor: grab;
             touch-action: none;
-            transition: transform 0.12s, opacity 0.2s, box-shadow 0.2s;
+            transition: transform 0.12s, opacity 0.2s, box-shadow 0.2s, border 0.2s;
             z-index: 1;
-            padding: 6px 10px;
+            padding: 10px 8px;
             border-radius: 14px;
             background: transparent;
-            border: none;
+            border: 2px solid transparent;
             -webkit-tap-highlight-color: transparent;
-            width: 80px;
+            position: relative;
         }
         .app-item:active { transform: scale(0.92); }
         .app-item.dragging {
             opacity: 0.35;
-            transform: scale(0.92);
+            transform: scale(0.9);
             z-index: 999;
             background: rgba(255,255,255,0.04);
             border-radius: 14px;
             box-shadow: 0 8px 30px rgba(0,0,0,0.4);
         }
         .app-item.drag-over {
-            transform: scale(1.06);
-            background: rgba(255,255,255,0.05);
+            border: 2px dashed rgba(79,172,254,0.6);
+            background: rgba(79,172,254,0.08);
+            transform: scale(1.04);
             border-radius: 14px;
         }
         .app-icon {
@@ -309,7 +312,7 @@
             .phone-screen { border-radius: 20px; padding: 14px; }
             .app-icon { width: 52px; height: 52px; font-size: 24px; }
             .app-name { font-size: 10px; }
-            .app-item { width: 70px; }
+            .app-item { padding: 6px; }
         }
 
         /* ===== БАНК В СТИЛЕ СБЕРБАНКА ===== */
@@ -524,7 +527,8 @@
             </div>
         </div>
 
-        <div class="apps-container" id="appsContainer">
+        <!-- СЕТКА 3x3 -->
+        <div class="apps-grid" id="appsGrid">
             <div class="app-item" id="studyAppBtn">
                 <div class="app-icon study">📚</div>
                 <span class="app-name">Учеба</span>
@@ -594,7 +598,7 @@
     setInterval(updateBattery, 5000);
 
     // ============================================================
-    // DRAG-AND-DROP
+    // DRAG-AND-DROP (СЕТКА 3x3)
     // ============================================================
     var dragData = {
         dragEl: null,
@@ -642,7 +646,7 @@
         clone.style.transform = 'scale(1.04)';
         clone.style.background = 'rgba(255,255,255,0.04)';
         clone.style.borderRadius = '14px';
-        clone.style.padding = '6px 10px';
+        clone.style.padding = '10px 8px';
         clone.style.boxShadow = '0 20px 60px rgba(0,0,0,0.5)';
         document.body.appendChild(clone);
         dragData.clone = clone;
@@ -658,7 +662,8 @@
             var rect = item.getBoundingClientRect();
             var cx = rect.left + rect.width/2, cy = rect.top + rect.height/2;
             var dist = Math.sqrt(Math.pow(e.clientX - cx, 2) + Math.pow(e.clientY - cy, 2));
-            item.classList.toggle('drag-over', dist < 60);
+            if (dist < 80) item.classList.add('drag-over');
+            else item.classList.remove('drag-over');
         });
     }
 
@@ -672,7 +677,7 @@
             var rect = item.getBoundingClientRect();
             var cx = rect.left + rect.width/2, cy = rect.top + rect.height/2;
             var dist = Math.sqrt(Math.pow(e.clientX - cx, 2) + Math.pow(e.clientY - cy, 2));
-            if (dist < 60 && dist < minDist) { minDist = dist; target = item; }
+            if (dist < 80 && dist < minDist) { minDist = dist; target = item; }
         });
 
         var dragEl = dragData.dragEl;
@@ -680,69 +685,56 @@
         items.forEach(function(item) { item.classList.remove('drag-over'); });
 
         if (target && target !== dragEl) {
-            var container = document.getElementById('appsContainer');
-            var dragLeft = dragEl.style.left, dragTop = dragEl.style.top;
-            var targetLeft = target.style.left, targetTop = target.style.top;
+            var grid = document.getElementById('appsGrid');
+            var dragIndex = Array.from(grid.children).indexOf(dragEl);
+            var targetIndex = Array.from(grid.children).indexOf(target);
 
-            dragEl.style.left = targetLeft || '20px';
-            dragEl.style.top = targetTop || '10px';
-            target.style.left = dragLeft || '20px';
-            target.style.top = dragTop || '10px';
+            if (dragIndex < targetIndex) {
+                grid.insertBefore(dragEl, target.nextSibling);
+            } else {
+                grid.insertBefore(dragEl, target);
+            }
 
-            var di = Array.from(container.children).indexOf(dragEl);
-            var ti = Array.from(container.children).indexOf(target);
-            if (di < ti) container.insertBefore(dragEl, target.nextSibling);
-            else container.insertBefore(dragEl, target);
-
-            savePositions();
+            saveOrder();
         }
 
         dragData.isDragging = false;
         dragData.dragEl = null;
     }
 
-    function savePositions() {
-        var container = document.getElementById('appsContainer');
-        var data = [];
-        container.querySelectorAll('.app-item').forEach(function(item) {
-            data.push({
-                id: item.id || '',
-                left: item.style.left || '20px',
-                top: item.style.top || '10px'
-            });
+    function saveOrder() {
+        var grid = document.getElementById('appsGrid');
+        var order = [];
+        grid.querySelectorAll('.app-item').forEach(function(item) {
+            order.push(item.id || '');
         });
-        localStorage.setItem('appPositions', JSON.stringify(data));
+        localStorage.setItem('appOrder', JSON.stringify(order));
     }
 
-    function loadPositions() {
+    function loadOrder() {
         try {
-            var saved = localStorage.getItem('appPositions');
+            var saved = localStorage.getItem('appOrder');
             if (saved) {
-                var data = JSON.parse(saved);
-                var container = document.getElementById('appsContainer');
+                var order = JSON.parse(saved);
+                var grid = document.getElementById('appsGrid');
+                var items = grid.querySelectorAll('.app-item');
                 var map = {};
-                container.querySelectorAll('.app-item').forEach(function(item) {
-                    if (item.id) map[item.id] = item;
-                });
-                data.forEach(function(p) {
-                    if (p.id && map[p.id]) {
-                        map[p.id].style.left = p.left || '20px';
-                        map[p.id].style.top = p.top || '10px';
-                    }
-                });
+                items.forEach(function(item) { if (item.id) map[item.id] = item; });
+                grid.innerHTML = '';
+                order.forEach(function(id) { if (map[id]) grid.appendChild(map[id]); });
+                var allIds = ['studyAppBtn', 'bankAppBtn'];
+                allIds.forEach(function(id) { if (!order.includes(id) && map[id]) grid.appendChild(map[id]); });
+                var locked = document.querySelector('.app-item .locked');
+                if (locked) {
+                    var parent = locked.closest('.app-item');
+                    if (parent && !grid.contains(parent)) grid.appendChild(parent);
+                }
+                initDrag();
             }
         } catch(e) {}
-        var container = document.getElementById('appsContainer');
-        var items = container.querySelectorAll('.app-item');
-        var locked = null;
-        items.forEach(function(item) {
-            if (!item.id) locked = item;
-        });
-        if (locked && items.length > 0 && items[items.length-1] !== locked) {
-            container.appendChild(locked);
-        }
-        initDrag();
     }
+
+    setTimeout(function() { loadOrder(); initDrag(); }, 100);
 
     // ============================================================
     // ПРОФЕССИИ
@@ -1339,7 +1331,6 @@
     // ============================================================
     // ЗАПУСК
     // ============================================================
-    loadPositions();
     renderStudy();
 
     setInterval(function() {
@@ -1359,4 +1350,4 @@
     }, 1000);
 </script>
 </body>
-    </html>
+</html>
