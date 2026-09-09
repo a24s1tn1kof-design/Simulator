@@ -13,7 +13,7 @@
             align-items: center;
             min-height: 100vh;
             font-family: 'Segoe UI', system-ui, sans-serif;
-            touch-action: manipulation;
+            touch-action: none;
             padding: 10px;
         }
         .phone {
@@ -55,17 +55,40 @@
             grid-template-columns: repeat(3, 1fr);
             gap: 18px 12px;
             margin-top: 20px;
+            position: relative;
+            min-height: 350px;
         }
         .app-item {
             display: flex;
             flex-direction: column;
             align-items: center;
             gap: 6px;
-            cursor: pointer;
-            touch-action: manipulation;
+            cursor: grab;
+            touch-action: none;
             transition: transform 0.15s;
+            position: relative;
+            z-index: 1;
+            padding: 8px;
+            border-radius: 12px;
         }
-        .app-item:active { transform: scale(0.92); }
+        .app-item:active { cursor: grabbing; }
+        .app-item.dragging {
+            opacity: 0.5;
+            transform: scale(0.9);
+            z-index: 999;
+            position: relative;
+        }
+        .app-item.drag-over {
+            transform: scale(1.05);
+            background: rgba(255,255,255,0.05);
+            border-radius: 12px;
+        }
+        .app-item .drag-handle {
+            font-size: 10px;
+            opacity: 0.2;
+            cursor: grab;
+            margin-bottom: 2px;
+        }
         .app-icon {
             width: 62px;
             height: 62px;
@@ -75,11 +98,13 @@
             justify-content: center;
             font-size: 28px;
             box-shadow: 0 6px 20px rgba(0,0,0,0.4);
+            pointer-events: none;
+            transition: transform 0.15s;
         }
         .app-icon.study { background: linear-gradient(135deg, #4facfe, #00f2fe); }
         .app-icon.bank { background: linear-gradient(135deg, #43e97b, #38f9d7); }
         .app-icon.locked { background: linear-gradient(135deg, #2d2d44, #3d3d5c); opacity: 0.5; }
-        .app-name { color: #bbb; font-size: 11px; font-weight: 500; text-align: center; }
+        .app-name { color: #bbb; font-size: 11px; font-weight: 500; text-align: center; pointer-events: none; }
 
         .modal {
             display: none;
@@ -283,16 +308,19 @@
             </div>
         </div>
 
-        <div class="apps-grid">
-            <div class="app-item" id="studyAppBtn">
+        <div class="apps-grid" id="appsGrid">
+            <div class="app-item" data-id="study">
+                <div class="drag-handle">⠿</div>
                 <div class="app-icon study">📚</div>
                 <span class="app-name">Учеба</span>
             </div>
-            <div class="app-item" id="bankAppBtn">
+            <div class="app-item" data-id="bank">
+                <div class="drag-handle">⠿</div>
                 <div class="app-icon bank">🏦</div>
                 <span class="app-name">Банк</span>
             </div>
-            <div class="app-item">
+            <div class="app-item" data-id="locked">
+                <div class="drag-handle">⠿</div>
                 <div class="app-icon locked">🔒</div>
                 <span class="app-name">Скоро</span>
             </div>
@@ -324,7 +352,216 @@
 
     </div>
 </div>
-<style>
+<script>
+    // ===== DRAG-AND-DROP ДЛЯ ИКОНОК =====
+    var dragData = {
+        dragEl: null,
+        dragId: null,
+        startX: 0,
+        startY: 0,
+        offsetX: 0,
+        offsetY: 0,
+        clone: null,
+        isDragging: false
+    };
+
+    function initDrag() {
+        var items = document.querySelectorAll('.app-item');
+        var grid = document.getElementById('appsGrid');
+
+        items.forEach(function(item) {
+            // Начало перетаскивания
+            item.addEventListener('pointerdown', function(e) {
+                if (e.target.closest('.drag-handle')) {
+                    e.preventDefault();
+                    startDrag(e, item);
+                }
+            });
+        });
+
+        // Движение
+        document.addEventListener('pointermove', function(e) {
+            if (dragData.isDragging) {
+                moveDrag(e);
+            }
+        });
+
+        // Отпускание
+        document.addEventListener('pointerup', function(e) {
+            if (dragData.isDragging) {
+                endDrag(e);
+            }
+        });
+    }
+
+    function startDrag(e, item) {
+        var rect = item.getBoundingClientRect();
+        var gridRect = document.getElementById('appsGrid').getBoundingClientRect();
+
+        dragData.dragEl = item;
+        dragData.dragId = item.dataset.id;
+        dragData.startX = e.clientX;
+        dragData.startY = e.clientY;
+        dragData.offsetX = e.clientX - rect.left;
+        dragData.offsetY = e.clientY - rect.top;
+        dragData.isDragging = true;
+
+        // Создаём клон для перетаскивания
+        var clone = item.cloneNode(true);
+        clone.style.position = 'fixed';
+        clone.style.width = rect.width + 'px';
+        clone.style.left = (e.clientX - dragData.offsetX) + 'px';
+        clone.style.top = (e.clientY - dragData.offsetY) + 'px';
+        clone.style.pointerEvents = 'none';
+        clone.style.zIndex = '9999';
+        clone.style.opacity = '0.85';
+        clone.style.transform = 'scale(1.05)';
+        clone.style.background = 'rgba(255,255,255,0.03)';
+        clone.style.borderRadius = '12px';
+        clone.style.padding = '8px';
+        clone.style.boxShadow = '0 20px 60px rgba(0,0,0,0.5)';
+        document.body.appendChild(clone);
+        dragData.clone = clone;
+
+        item.classList.add('dragging');
+        item.style.opacity = '0.3';
+    }
+
+    function moveDrag(e) {
+        if (!dragData.clone) return;
+
+        // Перемещаем клон
+        dragData.clone.style.left = (e.clientX - dragData.offsetX) + 'px';
+        dragData.clone.style.top = (e.clientY - dragData.offsetY) + 'px';
+
+        // Поиск ближайшей иконки для замены
+        var items = document.querySelectorAll('.app-item:not(.dragging)');
+        var grid = document.getElementById('appsGrid');
+        var gridRect = grid.getBoundingClientRect();
+
+        items.forEach(function(item) {
+            var rect = item.getBoundingClientRect();
+            var centerX = rect.left + rect.width / 2;
+            var centerY = rect.top + rect.height / 2;
+            var dist = Math.sqrt(
+                Math.pow(e.clientX - centerX, 2) +
+                Math.pow(e.clientY - centerY, 2)
+            );
+
+            if (dist < 80) {
+                item.classList.add('drag-over');
+            } else {
+                item.classList.remove('drag-over');
+            }
+        });
+    }
+
+    function endDrag(e) {
+        if (!dragData.isDragging) return;
+
+        // Удаляем клон
+        if (dragData.clone) {
+            dragData.clone.remove();
+            dragData.clone = null;
+        }
+
+        // Находим элемент для замены
+        var items = document.querySelectorAll('.app-item:not(.dragging)');
+        var targetItem = null;
+        var minDist = Infinity;
+
+        items.forEach(function(item) {
+            var rect = item.getBoundingClientRect();
+            var centerX = rect.left + rect.width / 2;
+            var centerY = rect.top + rect.height / 2;
+            var dist = Math.sqrt(
+                Math.pow(e.clientX - centerX, 2) +
+                Math.pow(e.clientY - centerY, 2)
+            );
+
+            if (dist < 80 && dist < minDist) {
+                minDist = dist;
+                targetItem = item;
+            }
+        });
+
+        var dragEl = dragData.dragEl;
+        dragEl.classList.remove('dragging');
+        dragEl.style.opacity = '1';
+
+        items.forEach(function(item) {
+            item.classList.remove('drag-over');
+        });
+
+        // Если есть цель — меняем местами
+        if (targetItem && targetItem !== dragEl) {
+            var grid = document.getElementById('appsGrid');
+            var dragIndex = Array.from(grid.children).indexOf(dragEl);
+            var targetIndex = Array.from(grid.children).indexOf(targetItem);
+
+            if (dragIndex < targetIndex) {
+                grid.insertBefore(dragEl, targetItem.nextSibling);
+            } else {
+                grid.insertBefore(dragEl, targetItem);
+            }
+
+            // Сохраняем порядок
+            saveAppOrder();
+        }
+
+        dragData.isDragging = false;
+        dragData.dragEl = null;
+    }
+
+    function saveAppOrder() {
+        var grid = document.getElementById('appsGrid');
+        var order = [];
+        grid.querySelectorAll('.app-item').forEach(function(item) {
+            order.push(item.dataset.id);
+        });
+        localStorage.setItem('appOrder', JSON.stringify(order));
+    }
+
+    function loadAppOrder() {
+        try {
+            var saved = localStorage.getItem('appOrder');
+            if (saved) {
+                var order = JSON.parse(saved);
+                var grid = document.getElementById('appsGrid');
+                var items = grid.querySelectorAll('.app-item');
+                var map = {};
+                items.forEach(function(item) {
+                    map[item.dataset.id] = item;
+                });
+
+                // Очищаем сетку
+                grid.innerHTML = '';
+                // Вставляем в правильном порядке
+                order.forEach(function(id) {
+                    if (map[id]) {
+                        grid.appendChild(map[id]);
+                    }
+                });
+                // Добавляем недостающие
+                var allIds = ['study', 'bank', 'locked'];
+                allIds.forEach(function(id) {
+                    if (!order.includes(id) && map[id]) {
+                        grid.appendChild(map[id]);
+                    }
+                });
+                // Переинициализируем drag
+                initDrag();
+            }
+        } catch(e) {}
+    }
+
+    // Запускаем drag после загрузки
+    setTimeout(function() {
+        loadAppOrder();
+        initDrag();
+    }, 100);
+    </script>
+    <style>
     /* ===== БАНК В СТИЛЕ СБЕРБАНКА ===== */
     .sber-card {
         background: linear-gradient(135deg, #1a6d3e, #0d4a2a);
@@ -354,7 +591,7 @@
     }
     .sber-card .card-bottom span { font-size: 10px; opacity: 0.5; }
 
-    /* Прямоугольное окошко для номера карты */
+    /* Прямоугольное окошко для номера карты — СВОРАЧИВАЕТСЯ */
     .card-number-box {
         background: rgba(0,0,0,0.35);
         border-radius: 10px;
@@ -364,24 +601,27 @@
         cursor: pointer;
         user-select: none;
         border: 1px solid rgba(255,255,255,0.06);
-        transition: 0.3s;
+        transition: all 0.3s ease;
+        overflow: hidden;
     }
-    .card-number-box:active { transform: scale(0.97); }
+    /* СВЁРНУТОЕ СОСТОЯНИЕ — окошко сжимается */
+    .card-number-box.collapsed {
+        padding: 4px 14px;
+        background: rgba(0,0,0,0.15);
+    }
     .card-number-box .number {
         font-size: 20px;
         font-weight: 600;
         letter-spacing: 3px;
         font-family: 'Courier New', monospace;
         color: #fff;
+        transition: all 0.3s ease;
+        white-space: nowrap;
     }
-    .card-number-box .number.hidden {
-        letter-spacing: 6px;
-        font-size: 22px;
-    }
-    .card-number-box .hint {
-        font-size: 10px;
-        opacity: 0.3;
-        margin-top: 4px;
+    /* СВЁРНУТЫЙ НОМЕР — меньше шрифт, пробелы остаются */
+    .card-number-box .number.collapsed {
+        font-size: 13px;
+        letter-spacing: 2px;
     }
 
     .sber-balance {
@@ -526,9 +766,8 @@
     .sber-history::-webkit-scrollbar { width: 3px; }
     .sber-history::-webkit-scrollbar-track { background: transparent; }
     .sber-history::-webkit-scrollbar-thumb { background: #333; border-radius: 10px; }
-</style>
-
-<script>
+    </style>
+    <script>
     // ===== НАСТОЯЩЕЕ ВРЕМЯ =====
     function updateTime() {
         var now = new Date();
@@ -661,8 +900,8 @@
         document.getElementById('phoneScreen').appendChild(toast);
         setTimeout(function() { toast.remove(); }, 2500);
     }
-</script>
-<script>
+    </script>
+    <script>
     // ===== КНИГА ДЛЯ УЧЕНИЯ =====
     var bookQuestions = {
         fsb: [
@@ -802,8 +1041,8 @@
         }
         return '';
     }
-</script>
-<script>
+    </script>
+    <script>
     // ===== РЕГИСТРАЦИЯ И ВХОД =====
     function renderBank() {
         var content = document.getElementById('bankContent');
@@ -913,27 +1152,25 @@
         renderBank();
         showToast('👋 Вы вышли из банка');
     }
-</script>
-<script>
+    </script>
+    <script>
     // ===== ГЛАВНЫЙ ЭКРАН БАНКА =====
     function renderBankMain() {
         var content = document.getElementById('bankContent');
         var daysLeft = getDaysLeft();
         var prof = getProfessionFromStudy();
 
-        // Форматируем номер карты
-        var displayNumber = bankData.cardNumber;
-        var hiddenNumber = '•••• •••• •••• ' + bankData.cardNumber.replace(/\s/g, '').slice(-4);
+        // Номер карты ВСЕГДА с пробелами
+        var displayNumber = bankData.cardNumber; // 1234 5678 9012 3456
 
         content.innerHTML = `
             <div class="sber-card">
                 <div class="bank-name">СБЕРБАНК</div>
 
-                <div class="card-number-box" onclick="toggleCardHide()">
-                    <div class="number ${bankData.cardHidden ? 'hidden' : ''}">
-                        ${bankData.cardHidden ? hiddenNumber : displayNumber}
+                <div class="card-number-box ${bankData.cardHidden ? 'collapsed' : ''}" onclick="toggleCardHide()">
+                    <div class="number ${bankData.cardHidden ? 'collapsed' : ''}">
+                        ${displayNumber}
                     </div>
-                    <div class="hint">${bankData.cardHidden ? '👁️ Нажмите, чтобы показать' : '🙈 Нажмите, чтобы скрыть'}</div>
                 </div>
 
                 <div class="card-holder">${bankData.name}</div>
@@ -1001,8 +1238,8 @@
         saveBankData();
         renderBankMain();
     }
-</script>
-<script>
+    </script>
+    <script>
     // ===== ВКЛАД =====
     function showDeposit() {
         var content = document.getElementById('bankContent');
@@ -1066,8 +1303,8 @@
         renderBank();
         showToast('💰 Вклад закрыт. Получено: ' + total + ' ₽');
     }
-</script>
-<script>
+    </script>
+    <script>
     // ===== КРЕДИТ =====
     function showCredit() {
         var content = document.getElementById('bankContent');
@@ -1135,8 +1372,8 @@
         renderBank();
         showToast('✅ Кредит погашен!');
     }
-</script>
-<script>
+    </script>
+    <script>
     // ===== ПЕРЕВОД ПО КАРТЕ ИЛИ ТЕЛЕФОНУ =====
     var transferMethod = 'card';
 
