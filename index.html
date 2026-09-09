@@ -84,14 +84,17 @@
         }
         .app-item .drag-handle {
             font-size: 10px;
-            opacity: 0.2;
+            opacity: 0.3;
             cursor: grab;
             margin-bottom: 2px;
             padding: 4px 8px;
             user-select: none;
             touch-action: none;
+            border-radius: 4px;
+            transition: 0.2s;
         }
-        .app-item .drag-handle:active { cursor: grabbing; }
+        .app-item .drag-handle:hover { opacity: 0.6; background: rgba(255,255,255,0.05); }
+        .app-item .drag-handle:active { cursor: grabbing; opacity: 0.8; }
         .app-icon {
             width: 62px;
             height: 62px;
@@ -354,12 +357,11 @@
         </div>
 
     </div>
-    </div>
-    <script>
+</div>
+<script>
     // ===== DRAG-AND-DROP ДЛЯ ИКОНОК =====
     var dragData = {
         dragEl: null,
-        dragId: null,
         offsetX: 0,
         offsetY: 0,
         clone: null,
@@ -389,7 +391,6 @@
     function startDrag(e, item) {
         var rect = item.getBoundingClientRect();
         dragData.dragEl = item;
-        dragData.dragId = item.dataset.id || item.id;
         dragData.offsetX = e.clientX - rect.left;
         dragData.offsetY = e.clientY - rect.top;
         dragData.isDragging = true;
@@ -486,7 +487,6 @@
                 order.forEach(function(id) { if (map[id]) grid.appendChild(map[id]); });
                 var allIds = ['studyAppBtn', 'bankAppBtn'];
                 allIds.forEach(function(id) { if (!order.includes(id) && map[id]) grid.appendChild(map[id]); });
-                // Добавляем locked если его нет
                 var locked = document.querySelector('.app-item .locked');
                 if (locked) {
                     var parent = locked.closest('.app-item');
@@ -529,6 +529,7 @@
     }
     .sber-card .card-bottom span { font-size: 10px; opacity: 0.5; }
 
+    /* НОМЕР КАРТЫ — 4 ГРУППЫ ПО 4 ЦИФРЫ */
     .card-number-box {
         background: rgba(0,0,0,0.35);
         border-radius: 10px;
@@ -553,10 +554,17 @@
         color: #fff;
         transition: all 0.3s ease;
         white-space: nowrap;
+        display: flex;
+        justify-content: center;
+        gap: 6px;
+    }
+    .card-number-box .number .group {
+        display: inline-block;
     }
     .card-number-box .number.collapsed {
         font-size: 13px;
         letter-spacing: 2px;
+        gap: 4px;
     }
 
     .sber-balance {
@@ -900,12 +908,16 @@
     };
 
     function generateCardNumber() {
-        var num = '';
-        for (var i = 0; i < 16; i++) {
-            num += Math.floor(Math.random() * 10);
-            if (i === 3 || i === 7 || i === 11) num += ' ';
+        // 16 цифр, разбитых на 4 группы по 4
+        var groups = [];
+        for (var g = 0; g < 4; g++) {
+            var group = '';
+            for (var i = 0; i < 4; i++) {
+                group += Math.floor(Math.random() * 10);
+            }
+            groups.push(group);
         }
-        return num;
+        return groups.join(' ');
     }
 
     function generatePhone() {
@@ -1095,7 +1107,13 @@
         var daysLeft = getDaysLeft();
         var prof = getProfessionFromStudy();
 
-        var displayNumber = bankData.cardNumber;
+        // Разбиваем номер карты на 4 группы по 4 цифры
+        var groups = bankData.cardNumber.split(' ');
+        var displayNumber = '';
+        for (var i = 0; i < groups.length; i++) {
+            displayNumber += '<span class="group">' + groups[i] + '</span>';
+            if (i < groups.length - 1) displayNumber += ' ';
+        }
 
         content.innerHTML = `
             <div class="sber-card">
