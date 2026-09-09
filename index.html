@@ -323,8 +323,8 @@
         </div>
 
     </div>
-    </div>
-    <style>
+</div>
+<style>
     /* ===== БАНК В СТИЛЕ СБЕРБАНКА ===== */
     .sber-card {
         background: linear-gradient(135deg, #1a6d3e, #0d4a2a);
@@ -346,24 +346,6 @@
         color: #fff;
     }
     .sber-card .bank-name { font-size: 12px; opacity: 0.7; letter-spacing: 1px; }
-    .sber-card .card-number {
-        font-size: 18px;
-        font-weight: 600;
-        margin: 8px 0;
-        letter-spacing: 2px;
-        font-family: monospace;
-        cursor: pointer;
-        user-select: none;
-    }
-    .sber-card .card-number.hidden {
-        letter-spacing: 4px;
-        font-size: 20px;
-    }
-    .sber-card .card-number .hide-icon {
-        font-size: 14px;
-        opacity: 0.5;
-        margin-left: 8px;
-    }
     .sber-card .card-holder { font-size: 11px; opacity: 0.6; margin-top: 6px; text-transform: uppercase; }
     .sber-card .card-bottom {
         display: flex;
@@ -371,6 +353,36 @@
         margin-top: 6px;
     }
     .sber-card .card-bottom span { font-size: 10px; opacity: 0.5; }
+
+    /* Прямоугольное окошко для номера карты */
+    .card-number-box {
+        background: rgba(0,0,0,0.35);
+        border-radius: 10px;
+        padding: 14px 18px;
+        margin: 10px 0 8px 0;
+        text-align: center;
+        cursor: pointer;
+        user-select: none;
+        border: 1px solid rgba(255,255,255,0.06);
+        transition: 0.3s;
+    }
+    .card-number-box:active { transform: scale(0.97); }
+    .card-number-box .number {
+        font-size: 20px;
+        font-weight: 600;
+        letter-spacing: 3px;
+        font-family: 'Courier New', monospace;
+        color: #fff;
+    }
+    .card-number-box .number.hidden {
+        letter-spacing: 6px;
+        font-size: 22px;
+    }
+    .card-number-box .hint {
+        font-size: 10px;
+        opacity: 0.3;
+        margin-top: 4px;
+    }
 
     .sber-balance {
         background: rgba(255,255,255,0.04);
@@ -649,29 +661,29 @@
         document.getElementById('phoneScreen').appendChild(toast);
         setTimeout(function() { toast.remove(); }, 2500);
     }
-                </script>
-            <script>
+</script>
+<script>
     // ===== КНИГА ДЛЯ УЧЕНИЯ =====
     var bookQuestions = {
         fsb: [
-            { q: 'В торговом центре неизвестные открыли стрельбу, слышны взрывы. Вы сотрудник ФСБ. Какие номера набрать и как организовать эвакуацию?', a: 'Набрать 112, 102 и 101. Немедленно начать координацию с охраной ТЦ: перекрыть выходы, направить людей к ближайшим эвакуационным выходам, избегая мест стрельбы. Организовать группы по 5-10 человек, назначить старших. Укрыть раненых в безопасных местах. Оценить обстановку, доложить руководству.' },
-            { q: 'Вы получили анонимное сообщение о заложенной бомбе в учебном заведении. Вы сотрудник ФСБ. Ваши действия?', a: 'Набрать 112, 102, 101. Не паниковать, немедленно сообщить руководству и охране. Начать эвакуацию по плану: выводить людей поэтапно, не создавая давки. Проверить все подозрительные места, оцепить здание, дождаться прибытия сапёров.' }
+            { q: 'В торговом центре неизвестные открыли стрельбу. Вы сотрудник ФСБ. Какие номера набрать и как организовать эвакуацию?', a: 'Набрать 112, 102 и 101. Немедленно начать координацию с охраной ТЦ: перекрыть выходы, направить людей к ближайшим эвакуационным выходам. Организовать группы по 5-10 человек. Укрыть раненых. Оценить обстановку.' },
+            { q: 'Вы получили сообщение о заложенной бомбе. Вы сотрудник ФСБ. Ваши действия?', a: 'Набрать 112, 102, 101. Не паниковать, сообщить руководству. Начать эвакуацию по плану: выводить людей поэтапно. Проверить подозрительные места, оцепить здание.' }
         ],
         mchs: [
-            { q: 'Произошло землетрясение силой 7 баллов. Вы находитесь в квартире на 5-м этаже. Какие номера набрать и как действовать?', a: 'Набрать 112 или 101. Лечь на пол рядом с кроватью или столом, защитить голову руками, отойти от окон и тяжёлой мебели. После толчков — покинуть здание по лестнице, не пользуясь лифтом.' },
-            { q: 'Вы обнаружили возгорание в многоквартирном доме на 3-м этаже. Что делать и какой номер набрать?', a: 'Немедленно вызвать пожарную службу по номеру 101 или 112, сообщить точный адрес, этаж и что горит. Если пожар небольшой — попытаться потушить огнетушителем. Если огонь сильный — немедленно покинуть помещение.' }
+            { q: 'Произошло землетрясение силой 7 баллов. Вы спасатель МЧС. Как действовать?', a: 'Набрать 112 или 101. Лечь на пол рядом с кроватью, защитить голову. После толчков — покинуть здание по лестнице.' },
+            { q: 'Обнаружено возгорание в многоквартирном доме. Что делать?', a: 'Вызвать пожарную службу по номеру 101 или 112. Если пожар небольшой — потушить огнетушителем. Если сильный — покинуть помещение.' }
         ],
         medic: [
-            { q: 'У человека внезапно остановилось сердце, он без сознания. Что делать и какой номер набрать?', a: 'Немедленно набрать 103 или 112. Начать сердечно-легочную реанимацию: положить пострадавшего на твёрдую поверхность, проверить дыхание, сделать 30 компрессий грудной клетки глубиной 5-6 см с частотой 100-120 в минуту.' },
-            { q: 'Вы видите человека с признаками инсульта. Что делать?', a: 'Немедленно вызвать скорую помощь по номеру 103 или 112. Усадить или уложить пострадавшего с приподнятой головой. Не давать еду, воду и лекарства. Засечь время начала симптомов.' }
+            { q: 'У человека остановилось сердце. Что делать?', a: 'Набрать 103 или 112. Начать СЛР: 30 компрессий грудной клетки, 2 вдоха. Продолжать до приезда скорой.' },
+            { q: 'Человек с признаками инсульта. Что делать?', a: 'Вызвать скорую по номеру 103 или 112. Уложить с приподнятой головой. Не давать еду и воду.' }
         ],
         mvd: [
-            { q: 'Вы стали свидетелем уличного ограбления с оружием. Какие номера набрать и как действовать?', a: 'Немедленно набрать 102 или 112. Сообщить приметы преступников, направление их движения, номер машины. Не вступать в конфликт, если угроза для жизни.' },
-            { q: 'Вы нашли подозрительный предмет в автобусе. Что делать?', a: 'Немедленно сообщить водителю или охране, вызвать полицию по номеру 102 или 112. Не трогать предмет, не приближаться к нему, вывести людей из автобуса.' }
+            { q: 'Вы стали свидетелем ограбления. Что делать?', a: 'Набрать 102 или 112. Сообщить приметы преступников. Не вступать в конфликт.' },
+            { q: 'Нашли подозрительный предмет в автобусе. Что делать?', a: 'Сообщить водителю, вызвать полицию по 102 или 112. Не трогать предмет, вывести людей.' }
         ],
         teacher: [
-            { q: 'В классе началась паника из-за сообщения о стрельбе в школе. Как успокоить детей?', a: 'Набрать 112 или 102. Не паниковать самому, успокоить учеников, закрыть двери, выключить свет, заблокировать дверь стульями, не подходить к окнам.' },
-            { q: 'Вы стали свидетелем буллинга с угрозой ножом. Что делать?', a: 'Немедленно вызвать полицию по номеру 102 или 112. Вмешаться, развести учеников, провести беседу, сообщить родителям.' }
+            { q: 'В классе паника из-за сообщения о стрельбе. Как успокоить детей?', a: 'Набрать 112 или 102. Успокоить учеников, закрыть двери, выключить свет.' },
+            { q: 'Свидетель буллинга с ножом. Что делать?', a: 'Вызвать полицию по 102 или 112. Вмешаться, развести учеников.' }
         ]
     };
 
@@ -679,7 +691,7 @@
         var prof = selectedProfession;
         if (!prof) { document.getElementById('bookContent').innerHTML = '<div style="color:#888;">Сначала выберите профессию</div>'; return; }
         var questions = bookQuestions[prof];
-        if (!questions) { document.getElementById('bookContent').innerHTML = '<div style="color:#888;">Нет вопросов для этой профессии</div>'; return; }
+        if (!questions) { document.getElementById('bookContent').innerHTML = '<div style="color:#888;">Нет вопросов</div>'; return; }
 
         var html = '';
         for (var j = 0; j < questions.length; j++) {
@@ -723,8 +735,8 @@
     }
 
     function generatePhone() {
-        var num = '+7';
-        for (var i = 0; i < 10; i++) {
+        var num = '';
+        for (var i = 0; i < 11; i++) {
             num += Math.floor(Math.random() * 10);
         }
         return num;
@@ -790,8 +802,8 @@
         }
         return '';
     }
-            </script>
-            <script>
+</script>
+<script>
     // ===== РЕГИСТРАЦИЯ И ВХОД =====
     function renderBank() {
         var content = document.getElementById('bankContent');
@@ -901,49 +913,29 @@
         renderBank();
         showToast('👋 Вы вышли из банка');
     }
-    </script>
-    <script>
+</script>
+<script>
     // ===== ГЛАВНЫЙ ЭКРАН БАНКА =====
     function renderBankMain() {
         var content = document.getElementById('bankContent');
         var daysLeft = getDaysLeft();
         var prof = getProfessionFromStudy();
 
-        // Форматируем номер карты для отображения
+        // Форматируем номер карты
         var displayNumber = bankData.cardNumber;
-        if (bankData.cardHidden) {
-            // Показываем только последние 4 цифры
-            var last4 = bankData.cardNumber.replace(/\s/g, '').slice(-4);
-            displayNumber = '•••• •••• •••• ' + last4;
-        }
-
-        var historyHtml = '';
-        if (bankData.history.length === 0) {
-            historyHtml = '<div class="history-empty">История пуста</div>';
-        } else {
-            for (var i = bankData.history.length - 1; i >= 0; i--) {
-                var h = bankData.history[i];
-                var amountClass = h.type === 'out' ? 'minus' : '';
-                var sign = h.type === 'out' ? '-' : '+';
-                historyHtml += `
-                    <div class="history-item">
-                        <div class="h-left">
-                            ${h.recipient || 'Перевод'}
-                            <div class="h-detail">${h.time || ''}</div>
-                        </div>
-                        <div class="h-amount ${amountClass}">${sign}${h.amount} ₽</div>
-                    </div>
-                `;
-            }
-        }
+        var hiddenNumber = '•••• •••• •••• ' + bankData.cardNumber.replace(/\s/g, '').slice(-4);
 
         content.innerHTML = `
             <div class="sber-card">
                 <div class="bank-name">СБЕРБАНК</div>
-                <div class="card-number" onclick="toggleCardHide()">
-                    ${displayNumber}
-                    <span class="hide-icon">${bankData.cardHidden ? '👁️' : '🙈'}</span>
+
+                <div class="card-number-box" onclick="toggleCardHide()">
+                    <div class="number ${bankData.cardHidden ? 'hidden' : ''}">
+                        ${bankData.cardHidden ? hiddenNumber : displayNumber}
+                    </div>
+                    <div class="hint">${bankData.cardHidden ? '👁️ Нажмите, чтобы показать' : '🙈 Нажмите, чтобы скрыть'}</div>
                 </div>
+
                 <div class="card-holder">${bankData.name}</div>
                 <div class="card-bottom">
                     <span>${prof || 'Без профессии'}</span>
@@ -977,9 +969,31 @@
 
             <div class="sber-history">
                 <div class="history-title">📋 История переводов</div>
-                ${historyHtml}
+                ${renderHistory()}
             </div>
         `;
+    }
+
+    function renderHistory() {
+        if (bankData.history.length === 0) {
+            return '<div class="history-empty">История пуста</div>';
+        }
+        var html = '';
+        for (var i = bankData.history.length - 1; i >= 0; i--) {
+            var h = bankData.history[i];
+            var amountClass = h.type === 'out' ? 'minus' : '';
+            var sign = h.type === 'out' ? '-' : '+';
+            html += `
+                <div class="history-item">
+                    <div class="h-left">
+                        ${h.recipient || 'Перевод'}
+                        <div class="h-detail">${h.time || ''}</div>
+                    </div>
+                    <div class="h-amount ${amountClass}">${sign}${h.amount} ₽</div>
+                </div>
+            `;
+        }
+        return html;
     }
 
     function toggleCardHide() {
@@ -987,8 +1001,8 @@
         saveBankData();
         renderBankMain();
     }
-    </script>
-    <script>
+</script>
+<script>
     // ===== ВКЛАД =====
     function showDeposit() {
         var content = document.getElementById('bankContent');
@@ -1002,9 +1016,9 @@
                 </div>
                 <div class="sber-card">
                     <div class="bank-name">💰 ВКЛАД</div>
-                    <div class="balance-row" style="display:flex;justify-content:space-between;align-items:center;margin-top:8px;">
-                        <span class="label">Сумма</span>
-                        <span class="amount" style="font-size:22px;">${bankData.deposit} ₽</span>
+                    <div style="display:flex;justify-content:space-between;align-items:center;margin-top:8px;">
+                        <span style="opacity:0.6;font-size:13px;">Сумма</span>
+                        <span style="font-size:22px;font-weight:700;color:#f5c842;">${bankData.deposit} ₽</span>
                     </div>
                     <div style="color:#2ecc71;font-size:14px;margin-top:6px;">Доход: +10% в день</div>
                     <div style="color:#888;font-size:13px;">Заработано: ${earned} ₽</div>
@@ -1052,8 +1066,8 @@
         renderBank();
         showToast('💰 Вклад закрыт. Получено: ' + total + ' ₽');
     }
-    </script>
-    <script>
+</script>
+<script>
     // ===== КРЕДИТ =====
     function showCredit() {
         var content = document.getElementById('bankContent');
@@ -1066,9 +1080,9 @@
                 </div>
                 <div class="sber-card" style="background:linear-gradient(135deg,#6d1a1a,#4a0d0d);">
                     <div class="bank-name">💳 КРЕДИТ</div>
-                    <div class="balance-row" style="display:flex;justify-content:space-between;align-items:center;margin-top:8px;">
-                        <span class="label">Долг</span>
-                        <span class="amount" style="font-size:22px;color:#e74c3c;">${bankData.credit} ₽</span>
+                    <div style="display:flex;justify-content:space-between;align-items:center;margin-top:8px;">
+                        <span style="opacity:0.6;font-size:13px;">Долг</span>
+                        <span style="font-size:22px;font-weight:700;color:#e74c3c;">${bankData.credit} ₽</span>
                     </div>
                     <div style="color:#f5c842;font-size:14px;margin-top:6px;">Проценты: +20%</div>
                     <div style="color:#888;font-size:13px;">К возврату: ${Math.floor(bankData.credit * 1.2)} ₽</div>
@@ -1121,8 +1135,8 @@
         renderBank();
         showToast('✅ Кредит погашен!');
     }
-    </script>
-    <script>
+</script>
+<script>
     // ===== ПЕРЕВОД ПО КАРТЕ ИЛИ ТЕЛЕФОНУ =====
     var transferMethod = 'card';
 
@@ -1160,8 +1174,8 @@
             input.maxLength = 19;
             input.type = 'text';
         } else {
-            input.placeholder = 'Номер телефона (10 цифр)';
-            input.maxLength = 10;
+            input.placeholder = 'Номер телефона (11 цифр)';
+            input.maxLength = 11;
             input.type = 'tel';
         }
     }
@@ -1185,15 +1199,14 @@
             if (recipient === bankData.cardNumber.replace(/\s/g, '')) { showToast('❌ Нельзя перевести себе'); return; }
             recipientDisplay = 'Карта: ' + recipient;
         } else {
-            if (recipient.length < 10) { showToast('Введите 10 цифр телефона'); return; }
-            if (recipient === bankData.phone.replace('+7', '')) { showToast('❌ Нельзя перевести себе'); return; }
-            recipientDisplay = 'Телефон: +7' + recipient;
+            if (recipient.length < 11) { showToast('Введите 11 цифр телефона'); return; }
+            if (recipient === bankData.phone) { showToast('❌ Нельзя перевести себе'); return; }
+            recipientDisplay = 'Телефон: ' + recipient;
         }
 
         if (!amount || amount < 1) { showToast('Введите сумму перевода'); return; }
         if (amount > bankData.balance) { showToast('❌ Недостаточно средств'); return; }
 
-        // Добавляем в историю
         var now = new Date();
         var timeStr = String(now.getHours()).padStart(2, '0') + ':' + String(now.getMinutes()).padStart(2, '0');
         bankData.history.push({
