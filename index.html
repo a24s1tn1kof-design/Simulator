@@ -863,6 +863,122 @@
         .dev-modal .dev-menu .dev-menu-item .arrow {
             opacity: 0.3;
         }
+        .dev-modal .dev-amount-input {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 12px;
+            padding: 10px 14px;
+            color: #fff;
+            font-size: 16px;
+            width: 100%;
+            outline: none;
+            margin-bottom: 12px;
+        }
+        .dev-modal .dev-amount-input:focus {
+            border-color: #f5576c;
+        }
+
+        .dev-exam-select {
+            display: none;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 12px;
+        }
+        .dev-exam-select.show {
+            display: flex;
+        }
+        .dev-exam-select .exam-day-btn {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 12px;
+            padding: 14px 18px;
+            cursor: pointer;
+            transition: 0.2s;
+            color: #ddd;
+            font-size: 15px;
+            font-weight: 500;
+            text-align: center;
+        }
+        .dev-exam-select .exam-day-btn:active {
+            transform: scale(0.97);
+            background: rgba(255, 255, 255, 0.08);
+        }
+        .dev-exam-select .exam-day-btn .sub {
+            font-size: 12px;
+            opacity: 0.5;
+        }
+
+        .dev-exam-questions {
+            display: none;
+            margin-top: 12px;
+        }
+        .dev-exam-questions.show {
+            display: block;
+        }
+        .dev-exam-questions .question {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            padding: 14px 16px;
+            margin-bottom: 12px;
+            border-left: 3px solid #f5576c;
+        }
+        .dev-exam-questions .question .q {
+            color: #fff;
+            font-weight: 600;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+        .dev-exam-questions .question .options {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        .dev-exam-questions .question .options button {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 8px;
+            padding: 8px 12px;
+            color: #ccc;
+            font-size: 13px;
+            cursor: pointer;
+            text-align: left;
+            transition: 0.2s;
+        }
+        .dev-exam-questions .question .options button:active {
+            transform: scale(0.97);
+        }
+        .dev-exam-questions .question .options button.correct {
+            background: rgba(46, 204, 113, 0.2);
+            border-color: #2ecc71;
+            color: #2ecc71;
+        }
+        .dev-exam-questions .question .options button.wrong {
+            background: rgba(231, 76, 60, 0.2);
+            border-color: #e74c3c;
+            color: #e74c3c;
+        }
+        .dev-exam-questions .question .options button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+        .dev-exam-questions .result {
+            text-align: center;
+            font-size: 18px;
+            font-weight: 700;
+            padding: 16px;
+            border-radius: 12px;
+            margin-top: 12px;
+        }
+        .dev-exam-questions .result.pass {
+            background: rgba(46, 204, 113, 0.15);
+            color: #2ecc71;
+            border: 1px solid #2ecc71;
+        }
+        .dev-exam-questions .result.fail {
+            background: rgba(231, 76, 60, 0.15);
+            color: #e74c3c;
+            border: 1px solid #e74c3c;
+        }
 
         .toast-custom {
             position: absolute;
@@ -1277,14 +1393,53 @@
 
                 <!-- Меню разработчика -->
                 <div class="dev-menu" id="devMenu">
-                    <div class="dev-menu-item" onclick="devGiveMoney()">
+                    <div class="dev-menu-item" onclick="devShowGiveMoney()">
                         <span><span class="icon">💰</span> Выдать деньги</span>
                         <span class="arrow">→</span>
                     </div>
-                    <div class="dev-menu-item" onclick="devStartExam()">
+                    <div class="dev-menu-item" onclick="devShowExamSelect()">
                         <span><span class="icon">📝</span> Проверка экзамена</span>
                         <span class="arrow">→</span>
                     </div>
+                    <div class="dev-menu-item" onclick="devBackToMenu()" style="opacity:0.5;font-size:13px;">
+                        <span>← Назад в меню</span>
+                        <span></span>
+                    </div>
+                </div>
+
+                <!-- Выдача денег -->
+                <div id="devGiveMoneyPanel" style="display:none;">
+                    <div style="color:#fff;font-size:16px;font-weight:600;margin-bottom:12px;">💰 Выдать деньги</div>
+                    <div style="color:#888;font-size:13px;margin-bottom:8px;">Введите сумму для зачисления на счёт</div>
+                    <input class="dev-amount-input" id="devAmountInput" type="number" placeholder="Сумма" min="1">
+                    <button class="dev-btn green" onclick="devGiveMoney()">✅ Выдать</button>
+                    <button class="dev-btn" onclick="devBackToMenu()" style="margin-top:8px;">← Назад</button>
+                </div>
+
+                <!-- Выбор экзамена -->
+                <div id="devExamSelect" style="display:none;">
+                    <div style="color:#fff;font-size:16px;font-weight:600;margin-bottom:12px;">📝 Выбор экзамена</div>
+                    <div style="color:#888;font-size:13px;margin-bottom:8px;">Сначала выберите профессию</div>
+                    <div id="devExamProfList"></div>
+                    <button class="dev-btn" onclick="devBackToMenu()" style="margin-top:8px;">← Назад</button>
+                </div>
+
+                <!-- Выбор дня экзамена -->
+                <div id="devExamDaySelect" style="display:none;">
+                    <div style="color:#fff;font-size:16px;font-weight:600;margin-bottom:12px;">📅 Выберите день экзамена</div>
+                    <div style="color:#888;font-size:13px;margin-bottom:8px;">Вы выбрали: <span id="devExamProfName" style="color:#f5576c;"></span></div>
+                    <button class="dev-exam-select-btn exam-day-btn" onclick="devStartExam(7)">📝 Экзамен 1 (7-й день)</button>
+                    <button class="dev-exam-select-btn exam-day-btn" onclick="devStartExam(14)">📝 Экзамен 2 (14-й день)</button>
+                    <button class="dev-btn" onclick="devBackToExamSelect()" style="margin-top:8px;">← Назад</button>
+                </div>
+
+                <!-- Экзамен -->
+                <div id="devExamQuestions" style="display:none;">
+                    <div style="color:#fff;font-size:16px;font-weight:600;margin-bottom:8px;">📝 Экзамен</div>
+                    <div style="color:#888;font-size:13px;margin-bottom:12px;">Профессия: <span id="devExamQProf" style="color:#f5576c;"></span> | День: <span id="devExamQDay"></span></div>
+                    <div id="devExamQuestionsList"></div>
+                    <div id="devExamResult"></div>
+                    <button class="dev-btn" onclick="devBackToExamSelect()" style="margin-top:8px;">← Назад</button>
                 </div>
             </div>
         </div>
@@ -1370,15 +1525,13 @@
 
 <script>
     // ============================================================
-    // ПАРОЛЬ ДЛЯ РАЗРАБОТЧИКА (ЗАХЭШИРОВАН)
+    // ПАРОЛЬ
     // ============================================================
-    // Пароль 4215 закодирован в Base64: NDIxNQ==
-    var DEV_PASSWORD_HASH = 'NDIxNQ==';
+    var DEV_PASSWORD_HASH = 'NDIxNQ=='; // 4215
 
     function checkDevPassword() {
         var input = document.getElementById('devPassword').value.trim();
         var error = document.getElementById('devError');
-
         if (btoa(input) === DEV_PASSWORD_HASH) {
             error.classList.remove('show');
             document.getElementById('devLogin').style.display = 'none';
@@ -1394,29 +1547,195 @@
     // ============================================================
     // ФУНКЦИИ РАЗРАБОТЧИКА
     // ============================================================
+    function devShowGiveMoney() {
+        document.getElementById('devMenu').classList.remove('show');
+        document.getElementById('devGiveMoneyPanel').style.display = 'block';
+    }
+
     function devGiveMoney() {
+        var amount = parseInt(document.getElementById('devAmountInput').value);
+        if (!amount || amount < 1) {
+            showToast('❌ Введите сумму');
+            return;
+        }
         if (!bankData.registered) {
             showToast('❌ Сначала зарегистрируйтесь в банке');
             return;
         }
-        var amount = 10000;
         bankData.balance += amount;
         saveBankData();
         showToast('💰 Выдано ' + amount + ' ₽');
-        // Если банк открыт — обновляем
-        if (document.getElementById('bankModal').classList.contains('active')) {
-            renderBank();
-        }
+        document.getElementById('devAmountInput').value = '';
+        devBackToMenu();
     }
 
-    function devStartExam() {
-        if (!selectedProfession) {
-            showToast('❌ Сначала выберите профессию в учёбе');
+    function devShowExamSelect() {
+        document.getElementById('devMenu').classList.remove('show');
+        document.getElementById('devExamSelect').style.display = 'block';
+        renderDevProfessionList();
+    }
+
+    function renderDevProfessionList() {
+        var container = document.getElementById('devExamProfList');
+        var html = '';
+        for (var c = 0; c < categories.length; c++) {
+            html += '<div style="color:#888;font-size:12px;margin:6px 0 4px 0;">' + categories[c].name + '</div>';
+            for (var p = 0; p < categories[c].professions.length; p++) {
+                var prof = categories[c].professions[p];
+                html += `
+                    <div class="exam-day-btn" onclick="devSelectExamProf('${prof.id}')" style="margin-bottom:4px;font-size:13px;padding:10px 14px;">
+                        ${prof.name}
+                        <span style="font-size:11px;opacity:0.4;">${prof.desc}</span>
+                    </div>
+                `;
+            }
+        }
+        container.innerHTML = html;
+    }
+
+    var devExamProfId = null;
+
+    function devSelectExamProf(profId) {
+        devExamProfId = profId;
+        var prof = null;
+        for (var c = 0; c < categories.length; c++) {
+            for (var p = 0; p < categories[c].professions.length; p++) {
+                if (categories[c].professions[p].id === profId) {
+                    prof = categories[c].professions[p];
+                    break;
+                }
+            }
+            if (prof) break;
+        }
+        if (prof) {
+            document.getElementById('devExamProfName').textContent = prof.name;
+        }
+        document.getElementById('devExamSelect').style.display = 'none';
+        document.getElementById('devExamDaySelect').style.display = 'block';
+    }
+
+    function devBackToExamSelect() {
+        document.getElementById('devExamQuestions').style.display = 'none';
+        document.getElementById('devExamDaySelect').style.display = 'none';
+        document.getElementById('devExamSelect').style.display = 'block';
+        renderDevProfessionList();
+    }
+
+    var devCurrentExamQuestions = [];
+    var devCurrentExamIndex = 0;
+    var devExamScore = 0;
+    var devExamAnswered = false;
+
+    function devStartExam(day) {
+        if (!devExamProfId) {
+            showToast('❌ Сначала выберите профессию');
             return;
         }
-        // Открываем книгу для учения (она же экзамен)
-        openBook();
-        showToast('📝 Экзамен начат! Отвечайте на вопросы.');
+        var prof = null;
+        for (var c = 0; c < categories.length; c++) {
+            for (var p = 0; p < categories[c].professions.length; p++) {
+                if (categories[c].professions[p].id === devExamProfId) {
+                    prof = categories[c].professions[p];
+                    break;
+                }
+            }
+            if (prof) break;
+        }
+        if (!prof) {
+            showToast('❌ Профессия не найдена');
+            return;
+        }
+
+        var questions = bookQuestions[devExamProfId];
+        if (!questions || questions.length < 5) {
+            showToast('❌ Недостаточно вопросов для этой профессии');
+            return;
+        }
+
+        // Перемешиваем вопросы
+        var shuffled = questions.slice();
+        for (var i = shuffled.length - 1; i > 0; i--) {
+            var j = Math.floor(Math.random() * (i + 1));
+            var temp = shuffled[i];
+            shuffled[i] = shuffled[j];
+            shuffled[j] = temp;
+        }
+        // Берём 5 вопросов
+        devCurrentExamQuestions = shuffled.slice(0, 5);
+        devCurrentExamIndex = 0;
+        devExamScore = 0;
+        devExamAnswered = false;
+
+        document.getElementById('devExamQProf').textContent = prof.name;
+        document.getElementById('devExamQDay').textContent = day + '-й день';
+
+        document.getElementById('devExamDaySelect').style.display = 'none';
+        document.getElementById('devExamQuestions').style.display = 'block';
+        document.getElementById('devExamResult').innerHTML = '';
+        renderDevExamQuestion();
+    }
+
+    function renderDevExamQuestion() {
+        if (devCurrentExamIndex >= devCurrentExamQuestions.length) {
+            finishDevExam();
+            return;
+        }
+        var q = devCurrentExamQuestions[devCurrentExamIndex];
+        var html = `
+            <div class="question">
+                <div class="q">${devCurrentExamIndex + 1}. ${q.q}</div>
+                <div class="options" id="devExamOpts">
+        `;
+        for (var i = 0; i < q.options.length; i++) {
+            html += `<button onclick="devAnswerExam(${i})">${String.fromCharCode(65 + i)}. ${q.options[i]}</button>`;
+        }
+        html += `</div></div>`;
+        document.getElementById('devExamQuestionsList').innerHTML = html;
+        devExamAnswered = false;
+    }
+
+    function devAnswerExam(index) {
+        if (devExamAnswered) return;
+        devExamAnswered = true;
+        var q = devCurrentExamQuestions[devCurrentExamIndex];
+        var buttons = document.querySelectorAll('#devExamOpts button');
+        buttons.forEach(function(btn, i) {
+            btn.disabled = true;
+            if (i === q.correct) btn.classList.add('correct');
+            if (i === index && index !== q.correct) btn.classList.add('wrong');
+        });
+        if (index === q.correct) {
+            devExamScore++;
+        }
+        setTimeout(function() {
+            devCurrentExamIndex++;
+            renderDevExamQuestion();
+        }, 1000);
+    }
+
+    function finishDevExam() {
+        var total = devCurrentExamQuestions.length;
+        var percent = Math.round((devExamScore / total) * 100);
+        var passed = percent >= 70;
+        var resultHtml = `
+            <div class="result ${passed ? 'pass' : 'fail'}">
+                ${passed ? '✅ ЭКЗАМЕН СДАН!' : '❌ ЭКЗАМЕН НЕ СДАН!'}
+                <div style="font-size:14px;margin-top:4px;">${devExamScore} из ${total} правильных (${percent}%)</div>
+                <div style="font-size:12px;margin-top:4px;opacity:0.6;">${passed ? 'Поздравляем! Вы успешно сдали экзамен.' : 'Попробуйте ещё раз.'}</div>
+            </div>
+        `;
+        document.getElementById('devExamQuestionsList').innerHTML = '';
+        document.getElementById('devExamResult').innerHTML = resultHtml;
+        // Показываем кнопку "Назад" если её нет
+    }
+
+    function devBackToMenu() {
+        document.getElementById('devGiveMoneyPanel').style.display = 'none';
+        document.getElementById('devExamSelect').style.display = 'none';
+        document.getElementById('devExamDaySelect').style.display = 'none';
+        document.getElementById('devExamQuestions').style.display = 'none';
+        document.getElementById('devMenu').classList.add('show');
+        devExamProfId = null;
     }
 
     // ============================================================
@@ -1729,144 +2048,358 @@
     }
 
     // ============================================================
-    // КНИГА
+    // КНИГА (10+ ВОПРОСОВ ДЛЯ КАЖДОЙ)
     // ============================================================
     var bookQuestions = {
         advocate: [
-            { q: 'Что такое адвокатская тайна?', a: 'Информация, которую адвокат не может разглашать.' },
-            { q: 'Как адвокат защищает права клиента?', a: 'Представляет интересы, собирает доказательства.' }
+            { q: 'Что такое адвокатская тайна?', options: ['Информация, которую нельзя разглашать', 'Секретный код адвоката', 'Личный дневник', 'Нет правильного ответа'], correct: 0 },
+            { q: 'Как адвокат защищает права клиента?', options: ['Представляет интересы в суде', 'Даёт советы друзьям', 'Пишет стихи', 'Игнорирует клиента'], correct: 0 },
+            { q: 'Что нужно для получения статуса адвоката?', options: ['Сдать экзамен, стаж 2 года', 'Окончить школу', 'Купить лицензию', 'Ничего'], correct: 0 },
+            { q: 'Каковы основные обязанности адвоката?', options: ['Защита прав и законных интересов', 'Продажа недвижимости', 'Ремонт машин', 'Преподавание'], correct: 0 },
+            { q: 'В каком суде может работать адвокат?', options: ['В любом суде РФ', 'Только в районном', 'Только в арбитражном', 'Только в военном'], correct: 0 },
+            { q: 'Что такое ордер адвоката?', options: ['Документ на участие в деле', 'Разрешение на оружие', 'Паспорт', 'Водительские права'], correct: 0 },
+            { q: 'Может ли адвокат отказаться от защиты?', options: ['Да, в исключительных случаях', 'Нет, никогда', 'Только за деньги', 'Только по решению суда'], correct: 0 },
+            { q: 'Каковы этические нормы адвоката?', options: ['Соблюдение кодекса профессиональной этики', 'Соблюдение моды', 'Соблюдение спортивного режима', 'Нет этических норм'], correct: 0 },
+            { q: 'Что такое адвокатский запрос?', options: ['Запрос в госорганы для сбора доказательств', 'Запрос в магазин', 'Запрос в библиотеку', 'Нет правильного ответа'], correct: 0 },
+            { q: 'Каков срок полномочий адвоката?', options: ['Бессрочно при наличии статуса', '1 год', '5 лет', 'До первого нарушения'], correct: 0 }
         ],
         lawyer: [
-            { q: 'Чем юрист отличается от адвоката?', a: 'Юрист не имеет статуса адвоката.' },
-            { q: 'Что делает юрист в компании?', a: 'Проверяет договоры, консультирует.' }
+            { q: 'Чем юрист отличается от адвоката?', options: ['Юрист не имеет статуса адвоката', 'Юрист умнее', 'Юрист старше', 'Нет отличий'], correct: 0 },
+            { q: 'Что делает юрист в компании?', options: ['Консультирует по правовым вопросам', 'Готовит еду', 'Убирает офис', 'Проводит собрания'], correct: 0 },
+            { q: 'Что такое юридическое лицо?', options: ['Организация, имеющая права', 'Физический человек', 'Недвижимость', 'Транспорт'], correct: 0 },
+            { q: 'Что такое договор?', options: ['Соглашение между сторонами', 'Одностороннее желание', 'Закон', 'Правило'], correct: 0 },
+            { q: 'Что такое иск?', options: ['Требование в суд', 'Просьба', 'Приказ', 'Желание'], correct: 0 },
+            { q: 'Каковы основные отрасли права?', options: ['Гражданское, уголовное, административное', 'Математическое, физическое', 'Химическое, биологическое', 'Нет отраслей'], correct: 0 },
+            { q: 'Что такое презумпция невиновности?', options: ['Обвиняемый невиновен до доказательства обратного', 'Обвиняемый виновен всегда', 'Обвиняемый не имеет прав', 'Нет правильного ответа'], correct: 0 },
+            { q: 'Что такое апелляция?', options: ['Обжалование решения суда', 'Поздравление', 'Предложение', 'Отказ'], correct: 0 },
+            { q: 'Каковы права потребителя?', options: ['Право на информацию, качество, безопасность', 'Право на бесплатные товары', 'Право на вождение', 'Нет прав'], correct: 0 },
+            { q: 'Что такое трудовой договор?', options: ['Соглашение между работником и работодателем', 'Договор купли-продажи', 'Договор аренды', 'Нет правильного ответа'], correct: 0 }
         ],
         judge: [
-            { q: 'Как судья принимает решение?', a: 'На основе законов и внутреннего убеждения.' },
-            { q: 'Каковы требования к судье?', a: 'Высшее юридическое образование, стаж.' }
+            { q: 'Как судья принимает решение?', options: ['На основе законов и внутреннего убеждения', 'По настроению', 'По совету друзей', 'По приказу'], correct: 0 },
+            { q: 'Каковы требования к судье?', options: ['Высшее юридическое образование, стаж', 'Среднее образование', 'Техническое образование', 'Нет требований'], correct: 0 },
+            { q: 'Что такое судебный прецедент?', options: ['Решение, принятое ранее по аналогичному делу', 'Правило игры', 'Закон', 'Нет правильного ответа'], correct: 0 },
+            { q: 'Как назначаются судьи?', options: ['Президентом или по конкурсу', 'Голосованием', 'По наследству', 'Случайно'], correct: 0 },
+            { q: 'Каковы полномочия судьи?', options: ['Правосудие, толкование законов', 'Создание законов', 'Исполнение наказаний', 'Нет полномочий'], correct: 0 },
+            { q: 'Что такое судебная коллегия?', options: ['Группа судей для рассмотрения дела', 'Группа зрителей', 'Администрация', 'Нет правильного ответа'], correct: 0 },
+            { q: 'Как судья должен вести процесс?', options: ['Беспристрастно и независимо', 'С предвзятостью', 'С выгодой для одной стороны', 'Без правил'], correct: 0 },
+            { q: 'Что такое приговор?', options: ['Решение суда по уголовному делу', 'Похвала', 'Совет', 'Нет правильного ответа'], correct: 0 },
+            { q: 'Каковы гарантии независимости судьи?', options: ['Несменяемость, неприкосновенность', 'Высокая зарплата', 'Автомобиль', 'Отпуск'], correct: 0 },
+            { q: 'Может ли судья быть уволен?', options: ['Да, по решению квалификационной коллегии', 'Нет, никогда', 'Да, по желанию президента', 'Только за взятку'], correct: 0 }
         ],
         prosecutor: [
-            { q: 'Роль прокурора в суде?', a: 'Поддерживает обвинение, надзирает за законностью.' },
-            { q: 'Что делает прокурор досудебно?', a: 'Утверждает обвинительное заключение.' }
+            { q: 'Роль прокурора в суде?', options: ['Поддерживает обвинение, надзирает за законностью', 'Защищает подсудимого', 'Развлекает зрителей', 'Нет роли'], correct: 0 },
+            { q: 'Что делает прокурор досудебно?', options: ['Утверждает обвинительное заключение', 'Проводит следствие', 'Готовит обед', 'Нет правильного ответа'], correct: 0 },
+            { q: 'Каковы полномочия прокурора?', options: ['Надзор, поддержание обвинения', 'Принятие законов', 'Строительство домов', 'Нет полномочий'], correct: 0 },
+            { q: 'Что такое прокурорский надзор?', options: ['Контроль за соблюдением законов', 'Контроль за погодой', 'Контроль за ценами', 'Нет правильного ответа'], correct: 0 },
+            { q: 'Как назначается прокурор?', options: ['Президентом', 'Народом', 'Судом', 'Полицией'], correct: 0 },
+            { q: 'Каковы требования к прокурору?', options: ['Высшее юридическое образование, стаж', 'Среднее специальное', 'Военное', 'Нет требований'], correct: 0 },
+            { q: 'Что такое протест прокурора?', options: ['Оспаривание незаконного решения', 'Выражение недовольства', 'Просьба', 'Нет правильного ответа'], correct: 0 },
+            { q: 'Каковы сроки рассмотрения дел прокурором?', options: ['В установленные законом сроки', 'Бесконечно', 'За 1 день', 'Нет сроков'], correct: 0 },
+            { q: 'Что такое представление прокурора?', options: ['Документ об устранении нарушений', 'Подарок', 'Отчёт', 'Нет правильного ответа'], correct: 0 },
+            { q: 'Может ли прокурор отказаться от обвинения?', options: ['Да, если нет доказательств', 'Нет, никогда', 'Только по решению суда', 'Только за деньги'], correct: 0 }
         ],
         notary: [
-            { q: 'Что заверяет нотариус?', a: 'Договоры, доверенности, копии.' },
-            { q: 'Как стать нотариусом?', a: 'Сдать экзамен, получить лицензию.' }
+            { q: 'Что заверяет нотариус?', options: ['Договоры, доверенности, копии', 'Автомобили', 'Квартиры', 'Еду'], correct: 0 },
+            { q: 'Как стать нотариусом?', options: ['Сдать экзамен, получить лицензию', 'Купить', 'По наследству', 'Нет требований'], correct: 0 },
+            { q: 'Каковы права нотариуса?', options: ['Удостоверение сделок, свидетельство копий', 'Арест людей', 'Вынесение приговоров', 'Нет прав'], correct: 0 },
+            { q: 'Что такое нотариальная тайна?', options: ['Информация, которую нотариус не может разглашать', 'Секретная комната', 'Личный дневник', 'Нет правильного ответа'], correct: 0 },
+            { q: 'Каковы обязанности нотариуса?', options: ['Соблюдение законов, защита прав граждан', 'Продажа товаров', 'Ремонт', 'Нет обязанностей'], correct: 0 },
+            { q: 'Что такое нотариальный акт?', options: ['Заверенный документ', 'Закон', 'Постановление', 'Нет правильного ответа'], correct: 0 },
+            { q: 'Как оплачиваются услуги нотариуса?', options: ['По тарифам и нотариальному сбору', 'Бесплатно', 'С бартера', 'По желанию'], correct: 0 },
+            { q: 'Может ли нотариус отказать в совершении действия?', options: ['Да, если это противоречит закону', 'Нет, никогда', 'Только за деньги', 'Только по решению суда'], correct: 0 },
+            { q: 'Каков срок действия доверенности?', options: ['Указывается в документе', '1 год', '5 лет', 'Бессрочно'], correct: 0 },
+            { q: 'Что такое свидетельство о праве на наследство?', options: ['Документ, подтверждающий право на наследство', 'Свидетельство о браке', 'Свидетельство о рождении', 'Нет правильного ответа'], correct: 0 }
         ],
         mvd_police: [
-            { q: 'Что делает полицейский?', a: 'Охраняет порядок, задерживает нарушителей.' },
-            { q: 'Как реагировать на вызов?', a: 'Быстро прибыть, оценить обстановку.' }
+            { q: 'Что делает полицейский?', options: ['Охраняет общественный порядок, задерживает нарушителей', 'Продаёт товары', 'Готовит еду', 'Нет правильного ответа'], correct: 0 },
+            { q: 'Как реагировать на вызов?', options: ['Быстро прибыть, оценить обстановку', 'Игнорировать', 'Пойти домой', 'Никак'], correct: 0 },
+            { q: 'Каковы права полицейского?', options: ['Задержание, досмотр, применение силы', 'Принятие законов', 'Строительство', 'Нет прав'], correct: 0 },
+            { q: 'Что такое протокол?', options: ['Документ о правонарушении', 'Приказ', 'Закон', 'Нет правильного ответа'], correct: 0 },
+            { q: 'Каковы обязанности полицейского?', options: ['Защита прав граждан, соблюдение законов', 'Продажа оружия', 'Шпионаж', 'Нет обязанностей'], correct: 0 },
+            { q: 'Как поступить при угрозе жизни?', options: ['Использовать табельное оружие', 'Убежать', 'Звонить домой', 'Ждать'], correct: 0 },
+            { q: 'Что такое патрулирование?', options: ['Обход территории для поддержания порядка', 'Прогулка', 'Отдых', 'Нет правильного ответа'], correct: 0 },
+            { q: 'Как взаимодействовать с прокуратурой?', options: ['Предоставлять материалы по запросу', 'Игнорировать', 'Ссориться', 'Нет правильного ответа'], correct: 0 },
+            { q: 'Каковы сроки задержания?', options: ['Не более 48 часов', '1 день', '2 дня', 'Без ограничений'], correct: 0 },
+            { q: 'Что делать при ДТП?', options: ['Вызвать ГИБДД, помочь пострадавшим', 'Уехать', 'Сфотографировать', 'Ничего'], correct: 0 }
         ],
         mvd_investigator: [
-            { q: 'Что расследует следователь?', a: 'Уголовные дела, собирает доказательства.' },
-            { q: 'Как взаимодействовать с прокурором?', a: 'Предоставлять материалы для утверждения.' }
+            { q: 'Что расследует следователь?', options: ['Уголовные дела, собирает доказательства', 'Быт', 'Экономику', 'Нет правильного ответа'], correct: 0 },
+            { q: 'Как взаимодействовать с прокурором?', options: ['Предоставлять материалы для утверждения', 'Игнорировать', 'Спорить', 'Нет правильного ответа'], correct: 0 },
+            { q: 'Каковы полномочия следователя?', options: ['Проведение следственных действий, вызов на допрос', 'Вынесение приговора', 'Строительство', 'Нет полномочий'], correct: 0 },
+            { q: 'Что такое следственный эксперимент?', options: ['Воспроизведение обстановки для проверки', 'Эксперимент в лаборатории', 'Опрос', 'Нет правильного ответа'], correct: 0 },
+            { q: 'Каковы сроки следствия?', options: ['До 2 месяцев с возможным продлением', '1 день', '3 дня', 'Без сроков'], correct: 0 },
+            { q: 'Что такое очная ставка?', options: ['Совместный допрос двух лиц', 'Встреча друзей', 'Суд', 'Нет правильного ответа'], correct: 0 },
+            { q: 'Как оформляется допрос?', options: ['Составляется протокол', 'Записывается на диктофон', 'Фотографируется', 'Нет правильного ответа'], correct: 0 },
+            { q: 'Каковы права подозреваемого?', options: ['Право на защитника, на отказ от показаний', 'Право на побег', 'Право на оружие', 'Нет прав'], correct: 0 },
+            { q: 'Что такое вещественное доказательство?', options: ['Предмет, имеющий значение для дела', 'Документ', 'Свидетель', 'Нет правильного ответа'], correct: 0 },
+            { q: 'Что делать при отказе давать показания?', options: ['Объяснить последствия, но не принуждать', 'Заставить силой', 'Ничего', 'Арестовать'], correct: 0 }
         ],
         fsb_officer: [
-            { q: 'Чем занимается ФСБ?', a: 'Обеспечивает государственную безопасность.' },
-            { q: 'Как действовать при угрозе теракта?', a: 'Действовать по инструкции, сообщить руководству.' }
+            { q: 'Чем занимается ФСБ?', options: ['Обеспечивает государственную безопасность', 'Продаёт товары', 'Строит дороги', 'Нет правильного ответа'], correct: 0 },
+            { q: 'Как действовать при угрозе теракта?', options: ['Действовать по инструкции, сообщить руководству', 'Игнорировать', 'Убежать', 'Нет правильного ответа'], correct: 0 },
+            { q: 'Каковы полномочия ФСБ?', options: ['Контрразведка, борьба с терроризмом', 'Принятие законов', 'Судопроизводство', 'Нет полномочий'], correct: 0 },
+            { q: 'Что такое контрразведка?', options: ['Противодействие разведке противника', 'Разведка', 'Шпионаж', 'Нет правильного ответа'], correct: 0 },
+            { q: 'Каковы требования к сотруднику ФСБ?', options: ['Гражданство РФ, годность по здоровью', 'Среднее образование', 'Военная подготовка', 'Нет требований'], correct: 0 },
+            { q: 'Что такое оперативно-розыскная деятельность?', options: ['Мероприятия по выявлению преступлений', 'Полицейский патруль', 'Следствие', 'Нет правильного ответа'], correct: 0 },
+            { q: 'Как действовать при выявлении утечки данных?', options: ['Немедленно сообщить руководству, начать проверку', 'Игнорировать', 'Спрятать', 'Нет правильного ответа'], correct: 0 },
+            { q: 'Каковы правила секретности?', options: ['Соблюдение режима секретности, работа с гостайной', 'Открытая информация', 'Личные дневники', 'Нет правил'], correct: 0 },
+            { q: 'Что такое агентурная сеть?', options: ['Система секретных источников информации', 'Сеть магазинов', 'Компьютерная сеть', 'Нет правильного ответа'], correct: 0 },
+            { q: 'Каковы последствия разглашения гостайны?', options: ['Уголовная ответственность', 'Штраф', 'Выговор', 'Нет последствий'], correct: 0 }
         ],
         mchs_rescuer: [
-            { q: 'Что делать при землетрясении?', a: 'Лечь на пол, защитить голову, покинуть здание.' },
-            { q: 'Как спасать людей из завалов?', a: 'Использовать спецоборудование.' }
+            { q: 'Что делать при землетрясении?', options: ['Лечь на пол, защитить голову, покинуть здание', 'Бежать на улицу', 'Прыгать с балкона', 'Нет правильного ответа'], correct: 0 },
+            { q: 'Как спасать людей из завалов?', options: ['Использовать спецоборудование, действовать аккуратно', 'Руками', 'Кричать', 'Нет правильного ответа'], correct: 0 },
+            { q: 'Каковы обязанности спасателя?', options: ['Спасение людей, оказание помощи', 'Продажа товаров', 'Строительство', 'Нет обязанностей'], correct: 0 },
+            { q: 'Что такое ЧС?', options: ['Чрезвычайная ситуация', 'Частная собственность', 'Человеческий сбой', 'Нет правильного ответа'], correct: 0 },
+            { q: 'Каковы правила эвакуации?', options: ['Быстрое и организованное перемещение в безопасное место', 'Беспорядочный бег', 'Ожидание', 'Нет правил'], correct: 0 },
+            { q: 'Что делать при наводнении?', options: ['Переместиться на возвышенность, отключить электричество', 'Купаться', 'Затапливать дом', 'Нет правильного ответа'], correct: 0 },
+            { q: 'Как использовать огнетушитель?', options: ['Сорвать пломбу, направить на очаг', 'Бросить в огонь', 'Полить водой', 'Нет правильного ответа'], correct: 0 },
+            { q: 'Каковы правила первой помощи?', options: ['Остановка крови, СЛР, вызов скорой', 'Игнорирование', 'Бег', 'Нет правил'], correct: 0 },
+            { q: 'Что делать при химической аварии?', options: ['Использовать СИЗ, покинуть зону', 'Нюхать', 'Пить', 'Нет правильного ответа'], correct: 0 },
+            { q: 'Каковы полномочия МЧС?', options: ['Ликвидация ЧС, спасение людей', 'Принятие законов', 'Суд', 'Нет полномочий'], correct: 0 }
         ],
         mchs_fireman: [
-            { q: 'Что делать при пожаре?', a: 'Вызвать 101, эвакуировать людей, тушить.' },
-            { q: 'Как использовать огнетушитель?', a: 'Сорвать пломбу, направить на очаг.' }
+            { q: 'Что делать при пожаре?', options: ['Вызвать 101, эвакуировать людей, тушить', 'Ждать', 'Смотреть', 'Нет правильного ответа'], correct: 0 },
+            { q: 'Как использовать огнетушитель?', options: ['Сорвать пломбу, направить на очаг', 'Бросить в огонь', 'Полить водой', 'Нет правильного ответа'], correct: 0 },
+            { q: 'Каковы правила эвакуации при пожаре?', options: ['Не пользоваться лифтом, дышать через влажную ткань', 'Бежать куда угодно', 'Прыгать', 'Нет правил'], correct: 0 },
+            { q: 'Что такое пожарная безопасность?', options: ['Соблюдение правил предотвращения пожаров', 'Тушение', 'Бег', 'Нет правильного ответа'], correct: 0 },
+            { q: 'Как действовать при задымлении?', options: ['Дышать через влажную ткань, передвигаться пригнувшись', 'Бежать', 'Кричать', 'Нет правильного ответа'], correct: 0 },
+            { q: 'Каковы причины пожаров?', options: ['Неисправность электропроводки, неосторожное обращение с огнём', 'Дождь', 'Солнце', 'Нет правильного ответа'], correct: 0 },
+            { q: 'Как вызвать пожарных?', options: ['По номеру 101 или 112', 'По телефону другу', 'По почте', 'Нет правильного ответа'], correct: 0 },
+            { q: 'Каковы средства тушения пожара?', options: ['Огнетушители, вода, песок', 'Бензин', 'Спирт', 'Нет правильного ответа'], correct: 0 },
+            { q: 'Что делать, если загорелась одежда?', options: ['Кататься по земле, накрыть тканью', 'Бежать', 'Прыгать', 'Нет правильного ответа'], correct: 0 },
+            { q: 'Каковы правила поведения в горящем здании?', options: ['Не паниковать, использовать СИЗ', 'Бежать к лифту', 'Открыть окна', 'Нет правил'], correct: 0 }
         ],
         doctor: [
-            { q: 'Что делать при остановке сердца?', a: 'Начать СЛР: 30 нажатий, 2 вдоха.' },
-            { q: 'Как лечить простуду?', a: 'Покой, тёплое питьё, жаропонижающие.' }
+            { q: 'Что делать при остановке сердца?', options: ['Начать СЛР: 30 нажатий, 2 вдоха', 'Позвать врача', 'Дать воды', 'Нет правильного ответа'], correct: 0 },
+            { q: 'Как лечить простуду?', options: ['Покой, тёплое питьё, жаропонижающие', 'Антибиотики', 'Алкоголь', 'Нет правильного ответа'], correct: 0 },
+            { q: 'Каковы основные симптомы инфаркта?', options: ['Боль в груди, одышка, холодный пот', 'Головная боль', 'Кашель', 'Нет правильного ответа'], correct: 0 },
+            { q: 'Что такое гипертония?', options: ['Повышенное артериальное давление', 'Пониженное давление', 'Нормальное давление', 'Нет правильного ответа'], correct: 0 },
+            { q: 'Как лечить диабет?', options: ['Инсулин, диета, контроль сахара', 'Антибиотики', 'Операция', 'Нет правильного ответа'], correct: 0 },
+            { q: 'Каковы правила здорового питания?', options: ['Разнообразное питание, ограничение сахара', 'Одни сладости', 'Одни жиры', 'Нет правил'], correct: 0 },
+            { q: 'Что такое вакцинация?', options: ['Введение вакцины для иммунитета', 'Лечение антибиотиками', 'Операция', 'Нет правильного ответа'], correct: 0 },
+            { q: 'Каковы симптомы инсульта?', options: ['Асимметрия лица, нарушение речи', 'Головокружение', 'Тошнота', 'Нет правильного ответа'], correct: 0 },
+            { q: 'Как лечить аллергию?', options: ['Антигистаминные препараты, избегание аллергена', 'Антибиотики', 'Операция', 'Нет правильного ответа'], correct: 0 },
+            { q: 'Что такое анафилактический шок?', options: ['Тяжёлая аллергическая реакция, опасная для жизни', 'Лёгкая аллергия', 'Простуда', 'Нет правильного ответа'], correct: 0 }
         ],
         surgeon: [
-            { q: 'Что делать при открытом переломе?', a: 'Остановить кровь, наложить шину.' },
-            { q: 'Правила стерилизации?', a: 'Обработка инструментов, перчатки.' }
+            { q: 'Что делать при открытом переломе?', options: ['Остановить кровь, наложить шину, вызвать скорую', 'Ничего', 'Промыть рану', 'Нет правильного ответа'], correct: 0 },
+            { q: 'Правила стерилизации?', options: ['Обработка инструментов, использование перчаток', 'Мыть руки', 'Одевать халат', 'Нет правил'], correct: 0 },
+            { q: 'Как проводится операция?', options: ['После подготовки, под наркозом', 'Без подготовки', 'Сразу', 'Нет правильного ответа'], correct: 0 },
+            { q: 'Каковы этапы операции?', options: ['Разрез, манипуляция, ушивание', 'Осмотр, диагноз', 'Лечение', 'Нет правильного ответа'], correct: 0 },
+            { q: 'Что такое шовный материал?', options: ['Нитки для сшивания тканей', 'Бинт', 'Пластырь', 'Нет правильного ответа'], correct: 0 },
+            { q: 'Как предотвратить инфицирование?', options: ['Соблюдать стерильность, использовать антибиотики', 'Мыть руки', 'Обрабатывать рану', 'Нет правильного ответа'], correct: 0 },
+            { q: 'Каковы правила донорства крови?', options: ['Здоровый донор, прохождение анализов', 'Любой человек', 'Больной', 'Нет правил'], correct: 0 },
+            { q: 'Что такое операционная?', options: ['Специально оборудованное помещение для операций', 'Кабинет врача', 'Палата', 'Нет правильного ответа'], correct: 0 },
+            { q: 'Каковы осложнения после операции?', options: ['Кровотечение, инфекция, тромбоз', 'Головная боль', 'Тошнота', 'Нет правильного ответа'], correct: 0 },
+            { q: 'Как ухаживать за раной после операции?', options: ['Перевязка, обработка антисептиком', 'Мыть', 'Мазать кремом', 'Нет правильного ответа'], correct: 0 }
         ],
         pediatrician: [
-            { q: 'Как лечить детскую простуду?', a: 'Покой, обильное питьё, безопасные лекарства.' },
-            { q: 'Уход за новорождённым?', a: 'Гигиена, кормление, вакцинация.' }
+            { q: 'Как лечить детскую простуду?', options: ['Покой, обильное питьё, безопасные лекарства', 'Антибиотики', 'Алкоголь', 'Нет правильного ответа'], correct: 0 },
+            { q: 'Уход за новорождённым?', options: ['Гигиена, кормление, вакцинация', 'Купание, прогулки', 'Сон', 'Нет правильного ответа'], correct: 0 },
+            { q: 'Каковы симптомы детских инфекций?', options: ['Температура, сыпь, кашель', 'Боль в животе', 'Головная боль', 'Нет правильного ответа'], correct: 0 },
+            { q: 'Что такое детская вакцинация?', options: ['Защита от инфекций', 'Лечение', 'Операция', 'Нет правильного ответа'], correct: 0 },
+            { q: 'Как кормить новорождённого?', options: ['Грудное молоко или смесь по требованию', 'По часам', 'Только смесь', 'Нет правильного ответа'], correct: 0 },
+            { q: 'Что такое детская поликлиника?', options: ['Медицинское учреждение для детей', 'Школа', 'Детский сад', 'Нет правильного ответа'], correct: 0 },
+            { q: 'Каковы сроки вакцинации?', options: ['По календарю прививок', 'По желанию', 'При болезни', 'Нет правил'], correct: 0 },
+            { q: 'Что делать при детском отравлении?', options: ['Вызвать скорую, промыть желудок', 'Дать молоко', 'Ничего', 'Нет правильного ответа'], correct: 0 },
+            { q: 'Как ухаживать за пупочной ранкой?', options: ['Обрабатывать антисептиком', 'Мыть', 'Мазать кремом', 'Нет правильного ответа'], correct: 0 },
+            { q: 'Что такое детский врач?', options: ['Врач, специализирующийся на здоровье детей', 'Врач для взрослых', 'Хирург', 'Нет правильного ответа'], correct: 0 }
         ],
         dentist: [
-            { q: 'Как лечить кариес?', a: 'Удалить поражённую ткань, поставить пломбу.' },
-            { q: 'Как предотвратить кариес?', a: 'Чистка, нить, фторирование.' }
+            { q: 'Как лечить кариес?', options: ['Удалить поражённую ткань, поставить пломбу', 'Вырвать зуб', 'Промыть', 'Нет правильного ответа'], correct: 0 },
+            { q: 'Как предотвратить кариес?', options: ['Чистка зубов, нить, фторирование', 'Есть сладости', 'Не чистить', 'Нет правильного ответа'], correct: 0 },
+            { q: 'Что такое пародонтит?', options: ['Воспаление тканей вокруг зуба', 'Кариес', 'Пульпит', 'Нет правильного ответа'], correct: 0 },
+            { q: 'Как лечить пульпит?', options: ['Удаление нерва, пломбирование каналов', 'Вырвать зуб', 'Промыть', 'Нет правильного ответа'], correct: 0 },
+            { q: 'Что такое зубной камень?', options: ['Отложения на зубах', 'Твёрдый зуб', 'Пломба', 'Нет правильного ответа'], correct: 0 },
+            { q: 'Как часто нужно посещать стоматолога?', options: ['Раз в полгода', 'Раз в год', 'Раз в месяц', 'Нет правил'], correct: 0 },
+            { q: 'Что такое протезирование?', options: ['Восстановление зубов', 'Лечение кариеса', 'Чистка', 'Нет правильного ответа'], correct: 0 },
+            { q: 'Как ухаживать за зубами?', options: ['Чистка 2 раза в день, нить, ополаскиватель', 'Чистка раз в неделю', 'Не чистить', 'Нет правил'], correct: 0 },
+            { q: 'Что такое анестезия в стоматологии?', options: ['Обезболивание', 'Лечение', 'Удаление', 'Нет правильного ответа'], correct: 0 },
+            { q: 'Каковы симптомы пульпита?', options: ['Боль, реакция на холодное/горячее', 'Отсутствие боли', 'Кровоточивость', 'Нет правильного ответа'], correct: 0 }
         ],
         pharmacist: [
-            { q: 'Как изготавливать лекарства?', a: 'По рецепту, с соблюдением пропорций.' },
-            { q: 'Как отпускать лекарства?', a: 'Проверить рецепт, выдать.' }
+            { q: 'Как изготавливать лекарства?', options: ['По рецепту, с соблюдением пропорций', 'На глаз', 'В аптеке', 'Нет правильного ответа'], correct: 0 },
+            { q: 'Как отпускать лекарства?', options: ['Проверить рецепт, выдать препарат', 'Продать без рецепта', 'Отдать', 'Нет правильного ответа'], correct: 0 },
+            { q: 'Что такое фармацевтическая экспертиза?', options: ['Проверка качества лекарств', 'Лечение', 'Продажа', 'Нет правильного ответа'], correct: 0 },
+            { q: 'Каковы правила хранения лекарств?', options: ['Соблюдение температуры, влажности, срока годности', 'Где угодно', 'На солнце', 'Нет правил'], correct: 0 },
+            { q: 'Что такое рецепт?', options: ['Документ на получение лекарства', 'Письмо', 'Закон', 'Нет правильного ответа'], correct: 0 },
+            { q: 'Как выглядят лекарства?', options: ['Таблетки, капсулы, сиропы, мази', 'Еда', 'Вода', 'Нет правильного ответа'], correct: 0 },
+            { q: 'Что такое побочные эффекты?', options: ['Нежелательные реакции на лекарство', 'Лечение', 'Профилактика', 'Нет правильного ответа'], correct: 0 },
+            { q: 'Как принимать лекарства?', options: ['По инструкции, до или после еды', 'Как угодно', 'Всё сразу', 'Нет правил'], correct: 0 },
+            { q: 'Что такое антибиотики?', options: ['Лекарства против бактерий', 'Обезболивающие', 'Жаропонижающие', 'Нет правильного ответа'], correct: 0 },
+            { q: 'Каковы правила работы фармацевта?', options: ['Соблюдение фармацевтического порядка', 'Продажа товаров', 'Лечение', 'Нет правил'], correct: 0 }
         ],
         programmer: [
-            { q: 'Как писать чистый код?', a: 'Следовать стандартам, использовать комментарии.' },
-            { q: 'Что такое отладка?', a: 'Поиск и исправление ошибок.' }
+            { q: 'Как писать чистый код?', options: ['Следовать стандартам, использовать комментарии', 'Писать как придётся', 'Не писать', 'Нет правильного ответа'], correct: 0 },
+            { q: 'Что такое отладка?', options: ['Поиск и исправление ошибок', 'Создание программы', 'Тестирование', 'Нет правильного ответа'], correct: 0 },
+            { q: 'Что такое переменная?', options: ['Именованная область памяти', 'Постоянная', 'Функция', 'Нет правильного ответа'], correct: 0 },
+            { q: 'Что такое алгоритм?', options: ['Последовательность действий', 'Картинка', 'Звук', 'Нет правильного ответа'], correct: 0 },
+            { q: 'Что такое язык программирования?', options: ['Средство для написания кода', 'Язык общения', 'Иностранный язык', 'Нет правильного ответа'], correct: 0 },
+            { q: 'Что такое рефакторинг?', options: ['Улучшение структуры кода без изменения логики', 'Исправление ошибок', 'Тестирование', 'Нет правильного ответа'], correct: 0 },
+            { q: 'Что такое база данных?', options: ['Хранилище структурированной информации', 'Файл', 'Документ', 'Нет правильного ответа'], correct: 0 },
+            { q: 'Что такое API?', options: ['Интерфейс взаимодействия программ', 'Код', 'Программа', 'Нет правильного ответа'], correct: 0 },
+            { q: 'Что такое Git?', options: ['Система контроля версий', 'Язык программирования', 'Браузер', 'Нет правильного ответа'], correct: 0 },
+            { q: 'Что такое компиляция?', options: ['Преобразование кода в машинный', 'Запуск программы', 'Тестирование', 'Нет правильного ответа'], correct: 0 }
         ],
         tester: [
-            { q: 'Как тестировать ПО?', a: 'Находить баги, составлять отчёты.' },
-            { q: 'Виды тестирования?', a: 'Функциональное, нагрузочное, регрессионное.' }
+            { q: 'Как тестировать ПО?', options: ['Находить баги, составлять отчёты', 'Использовать программы', 'Смотреть', 'Нет правильного ответа'], correct: 0 },
+            { q: 'Виды тестирования?', options: ['Функциональное, нагрузочное, регрессионное', 'Визуальное', 'Звуковое', 'Нет правильного ответа'], correct: 0 },
+            { q: 'Что такое баг?', options: ['Ошибка в коде', 'Правильное поведение', 'Функция', 'Нет правильного ответа'], correct: 0 },
+            { q: 'Что такое регрессионное тестирование?', options: ['Проверка после изменений', 'Первая проверка', 'Тестирование дизайна', 'Нет правильного ответа'], correct: 0 },
+            { q: 'Что такое тест-кейс?', options: ['Набор шагов для проверки', 'Ошибка', 'Программа', 'Нет правильного ответа'], correct: 0 },
+            { q: 'Что такое баг-репорт?', options: ['Отчёт о найденной ошибке', 'Функция', 'Код', 'Нет правильного ответа'], correct: 0 },
+            { q: 'Что такое Smoke-тестирование?', options: ['Быстрая проверка основной функциональности', 'Детальное тестирование', 'Нагрузочное тестирование', 'Нет правильного ответа'], correct: 0 },
+            { q: 'Что такое тестирование безопасности?', options: ['Проверка защиты от атак', 'Функциональное', 'Дизайн', 'Нет правильного ответа'], correct: 0 },
+            { q: 'Что такое репорт?', options: ['Отчёт о результатах тестирования', 'Код', 'Программа', 'Нет правильного ответа'], correct: 0 },
+            { q: 'Каковы навыки тестировщика?', options: ['Внимательность, логика, знание теорий', 'Программирование', 'Дизайн', 'Нет правильного ответа'], correct: 0 }
         ],
         analyst: [
-            { q: 'Как анализировать данные?', a: 'Использовать статистику, визуализацию.' },
-            { q: 'Что такое бизнес-требования?', a: 'Описание потребностей заказчика.' }
+            { q: 'Как анализировать данные?', options: ['Использовать статистику, визуализацию', 'Смотреть', 'Читать', 'Нет правильного ответа'], correct: 0 },
+            { q: 'Что такое бизнес-требования?', options: ['Описание потребностей заказчика', 'Технические требования', 'Дизайн', 'Нет правильного ответа'], correct: 0 },
+            { q: 'Что такое анализ данных?', options: ['Изучение и интерпретация информации', 'Сбор', 'Хранение', 'Нет правильного ответа'], correct: 0 },
+            { q: 'Что такое визуализация данных?', options: ['Графическое представление информации', 'Таблицы', 'Текст', 'Нет правильного ответа'], correct: 0 },
+            { q: 'Что такое метрика?', options: ['Показатель, измеряемый параметр', 'Единица измерения', 'Алгоритм', 'Нет правильного ответа'], correct: 0 },
+            { q: 'Что такое KPI?', options: ['Ключевые показатели эффективности', 'Код', 'Программа', 'Нет правильного ответа'], correct: 0 },
+            { q: 'Что такое дашборд?', options: ['Интерактивная панель с данными', 'Панель управления', 'Код', 'Нет правильного ответа'], correct: 0 },
+            { q: 'Что такое прогнозирование?', options: ['Предсказание будущих значений', 'Анализ', 'Сбор', 'Нет правильного ответа'], correct: 0 },
+            { q: 'Что такое кластеризация?', options: ['Группировка данных по схожести', 'Сортировка', 'Фильтрация', 'Нет правильного ответа'], correct: 0 },
+            { q: 'Что такое корреляция?', options: ['Зависимость между показателями', 'Причина', 'Следствие', 'Нет правильного ответа'], correct: 0 }
         ],
         designer: [
-            { q: 'Как создавать дизайн?', a: 'Изучить пользователей, создать прототип.' },
-            { q: 'Что такое UX?', a: 'Опыт пользователя, удобство интерфейса.' }
+            { q: 'Как создавать дизайн?', options: ['Изучить пользователей, создать прототип', 'Нарисовать', 'Скопировать', 'Нет правильного ответа'], correct: 0 },
+            { q: 'Что такое UX?', options: ['Опыт пользователя, удобство интерфейса', 'Дизайн', 'Код', 'Нет правильного ответа'], correct: 0 },
+            { q: 'Что такое UI?', options: ['Интерфейс, визуальное оформление', 'Аналитика', 'Программирование', 'Нет правильного ответа'], correct: 0 },
+            { q: 'Что такое прототип?', options: ['Макет будущего продукта', 'Готовый продукт', 'Код', 'Нет правильного ответа'], correct: 0 },
+            { q: 'Что такое типографика?', options: ['Искусство оформления текста', 'Дизайн', 'Вёрстка', 'Нет правильного ответа'], correct: 0 },
+            { q: 'Что такое цветовая схема?', options: ['Сочетание цветов в дизайне', 'Палитра', 'Рисунок', 'Нет правильного ответа'], correct: 0 },
+            { q: 'Что такое адаптивный дизайн?', options: ['Адаптация под разные экраны', 'Статичный дизайн', 'Код', 'Нет правильного ответа'], correct: 0 },
+            { q: 'Что такое юзабилити?', options: ['Удобство и простота использования', 'Дизайн', 'Код', 'Нет правильного ответа'], correct: 0 },
+            { q: 'Что такое шрифт?', options: ['Набор символов с общим стилем', 'Рисунок', 'Код', 'Нет правильного ответа'], correct: 0 },
+            { q: 'Что такое макет?', options: ['Предварительное изображение дизайна', 'Готовый продукт', 'Код', 'Нет правильного ответа'], correct: 0 }
         ],
         sysadmin: [
-            { q: 'Как настраивать сервер?', a: 'Установить ОС, настроить безопасность.' },
-            { q: 'Что делать при сбое?', a: 'Найти причину, восстановить работу.' }
+            { q: 'Как настраивать сервер?', options: ['Установить ОС, настроить безопасность', 'Включить', 'Выключить', 'Нет правильного ответа'], correct: 0 },
+            { q: 'Что делать при сбое?', options: ['Найти причину, восстановить работу', 'Игнорировать', 'Перезагрузить', 'Нет правильного ответа'], correct: 0 },
+            { q: 'Что такое сеть?', options: ['Объединение компьютеров', 'Программа', 'Код', 'Нет правильного ответа'], correct: 0 },
+            { q: 'Что такое бэкап?', options: ['Резервное копирование данных', 'Восстановление', 'Удаление', 'Нет правильного ответа'], correct: 0 },
+            { q: 'Что такое сервер?', options: ['Компьютер, предоставляющий услуги', 'Клиент', 'Программа', 'Нет правильного ответа'], correct: 0 },
+            { q: 'Что такое безопасность сети?', options: ['Защита от угроз', 'Открытость', 'Уязвимость', 'Нет правильного ответа'], correct: 0 },
+            { q: 'Что такое домен?', options: ['Имя в интернете', 'Компьютер', 'Программа', 'Нет правильного ответа'], correct: 0 },
+            { q: 'Что такое хостинг?', options: ['Услуга размещения сайта', 'Программа', 'Код', 'Нет правильного ответа'], correct: 0 },
+            { q: 'Что такое DNS?', options: ['Система доменных имён', 'Сервер', 'Программа', 'Нет правильного ответа'], correct: 0 },
+            { q: 'Что такое сертификат SSL?', options: ['Шифрование данных между сервером и клиентом', 'Программа', 'Код', 'Нет правильного ответа'], correct: 0 }
         ],
         architect: [
-            { q: 'Как создать проект здания?', a: 'Разработать чертежи, рассчитать нагрузки.' },
-            { q: 'Правила строительства?', a: 'Соблюдать СНиПы и ГОСТы.' }
+            { q: 'Как создать проект здания?', options: ['Разработать чертежи, рассчитать нагрузки', 'Нарисовать', 'Представить', 'Нет правильного ответа'], correct: 0 },
+            { q: 'Правила строительства?', options: ['Соблюдать СНиПы и ГОСТы', 'Не соблюдать', 'Игнорировать', 'Нет правил'], correct: 0 },
+            { q: 'Что такое фасад?', options: ['Внешняя сторона здания', 'Внутренняя', 'Крыша', 'Нет правильного ответа'], correct: 0 },
+            { q: 'Что такое план здания?', options: ['Горизонтальный разрез', 'Фасад', 'Крыша', 'Нет правильного ответа'], correct: 0 },
+            { q: 'Что такое архитектурный стиль?', options: ['Особенности оформления здания', 'Материал', 'Размер', 'Нет правильного ответа'], correct: 0 },
+            { q: 'Что такое макет здания?', options: ['Модель будущего строения', 'Чертёж', 'Фасад', 'Нет правильного ответа'], correct: 0 },
+            { q: 'Что такое конструкция?', options: ['Несущая часть здания', 'Фасад', 'Крыша', 'Нет правильного ответа'], correct: 0 },
+            { q: 'Что такое архитектура?', options: ['Искусство проектировать здания', 'Строительство', 'Дизайн', 'Нет правильного ответа'], correct: 0 },
+            { q: 'Что такое генеральный план?', options: ['План территории вокруг здания', 'План этажа', 'Фасад', 'Нет правильного ответа'], correct: 0 },
+            { q: 'Что такое градостроительство?', options: ['Планирование городов', 'Строительство домов', 'Дизайн', 'Нет правильного ответа'], correct: 0 }
         ],
         engineer: [
-            { q: 'Как делать расчёты конструкций?', a: 'Использовать формулы, проверять прочность.' },
-            { q: 'Как контролировать качество?', a: 'Проверять материалы, тестировать.' }
+            { q: 'Как делать расчёты конструкций?', options: ['Использовать формулы, проверять прочность', 'На глаз', 'Угадывать', 'Нет правильного ответа'], correct: 0 },
+            { q: 'Как контролировать качество?', options: ['Проверять материалы, тестировать', 'Не проверять', 'Смотреть', 'Нет правильного ответа'], correct: 0 },
+            { q: 'Что такое нагрузка?', options: ['Сила, воздействующая на конструкцию', 'Вес', 'Давление', 'Нет правильного ответа'], correct: 0 },
+            { q: 'Что такое прочность?', options: ['Способность выдерживать нагрузки', 'Лёгкость', 'Гибкость', 'Нет правильного ответа'], correct: 0 },
+            { q: 'Что такое конструкция?', options: ['Совокупность элементов здания', 'Материал', 'Фасад', 'Нет правильного ответа'], correct: 0 },
+            { q: 'Что такое расчёт?', options: ['Определение параметров конструкции', 'Измерение', 'Взвешивание', 'Нет правильного ответа'], correct: 0 },
+            { q: 'Что такое материалы?', options: ['Вещества для строительства', 'Инструменты', 'Оборудование', 'Нет правильного ответа'], correct: 0 },
+            { q: 'Что такое технология?', options: ['Способ производства работ', 'Материал', 'Инструмент', 'Нет правильного ответа'], correct: 0 },
+            { q: 'Что такое проектная документация?', options: ['Чертежи и расчёты', 'Схема', 'Фасад', 'Нет правильного ответа'], correct: 0 },
+            { q: 'Что такое экспертиза проекта?', options: ['Проверка на соответствие нормам', 'Одобрение', 'Отказ', 'Нет правильного ответа'], correct: 0 }
         ],
         builder: [
-            { q: 'Как класть кирпич?', a: 'Раствор, выравнивание, проверка уровня.' },
-            { q: 'Как работать с бетоном?', a: 'Смешивать, заливать, утрамбовывать.' }
+            { q: 'Как класть кирпич?', options: ['Раствор, выравнивание, проверка уровня', 'Бросить', 'Приклеить', 'Нет правильного ответа'], correct: 0 },
+            { q: 'Как работать с бетоном?', options: ['Смешивать, заливать, утрамбовывать', 'Заливать', 'Мешать', 'Нет правильного ответа'], correct: 0 },
+            { q: 'Что такое фундамент?', options: ['Основание здания', 'Крыша', 'Стена', 'Нет правильного ответа'], correct: 0 },
+            { q: 'Что такое армирование?', options: ['Укрепление бетона металлом', 'Заливка', 'Смешивание', 'Нет правильного ответа'], correct: 0 },
+            { q: 'Что такое опалубка?', options: ['Форма для бетона', 'Инструмент', 'Материал', 'Нет правильного ответа'], correct: 0 },
+            { q: 'Что такое раствор?', options: ['Смесь для кладки', 'Вода', 'Песок', 'Нет правильного ответа'], correct: 0 },
+            { q: 'Что такое перекрытие?', options: ['Горизонтальная конструкция между этажами', 'Крыша', 'Стена', 'Нет правильного ответа'], correct: 0 },
+            { q: 'Что такое кровля?', options: ['Покрытие крыши', 'Фасад', 'Стена', 'Нет правильного ответа'], correct: 0 },
+            { q: 'Что такое строительные леса?', options: ['Временная конструкция для работ на высоте', 'Материал', 'Инструмент', 'Нет правильного ответа'], correct: 0 },
+            { q: 'Что такое отделка?', options: ['Финальная обработка поверхностей', 'Строительство', 'Черновые работы', 'Нет правильного ответа'], correct: 0 }
         ],
         surveyor: [
-            { q: 'Что такое геодезия?', a: 'Наука об измерениях на местности.' },
-            { q: 'Как делать разбивку участка?', a: 'Использовать теодолит, мерную ленту.' }
+            { q: 'Что такое геодезия?', options: ['Наука об измерениях на местности', 'Строительство', 'Архитектура', 'Нет правильного ответа'], correct: 0 },
+            { q: 'Как делать разбивку участка?', options: ['Использовать теодолит, мерную ленту', 'На глаз', 'Схематично', 'Нет правильного ответа'], correct: 0 },
+            { q: 'Что такое нивелир?', options: ['Инструмент для измерения высот', 'Теодолит', 'Лента', 'Нет правильного ответа'], correct: 0 },
+            { q: 'Что такое топография?', options: ['Карта местности', 'Схема', 'Чертёж', 'Нет правильного ответа'], correct: 0 },
+            { q: 'Что такое геодезический пункт?', options: ['Точка с известными координатами', 'Точка на карте', 'Отметка', 'Нет правильного ответа'], correct: 0 },
+            { q: 'Что такое план местности?', options: ['Уменьшенное изображение территории', 'Карта', 'Схема', 'Нет правильного ответа'], correct: 0 },
+            { q: 'Что такое вертикальная планировка?', options: ['Изменение рельефа', 'Горизонтальная', 'Строительство', 'Нет правильного ответа'], correct: 0 },
+            { q: 'Что такое геодезическая сеть?', options: ['Система точек с известными координатами', 'Карта', 'План', 'Нет правильного ответа'], correct: 0 },
+            { q: 'Что такое георадар?', options: ['Прибор для поиска подземных объектов', 'Теодолит', 'Нивелир', 'Нет правильного ответа'], correct: 0 },
+            { q: 'Что такое геоинформационная система?', options: ['Система для работы с пространственными данными', 'Карта', 'План', 'Нет правильного ответа'], correct: 0 }
         ],
         project_manager: [
-            { q: 'Как управлять проектом?', a: 'Планировать, контролировать сроки.' },
-            { q: 'Как работать с заказчиком?', a: 'Уточнять требования, презентовать решения.' }
+            { q: 'Как управлять проектом?', options: ['Планировать, контролировать сроки', 'Делать всё самому', 'Ничего не делать', 'Нет правильного ответа'], correct: 0 },
+            { q: 'Как работать с заказчиком?', options: ['Уточнять требования, презентовать решения', 'Игнорировать', 'Отвечать', 'Нет правильного ответа'], correct: 0 },
+            { q: 'Что такое план проекта?', options: ['Документ с этапами и сроками', 'Идея', 'Цель', 'Нет правильного ответа'], correct: 0 },
+            { q: 'Что такое бюджет проекта?', options: ['Финансовый план', 'Смета', 'Расходы', 'Нет правильного ответа'], correct: 0 },
+            { q: 'Что такое команда проекта?', options: ['Группа исполнителей', 'Сотрудники', 'Участники', 'Нет правильного ответа'], correct: 0 },
+            { q: 'Что такое риски в проекте?', options: ['Возможные проблемы', 'Угрозы', 'Ошибки', 'Нет правильного ответа'], correct: 0 },
+            { q: 'Что такое управление качеством?', options: ['Контроль соответствия стандартам', 'Проверка', 'Тестирование', 'Нет правильного ответа'], correct: 0 },
+            { q: 'Что такое Agile?', options: ['Методология управления проектами', 'Программа', 'Код', 'Нет правильного ответа'], correct: 0 },
+            { q: 'Что такое Scrum?', options: ['Методология управления проектами', 'Программа', 'Код', 'Нет правильного ответа'], correct: 0 },
+            { q: 'Что такое дедлайн?', options: ['Крайний срок выполнения задачи', 'Время', 'Дата', 'Нет правильного ответа'], correct: 0 }
         ],
         teacher: [
-            { q: 'Как вести урок?', a: 'Объяснять материал, задавать вопросы.' },
-            { q: 'Как работать с трудными учениками?', a: 'Находить подход, мотивировать.' }
+            { q: 'Как вести урок?', options: ['Объяснять материал, задавать вопросы', 'Молчать', 'Кричать', 'Нет правильного ответа'], correct: 0 },
+            { q: 'Как работать с трудными учениками?', options: ['Находить подход, мотивировать', 'Наказывать', 'Игнорировать', 'Нет правильного ответа'], correct: 0 },
+            { q: 'Как оценивать знания?', options: ['Объективно, по системе оценивания', 'Субъективно', 'Не оценивать', 'Нет правильного ответа'], correct: 0 },
+            { q: 'Что такое педагогика?', options: ['Наука о воспитании и обучении', 'Методика', 'Дидактика', 'Нет правильного ответа'], correct: 0 },
+            { q: 'Как подготовить урок?', options: ['План-конспект, материал, задания', 'Без подготовки', 'Импровизировать', 'Нет правильного ответа'], correct: 0 },
+            { q: 'Что такое дисциплина?', options: ['Соблюдение правил, порядок', 'Свобода', 'Хаос', 'Нет правильного ответа'], correct: 0 },
+            { q: 'Как взаимодействовать с родителями?', options: ['Информировать, обсуждать', 'Игнорировать', 'Критиковать', 'Нет правильного ответа'], correct: 0 },
+            { q: 'Что такое методика?', options: ['Способы преподавания', 'Правила', 'Закон', 'Нет правильного ответа'], correct: 0 },
+            { q: 'Как заинтересовать учеников?', options: ['Использовать интерактивные методы', 'Скучно', 'Монотонно', 'Нет правильного ответа'], correct: 0 },
+            { q: 'Что такое внеурочная деятельность?', options: ['Занятия вне урока', 'Основные уроки', 'Домашка', 'Нет правильного ответа'], correct: 0 }
         ],
         professor: [
-            { q: 'Как читать лекции?', a: 'Структурированно, с примерами.' },
-            { q: 'Как принимать экзамены?', a: 'Оценивать знания объективно.' }
+            { q: 'Как читать лекции?', options: ['Структурированно, с примерами', 'Не готовиться', 'Скучно', 'Нет правильного ответа'], correct: 0 },
+            { q: 'Как принимать экзамены?', options: ['Оценивать знания объективно', 'Субъективно', 'Не оценивать', 'Нет правильного ответа'], correct: 0 },
+            { q: 'Что такое высшее образование?', options: ['Образование после школы', 'Среднее', 'Начальное', 'Нет правильного ответа'], correct: 0 },
+            { q: 'Что такое научная работа?', options: ['Исследование, публикация', 'Преподавание', 'Учёба', 'Нет правильного ответа'], correct: 0 },
+            { q: 'Как вести семинар?', options: ['Обсуждение, дискуссия', 'Монолог', 'Лекция', 'Нет правильного ответа'], correct: 0 },
+            { q: 'Что такое аспирантура?', options: ['Обучение для получения учёной степени', 'Бакалавриат', 'Магистратура', 'Нет правильного ответа'], correct: 0 },
+            { q: 'Как руководить студентами?', options: ['Направлять, консультировать', 'Контролировать', 'Игнорировать', 'Нет правильного ответа'], correct: 0 },
+            { q: 'Что такое диссертация?', options: ['Научная работа для получения степени', 'Статья', 'Доклад', 'Нет правильного ответа'], correct: 0 },
+            { q: 'Каковы обязанности профессора?', options: ['Преподавание, наука', 'Администрация', 'Воспитание', 'Нет правильного ответа'], correct: 0 },
+            { q: 'Как оценивать студентов?', options: ['Объективно, по критериям', 'Субъективно', 'Не оценивать', 'Нет правильного ответа'], correct: 0 }
         ],
         tutor: [
-            { q: 'Как помогать ученику?', a: 'Объяснять материал, делать упражнения.' },
-            { q: 'Как мотивировать ученика?', a: 'Хвалить, показывать прогресс.' }
+            { q: 'Как помогать ученику?', options: ['Объяснять материал, делать упражнения', 'Делать всё за него', 'Игнорировать', 'Нет правильного ответа'], correct: 0 },
+            { q: 'Как мотивировать ученика?', options: ['Хвалить, показывать прогресс', 'Ругать', 'Игнорировать', 'Нет правильного ответа'], correct: 0 },
+            { q: 'Что такое индивидуальный подход?', options: ['Учёт особенностей ученика', 'Стандартный подход', 'Общий', 'Нет правильного ответа'], correct: 0 },
+            { q: 'Как организовать занятие?', options: ['План, цель, задания', 'Без плана', 'Импровизация', 'Нет правильного ответа'], correct: 0 },
+            { q: 'Как оценивать прогресс?', options: ['Тесты, контрольные', 'Наблюдение', 'Интуитивно', 'Нет правильного ответа'], correct: 0 },
+            { q: 'Как работать с родителями?', options: ['Информировать о прогрессе', 'Игнорировать', 'Жаловаться', 'Нет правильного ответа'], correct: 0 },
+            { q: 'Что такое тьюторство?', options: ['Индивидуальное сопровождение', 'Групповое обучение', 'Лекция', 'Нет правильного ответа'], correct: 0 },
+            { q: 'Как подбирать материалы?', options: ['Уровень ученика, цели', 'Стандартные', 'Сложные', 'Нет правильного ответа'], correct: 0 },
+            { q: 'Каковы обязанности тьютора?', options: ['Обучение, наставничество', 'Воспитание', 'Контроль', 'Нет правильного ответа'], correct: 0 },
+            { q: 'Как заинтересовать ученика?', options: ['Интересные задания, индивидуальные цели', 'Скучные задания', 'Домашка', 'Нет правильного ответа'], correct: 0 }
         ],
         methodologist: [
-            { q: 'Как создать учебную программу?', a: 'Определить цели, разработать план.' },
-            { q: 'Как оценить эффективность?', a: 'Собрать обратную связь.' }
+            { q: 'Как создать учебную программу?', options: ['Определить цели, разработать план', 'Копировать', 'Импровизировать', 'Нет правильного ответа'], correct: 0 },
+            { q: 'Как оценить эффективность?', options: ['Собрать обратную связь, анализ', 'Интуитивно', 'Не оценивать', 'Нет правильного ответа'], correct: 0 },
+            { q: 'Что такое методический материал?', options: ['Пособия, разработки для обучения', 'Учебник', 'Лекция', 'Нет правильного ответа'], correct: 0 },
+            { q: 'Что такое педагогический опыт?', options: ['Практика и разработки', 'Теория', 'Идея', 'Нет правильного ответа'], correct: 0 },
+            { q: 'Как адаптировать программу?', options: ['Под особенности учащихся', 'По стандарту', 'Не адаптировать', 'Нет правильного ответа'], correct: 0 },
+            { q: 'Что такое учебно-методический комплекс?', options: ['Совокупность учебных материалов', 'Учебник', 'Программа', 'Нет правильного ответа'], correct: 0 },
+            { q: 'Что такое аттестация?', options: ['Оценка качества обучения', 'Экзамен', 'Контроль', 'Нет правильного ответа'], correct: 0 },
+            { q: 'Как разработать тест?', options: ['По целям, заданиям', 'Случайно', 'Скопировать', 'Нет правильного ответа'], correct: 0 },
+            { q: 'Что такое стандарт образования?', options: ['Государственные требования к обучению', 'Рекомендации', 'Правила', 'Нет правильного ответа'], correct: 0 },
+            { q: 'Как улучшить программу?', options: ['Анализ, корректировка', 'Оставить', 'Удалить', 'Нет правильного ответа'], correct: 0 }
         ]
     };
-
-    function renderBook() {
-        var prof = selectedProfession;
-        if (!prof) {
-            document.getElementById('bookContent').innerHTML = '<div style="color:#888;">Сначала выберите профессию</div>';
-            return;
-        }
-        var questions = bookQuestions[prof];
-        if (!questions) {
-            document.getElementById('bookContent').innerHTML = '<div style="color:#888;">Нет вопросов</div>';
-            return;
-        }
-        var html = '';
-        questions.forEach(function(q) {
-            html += '<div class="question-block"><div class="q">❓ ' + q.q + '</div><div class="a">' + q.a + '</div></div>';
-        });
-        document.getElementById('bookContent').innerHTML = html;
-    }
 
     // ============================================================
     // БАНК
@@ -2295,11 +2828,14 @@
     }
 
     function openDev() {
-        // Сбрасываем пароль при открытии
         document.getElementById('devPassword').value = '';
         document.getElementById('devError').classList.remove('show');
         document.getElementById('devLogin').style.display = 'block';
         document.getElementById('devMenu').classList.remove('show');
+        document.getElementById('devGiveMoneyPanel').style.display = 'none';
+        document.getElementById('devExamSelect').style.display = 'none';
+        document.getElementById('devExamDaySelect').style.display = 'none';
+        document.getElementById('devExamQuestions').style.display = 'none';
         document.getElementById('devModal').classList.add('active');
     }
 
@@ -2316,7 +2852,7 @@
     }
 
     // ============================================================
-    // НАЗНАЧЕНИЕ СОБЫТИЙ
+    // СОБЫТИЯ
     // ============================================================
     document.getElementById('closeStudyBtn').addEventListener('click', closeStudy);
     document.getElementById('closeBankBtn').addEventListener('click', closeBank);
@@ -2343,7 +2879,6 @@
         if (e.target === this) closeBook();
     });
 
-    // Ввод пароля по Enter
     document.getElementById('devPassword').addEventListener('keydown', function(e) {
         if (e.key === 'Enter') {
             checkDevPassword();
