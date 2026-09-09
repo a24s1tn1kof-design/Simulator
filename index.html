@@ -410,8 +410,8 @@
         </div>
 
     </div>
-                </div>
-  <script>
+    </div>
+    <script>
     // ===== НАСТОЯЩЕЕ ВРЕМЯ =====
     function updateTime() {
         var now = new Date();
@@ -583,7 +583,7 @@
         }
         document.getElementById('bookContent').innerHTML = html;
     }
-    </script>              
+                </script>
     <script>
     // ===== БАНК =====
     var bankData = {
@@ -615,14 +615,28 @@
                 bankData.creditDate = data.creditDate || null;
                 bankData.creditAmount = data.creditAmount || 0;
                 bankData.profession = data.profession || '';
-                bankData.loggedIn = data.loggedIn || false;
+                // НЕ загружаем loggedIn — при обновлении страницы всегда выходим
+                bankData.loggedIn = false;
             }
         } catch(e) {}
     }
 
     function saveBankData() {
         try {
-            localStorage.setItem('bankData', JSON.stringify(bankData));
+            // Сохраняем всё, кроме loggedIn (чтобы при обновлении страницы был выход)
+            var dataToSave = {
+                registered: bankData.registered,
+                name: bankData.name,
+                password: bankData.password,
+                balance: bankData.balance,
+                deposit: bankData.deposit,
+                depositDate: bankData.depositDate,
+                credit: bankData.credit,
+                creditDate: bankData.creditDate,
+                creditAmount: bankData.creditAmount,
+                profession: bankData.profession
+            };
+            localStorage.setItem('bankData', JSON.stringify(dataToSave));
         } catch(e) {}
     }
 
@@ -743,7 +757,6 @@
 
     // ===== ПЕРЕКЛЮЧЕНИЕ МЕЖДУ ВХОДОМ И РЕГИСТРАЦИЕЙ =====
     function showLogin() {
-        // Сохраняем данные, просто показываем экран входа
         renderBank();
     }
 
@@ -770,7 +783,7 @@
         bankData.password = password;
         bankData.balance = 100;
         bankData.profession = getProfessionFromStudy();
-        bankData.loggedIn = true; // после регистрации сразу входим
+        bankData.loggedIn = true;
         saveBankData();
         renderBank();
         showToast('✅ Регистрация успешна! Получен бонус 100 $');
@@ -976,6 +989,9 @@
     }
 
     function closeBank() {
+        // При закрытии банка (крестик) — выходим из аккаунта
+        bankData.loggedIn = false;
+        saveBankData();
         document.getElementById('bankModal').classList.remove('active');
     }
 
@@ -1014,7 +1030,7 @@
                 if (status) status.textContent = 'Обучение завершено';
             }
         }
-    }, 1000);
-</script>
+        }, 1000);
+        </script>
 </body>
-    </html>
+</html>
