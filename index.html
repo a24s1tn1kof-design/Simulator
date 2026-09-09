@@ -132,7 +132,6 @@
         .profession-card:active { transform: scale(0.97); }
         .profession-card .info h3 { color: #fff; font-size: 15px; font-weight: 600; }
         .profession-card .info p { color: #888; font-size: 12px; margin-top: 2px; }
-        .profession-card .info .detail { color: #4facfe; font-size: 11px; margin-top: 4px; }
 
         .profession-btn {
             background: linear-gradient(135deg, #4facfe, #00f2fe);
@@ -150,10 +149,6 @@
         }
         .profession-btn:active { transform: scale(0.92); }
         .profession-btn:disabled { opacity: 0.5; cursor: not-allowed; }
-
-        .empty-bank { text-align: center; padding: 50px 0; color: #555; }
-        .empty-bank .big-icon { font-size: 64px; margin-bottom: 16px; }
-        .empty-bank p { font-size: 14px; }
 
         .profession-detail {
             display: none;
@@ -173,21 +168,6 @@
         }
         .profession-detail .row .label { color: #888; }
         .profession-detail .row .value { color: #fff; font-weight: 500; }
-        .profession-detail .exam-date {
-            color: #f5c842;
-            font-size: 13px;
-            margin-top: 8px;
-            text-align: center;
-            border-top: 1px solid rgba(255,255,255,0.05);
-            padding-top: 8px;
-        }
-        .profession-detail .days-left {
-            color: #4facfe;
-            font-size: 15px;
-            font-weight: 700;
-            text-align: center;
-            margin-top: 6px;
-        }
 
         .selected-profession-block {
             background: rgba(46,204,113,0.1);
@@ -261,73 +241,6 @@
         }
         .book-content .question-block .q { color: #fff; font-weight: 600; margin-bottom: 6px; }
         .book-content .question-block .a { color: #aaa; }
-
-        .bank-container {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-        .bank-card {
-            background: rgba(255,255,255,0.05);
-            border-radius: 16px;
-            padding: 16px;
-            border: 1px solid rgba(255,255,255,0.06);
-            cursor: pointer;
-            transition: 0.2s;
-        }
-        .bank-card:active { transform: scale(0.96); }
-        .bank-card .title { color: #fff; font-size: 15px; font-weight: 600; }
-        .bank-card .sub { color: #888; font-size: 12px; margin-top: 4px; }
-        .bank-card .amount { color: #f5c842; font-size: 20px; font-weight: 700; margin-top: 6px; }
-
-        .bank-input {
-            background: rgba(255,255,255,0.05);
-            border: 1px solid rgba(255,255,255,0.1);
-            border-radius: 12px;
-            padding: 12px 14px;
-            color: #fff;
-            font-size: 15px;
-            width: 100%;
-            outline: none;
-        }
-        .bank-input::placeholder { color: #555; }
-        .bank-input:focus { border-color: #4facfe; }
-
-        .bank-btn {
-            background: linear-gradient(135deg, #4facfe, #00f2fe);
-            border: none;
-            color: #fff;
-            padding: 12px 20px;
-            border-radius: 30px;
-            font-weight: 700;
-            font-size: 15px;
-            cursor: pointer;
-            touch-action: manipulation;
-            transition: 0.2s;
-            box-shadow: 0 4px 15px rgba(79,172,254,0.3);
-            width: 100%;
-        }
-        .bank-btn:active { transform: scale(0.96); }
-        .bank-btn.green { background: linear-gradient(135deg, #2ecc71, #27ae60); box-shadow: 0 4px 15px rgba(46,204,113,0.3); }
-        .bank-btn.red { background: linear-gradient(135deg, #e74c3c, #c0392b); box-shadow: 0 4px 15px rgba(231,76,60,0.3); }
-        .bank-btn:disabled { opacity: 0.4; cursor: not-allowed; }
-
-        .bank-balance {
-            background: rgba(46,204,113,0.1);
-            border: 1px solid #2ecc71;
-            border-radius: 16px;
-            padding: 20px;
-            text-align: center;
-            margin-bottom: 16px;
-        }
-        .bank-balance .label { color: #888; font-size: 13px; }
-        .bank-balance .amount { color: #f5c842; font-size: 32px; font-weight: 700; }
-
-        .bank-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
-        }
 
         .toast-custom {
             position: absolute;
@@ -410,8 +323,148 @@
         </div>
 
     </div>
-    </div>
-    <script>
+                </div>
+    <style>
+    /* ===== БАНК В СТИЛЕ СБЕРБАНКА ===== */
+    .sber-card {
+        background: linear-gradient(135deg, #1a6d3e, #0d4a2a);
+        border-radius: 16px;
+        padding: 20px;
+        color: #fff;
+        margin-bottom: 16px;
+        box-shadow: 0 8px 30px rgba(26,109,62,0.3);
+        position: relative;
+        overflow: hidden;
+    }
+    .sber-card::before {
+        content: '★';
+        position: absolute;
+        top: -20px;
+        right: -10px;
+        font-size: 80px;
+        opacity: 0.08;
+        color: #fff;
+    }
+    .sber-card .bank-name { font-size: 12px; opacity: 0.7; letter-spacing: 1px; }
+    .sber-card .card-number {
+        font-size: 18px;
+        font-weight: 600;
+        margin: 8px 0;
+        letter-spacing: 2px;
+        font-family: monospace;
+    }
+    .sber-card .balance-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 4px;
+    }
+    .sber-card .balance-row .label { font-size: 11px; opacity: 0.6; }
+    .sber-card .balance-row .amount {
+        font-size: 26px;
+        font-weight: 700;
+        color: #f5c842;
+    }
+    .sber-card .card-holder { font-size: 11px; opacity: 0.6; margin-top: 6px; text-transform: uppercase; }
+    .sber-card .card-bottom {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 6px;
+    }
+    .sber-card .card-bottom span { font-size: 10px; opacity: 0.5; }
+
+    .sber-menu {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 8px;
+        margin: 12px 0;
+    }
+    .sber-menu-item {
+        background: rgba(255,255,255,0.04);
+        border: 1px solid rgba(255,255,255,0.06);
+        border-radius: 12px;
+        padding: 14px 10px;
+        text-align: center;
+        cursor: pointer;
+        transition: 0.2s;
+        color: #ddd;
+    }
+    .sber-menu-item:active { transform: scale(0.95); background: rgba(255,255,255,0.08); }
+    .sber-menu-item .icon { font-size: 24px; display: block; margin-bottom: 4px; }
+    .sber-menu-item .label { font-size: 11px; font-weight: 500; }
+
+    .sber-input {
+        background: rgba(255,255,255,0.05);
+        border: 1px solid rgba(255,255,255,0.08);
+        border-radius: 12px;
+        padding: 12px 14px;
+        color: #fff;
+        font-size: 15px;
+        width: 100%;
+        outline: none;
+        margin-bottom: 10px;
+    }
+    .sber-input::placeholder { color: #555; }
+    .sber-input:focus { border-color: #1a6d3e; }
+
+    .sber-btn {
+        background: linear-gradient(135deg, #1a6d3e, #0d4a2a);
+        border: none;
+        color: #fff;
+        padding: 12px 20px;
+        border-radius: 30px;
+        font-weight: 700;
+        font-size: 15px;
+        cursor: pointer;
+        touch-action: manipulation;
+        transition: 0.2s;
+        width: 100%;
+        margin-top: 4px;
+    }
+    .sber-btn:active { transform: scale(0.96); }
+    .sber-btn.green { background: linear-gradient(135deg, #2ecc71, #27ae60); }
+    .sber-btn.red { background: linear-gradient(135deg, #e74c3c, #c0392b); }
+    .sber-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+    .sber-back {
+        background: rgba(255,255,255,0.06);
+        border: none;
+        color: #4facfe;
+        padding: 8px 16px;
+        border-radius: 20px;
+        font-size: 13px;
+        cursor: pointer;
+        touch-action: manipulation;
+        transition: 0.2s;
+    }
+    .sber-back:active { transform: scale(0.92); }
+
+    .transfer-method {
+        display: flex;
+        gap: 8px;
+        margin-bottom: 12px;
+    }
+    .transfer-method button {
+        flex: 1;
+        background: rgba(255,255,255,0.04);
+        border: 1px solid rgba(255,255,255,0.08);
+        color: #aaa;
+        padding: 10px;
+        border-radius: 10px;
+        font-size: 12px;
+        cursor: pointer;
+        transition: 0.2s;
+        touch-action: manipulation;
+    }
+    .transfer-method button:active { transform: scale(0.95); }
+    .transfer-method button.active {
+        border-color: #1a6d3e;
+        color: #fff;
+        background: rgba(26,109,62,0.2);
+    }
+</style>
+
+<script>
     // ===== НАСТОЯЩЕЕ ВРЕМЯ =====
     function updateTime() {
         var now = new Date();
@@ -493,7 +546,6 @@
                     <div class="row"><span class="label">Время обучения</span><span class="value">14 дней</span></div>
                     <div class="row"><span class="label">Экзамены</span><span class="value">7-й и 14-й день</span></div>
                     <div class="row"><span class="label">Осталось дней</span><span class="value" id="daysCounter">${finished ? 0 : daysLeft}</span></div>
-                    <div class="exam-date">${finished ? 'Обучение завершено' : 'Вы проходите обучение по этой профессии'}</div>
                 </div>
                 <button class="book-btn" onclick="openBook()">📖 Книга для учения</button>
             `;
@@ -536,32 +588,38 @@
         document.getElementById('bookModal').classList.remove('active');
     }
 
+    function showToast(text) {
+        var old = document.querySelector('.toast-custom');
+        if (old) old.remove();
+        var toast = document.createElement('div');
+        toast.className = 'toast-custom';
+        toast.textContent = text;
+        document.getElementById('phoneScreen').appendChild(toast);
+        setTimeout(function() { toast.remove(); }, 2500);
+    }
+    </script>
+    <script>
     // ===== КНИГА ДЛЯ УЧЕНИЯ =====
     var bookQuestions = {
         fsb: [
             { q: 'В торговом центре неизвестные открыли стрельбу, слышны взрывы, люди в панике бегают. Вы сотрудник ФСБ. Какие номера набрать и как организовать эвакуацию?', a: 'Набрать 112, 102 и 101. Немедленно начать координацию с охраной ТЦ: перекрыть выходы, направить людей к ближайшим эвакуационным выходам, избегая мест стрельбы. Организовать группы по 5-10 человек, назначить старших. Укрыть раненых в безопасных местах. Оценить обстановку, доложить руководству.' },
-            { q: 'Вы получили анонимное сообщение о заложенной бомбе в вашем учебном заведении. Вы сотрудник ФСБ. Ваши действия?', a: 'Набрать 112, 102, 101. Не паниковать, немедленно сообщить руководству и охране. Начать эвакуацию по заранее отработанному плану: выводить людей поэтапно, не создавая давки. Проверить все подозрительные места, оцепить здание, дождаться прибытия сапёров. Не допускать паники, вести переговоры с персоналом и учениками.' },
-            { q: 'Вы заметили подозрительного человека, который фотографирует военные объекты или здания госучреждений. Вы сотрудник ФСБ. Что делать?', a: 'Запомнить приметы человека (одежда, рост, цвет волос, особые приметы), номер машины, если есть. Немедленно сообщить по номеру 102 или 112. Установить наблюдение, не теряя из виду подозреваемого. При необходимости задержать, действуя по инструкции. Обеспечить сохранность улик.' }
+            { q: 'Вы получили анонимное сообщение о заложенной бомбе в вашем учебном заведении. Вы сотрудник ФСБ. Ваши действия?', a: 'Набрать 112, 102, 101. Не паниковать, немедленно сообщить руководству и охране. Начать эвакуацию по заранее отработанному плану: выводить людей поэтапно, не создавая давки. Проверить все подозрительные места, оцепить здание, дождаться прибытия сапёров. Не допускать паники, вести переговоры с персоналом и учениками.' }
         ],
         mchs: [
-            { q: 'Произошло землетрясение силой 7 баллов. Вы находитесь в квартире на 5-м этаже. Какие номера набрать и как действовать?', a: 'Набрать 112 или 101. Лечь на пол рядом с кроватью или столом, защитить голову руками, отойти от окон и тяжёлой мебели. После прекращения толчков — покинуть здание по лестнице, не пользуясь лифтом. Помочь пожилым людям и детям. Не заходить в повреждённые здания.' },
-            { q: 'Вы обнаружили возгорание в многоквартирном доме на 3-м этаже, огонь быстро распространяется. Что делать и какой номер набрать?', a: 'Немедленно вызвать пожарную службу по номеру 101 или 112, сообщить точный адрес, этаж и что горит. Если пожар небольшой — попытаться потушить огнетушителем. Если огонь сильный — немедленно покинуть помещение, закрыть двери и окна, предупредить соседей. Не пользоваться лифтом, дышать через влажную ткань.' },
-            { q: 'Вы стали свидетелем ДТП с пострадавшими, есть угроза возгорания. Какие номера набрать и как помочь?', a: 'Набрать 112 или 101 и 103. Обесточить машину, если возможно. Не передвигать пострадавших без необходимости, вызвать спасателей. Если есть огнетушитель — быть готовым потушить огонь. Обеспечить безопасность места ДТП, выставить знак аварийной остановки.' }
+            { q: 'Произошло землетрясение силой 7 баллов. Вы находитесь в квартире на 5-м этаже. Какие номера набрать и как действовать?', a: 'Набрать 112 или 101. Лечь на пол рядом с кроватью или столом, защитить голову руками, отойти от окон и тяжёлой мебели. После прекращения толчков — покинуть здание по лестнице, не пользуясь лифтом.' },
+            { q: 'Вы обнаружили возгорание в многоквартирном доме на 3-м этаже, огонь быстро распространяется. Что делать и какой номер набрать?', a: 'Немедленно вызвать пожарную службу по номеру 101 или 112, сообщить точный адрес, этаж и что горит. Если пожар небольшой — попытаться потушить огнетушителем. Если огонь сильный — немедленно покинуть помещение.' }
         ],
         medic: [
-            { q: 'У человека внезапно остановилось сердце, он без сознания. Что делать и какой номер набрать?', a: 'Немедленно набрать 103 или 112. Начать сердечно-легочную реанимацию: положить пострадавшего на твёрдую поверхность, проверить дыхание, сделать 30 компрессий грудной клетки глубиной 5-6 см с частотой 100-120 в минуту, затем 2 искусственных вдоха. Продолжать до приезда скорой помощи или появления признаков жизни.' },
-            { q: 'Вы видите человека с признаками инсульта: асимметрия лица, нарушение речи, слабость в руке. Что делать?', a: 'Немедленно вызвать скорую помощь по номеру 103 или 112, сообщить о подозрении на инсульт. Усадить или уложить пострадавшего с приподнятой головой. Не давать еду, воду и лекарства. Засечь время начала симптомов, наблюдать за состоянием до приезда врачей.' },
-            { q: 'Ребёнок подавился едой и не может дышать, синеет. Что делать и какой номер набрать?', a: 'Немедленно вызвать скорую по номеру 103 или 112. Встать позади ребёнка, обхватить его руками, наклонить вперёд, нанести 5 резких ударов между лопатками. Если не помогает — выполнить 5 компрессий в область живота (приём Геймлиха). Если ребёнок потерял сознание — начать СЛР.' }
+            { q: 'У человека внезапно остановилось сердце, он без сознания. Что делать и какой номер набрать?', a: 'Немедленно набрать 103 или 112. Начать сердечно-легочную реанимацию: положить пострадавшего на твёрдую поверхность, проверить дыхание, сделать 30 компрессий грудной клетки глубиной 5-6 см с частотой 100-120 в минуту.' },
+            { q: 'Вы видите человека с признаками инсульта: асимметрия лица, нарушение речи, слабость в руке. Что делать?', a: 'Немедленно вызвать скорую помощь по номеру 103 или 112, сообщить о подозрении на инсульт. Усадить или уложить пострадавшего с приподнятой головой. Не давать еду, воду и лекарства.' }
         ],
         mvd: [
-            { q: 'Вы стали свидетелем уличного ограбления с применением оружия. Какие номера набрать и как действовать?', a: 'Немедленно набрать 102 или 112. Сообщить приметы преступников (рост, одежда, цвет волос), направление их движения, номер машины, если есть. Не вступать в конфликт, если угроза для жизни. Постараться запомнить детали, не рисковать.' },
-            { q: 'Вы нашли подозрительный предмет в автобусе — бесхозный рюкзак с торчащими проводами. Что делать?', a: 'Немедленно сообщить водителю или охране, вызвать полицию по номеру 102 или 112. Не трогать предмет, не приближаться к нему, вывести людей из автобуса, оградить место находки, дождаться прибытия спецслужб. Не пользоваться телефоном рядом с предметом.' },
-            { q: 'Вы получили сообщение о готовящемся теракте в ТЦ через мессенджер. Ваши действия как сотрудника МВД?', a: 'Не распространять информацию, чтобы не создавать панику. Немедленно передать сообщение в дежурную часть по номеру 102, указать все детали: кто отправил, время, содержание. Проверить камеры наблюдения, усилить патрулирование, при необходимости начать эвакуацию.' }
+            { q: 'Вы стали свидетелем уличного ограбления с применением оружия. Какие номера набрать и как действовать?', a: 'Немедленно набрать 102 или 112. Сообщить приметы преступников (рост, одежда, цвет волос), направление их движения, номер машины, если есть. Не вступать в конфликт, если угроза для жизни.' },
+            { q: 'Вы нашли подозрительный предмет в автобусе — бесхозный рюкзак с торчащими проводами. Что делать?', a: 'Немедленно сообщить водителю или охране, вызвать полицию по номеру 102 или 112. Не трогать предмет, не приближаться к нему, вывести людей из автобуса.' }
         ],
         teacher: [
-            { q: 'В классе во время урока началась паника из-за сообщения о стрельбе в школе. Какие номера набрать и как успокоить детей?', a: 'Набрать 112 или 102. Не паниковать самому, успокоить учеников, закрыть двери, выключить свет, заблокировать дверь стульями, не подходить к окнам, поддерживать тишину, связаться с администрацией или полицией, быть готовым действовать по команде.' },
-            { q: 'Вы стали свидетелем буллинга между учениками, один из них угрожает ножом. Что делать и какой номер набрать?', a: 'Немедленно вызвать полицию по номеру 102 или 112. Вмешаться, развести учеников, провести беседу с ними и классным руководителем, выяснить причины, предложить психологическую помощь, сообщить родителям, организовать профилактическую работу.' },
-            { q: 'Во время экскурсии один из учеников потерялся в лесу. Какие номера набрать и как организовать поиск?', a: 'Набрать 112 или 101 и 102. Успокоить остальных детей, оставить их с другим взрослым, найти потерявшегося по маршруту, сообщить администрации, не создавать панику. Если есть возможность — использовать GPS-трекер на телефоне.' }
+            { q: 'В классе во время урока началась паника из-за сообщения о стрельбе в школе. Какие номера набрать и как успокоить детей?', a: 'Набрать 112 или 102. Не паниковать самому, успокоить учеников, закрыть двери, выключить свет, заблокировать дверь стульями, не подходить к окнам.' },
+            { q: 'Вы стали свидетелем буллинга между учениками, один из них угрожает ножом. Что делать и какой номер набрать?', a: 'Немедленно вызвать полицию по номеру 102 или 112. Вмешаться, развести учеников, провести беседу с ними и классным руководителем.' }
         ]
     };
 
@@ -583,9 +641,8 @@
         }
         document.getElementById('bookContent').innerHTML = html;
     }
-                </script>
-    <script>
-    // ===== БАНК =====
+
+    // ===== БАНК ДАННЫЕ =====
     var bankData = {
         registered: false,
         name: '',
@@ -597,8 +654,27 @@
         creditDate: null,
         creditAmount: 0,
         profession: '',
-        loggedIn: false
+        loggedIn: false,
+        cardNumber: '',
+        phone: ''
     };
+
+    function generateCardNumber() {
+        var num = '';
+        for (var i = 0; i < 16; i++) {
+            num += Math.floor(Math.random() * 10);
+            if (i === 3 || i === 7 || i === 11) num += ' ';
+        }
+        return num;
+    }
+
+    function generatePhone() {
+        var num = '+7';
+        for (var i = 0; i < 10; i++) {
+            num += Math.floor(Math.random() * 10);
+        }
+        return num;
+    }
 
     function loadBankData() {
         try {
@@ -615,7 +691,8 @@
                 bankData.creditDate = data.creditDate || null;
                 bankData.creditAmount = data.creditAmount || 0;
                 bankData.profession = data.profession || '';
-                // НЕ загружаем loggedIn — при обновлении страницы всегда выходим
+                bankData.cardNumber = data.cardNumber || generateCardNumber();
+                bankData.phone = data.phone || generatePhone();
                 bankData.loggedIn = false;
             }
         } catch(e) {}
@@ -623,7 +700,6 @@
 
     function saveBankData() {
         try {
-            // Сохраняем всё, кроме loggedIn (чтобы при обновлении страницы был выход)
             var dataToSave = {
                 registered: bankData.registered,
                 name: bankData.name,
@@ -634,7 +710,9 @@
                 credit: bankData.credit,
                 creditDate: bankData.creditDate,
                 creditAmount: bankData.creditAmount,
-                profession: bankData.profession
+                profession: bankData.profession,
+                cardNumber: bankData.cardNumber,
+                phone: bankData.phone
             };
             localStorage.setItem('bankData', JSON.stringify(dataToSave));
         } catch(e) {}
@@ -654,22 +732,12 @@
         }
         return '';
     }
-
-    function showToast(text) {
-        var old = document.querySelector('.toast-custom');
-        if (old) old.remove();
-        var toast = document.createElement('div');
-        toast.className = 'toast-custom';
-        toast.textContent = text;
-        document.getElementById('phoneScreen').appendChild(toast);
-        setTimeout(function() { toast.remove(); }, 2500);
-    }
-
+    </script>
+    <script>
     // ===== ОТРИСОВКА БАНКА =====
     function renderBank() {
         var content = document.getElementById('bankContent');
 
-        // Если не зарегистрирован — показываем регистрацию
         if (!bankData.registered) {
             var prof = getProfessionFromStudy();
             if (!prof) {
@@ -678,7 +746,7 @@
                         <div style="font-size:48px;margin-bottom:16px;">🏦</div>
                         <p style="font-size:15px;color:#ddd;">Для регистрации в банке</p>
                         <p style="font-size:13px;color:#888;margin-top:6px;">Сначала выберите профессию в учёбе</p>
-                        <button class="bank-btn" onclick="closeBank();openStudy();" style="margin-top:16px;">Перейти к учёбе</button>
+                        <button class="sber-btn" onclick="closeBank();openStudy();" style="margin-top:16px;">Перейти к учёбе</button>
                     </div>
                 `;
                 return;
@@ -687,13 +755,13 @@
             content.innerHTML = `
                 <div style="text-align:center;margin-bottom:20px;">
                     <div style="font-size:48px;">🏦</div>
-                    <div style="color:#fff;font-size:18px;font-weight:600;margin-top:8px;">Регистрация</div>
-                    <div style="color:#888;font-size:13px;margin-top:4px;">Профессия: ${prof}</div>
+                    <div style="color:#fff;font-size:20px;font-weight:700;margin-top:6px;">СБЕРБАНК</div>
+                    <div style="color:#888;font-size:13px;margin-top:2px;">Профессия: ${prof}</div>
                 </div>
-                <div style="display:flex;flex-direction:column;gap:12px;">
-                    <input class="bank-input" id="regName" placeholder="Ваше имя" maxlength="20">
-                    <input class="bank-input" id="regPassword" placeholder="Пароль (4 цифры)" type="password" maxlength="4" inputmode="numeric">
-                    <button class="bank-btn green" onclick="registerBank()">Зарегистрироваться</button>
+                <div style="display:flex;flex-direction:column;gap:10px;">
+                    <input class="sber-input" id="regName" placeholder="Ваше имя" maxlength="20">
+                    <input class="sber-input" id="regPassword" placeholder="Пин-код (4 цифры)" type="password" maxlength="4" inputmode="numeric">
+                    <button class="sber-btn green" onclick="registerBank()">Зарегистрироваться</button>
                 </div>
                 <div style="text-align:center;margin-top:12px;color:#888;font-size:13px;">
                     Уже есть аккаунт? <span style="color:#4facfe;cursor:pointer;" onclick="showLogin()">Войти</span>
@@ -702,7 +770,6 @@
             return;
         }
 
-        // Если зарегистрирован, но не залогинен — показываем вход
         if (!bankData.loggedIn) {
             content.innerHTML = `
                 <div style="text-align:center;margin-bottom:20px;">
@@ -710,9 +777,9 @@
                     <div style="color:#fff;font-size:18px;font-weight:600;margin-top:8px;">Здравствуйте, ${bankData.name}!</div>
                     <div style="color:#888;font-size:13px;margin-top:4px;">Введите пин-код для входа</div>
                 </div>
-                <div style="display:flex;flex-direction:column;gap:12px;">
-                    <input class="bank-input" id="loginPassword" placeholder="Пин-код (4 цифры)" type="password" maxlength="4" inputmode="numeric">
-                    <button class="bank-btn green" onclick="loginBank()">Войти</button>
+                <div style="display:flex;flex-direction:column;gap:10px;">
+                    <input class="sber-input" id="loginPassword" placeholder="Пин-код (4 цифры)" type="password" maxlength="4" inputmode="numeric">
+                    <button class="sber-btn green" onclick="loginBank()">Войти</button>
                 </div>
                 <div style="text-align:center;margin-top:12px;color:#888;font-size:13px;">
                     <span style="color:#4facfe;cursor:pointer;" onclick="showRegistration()">Вернуться к регистрации</span>
@@ -721,52 +788,48 @@
             return;
         }
 
-        // Если залогинен — показываем главный экран
-        var prof = getProfessionFromStudy();
         var daysLeft = getDaysLeft();
+        var prof = getProfessionFromStudy();
 
         content.innerHTML = `
-            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
-                <div style="color:#888;font-size:13px;">👤 ${bankData.name}</div>
-                <div style="color:#888;font-size:13px;">${prof || 'Без профессии'}</div>
-            </div>
-
-            <div class="bank-balance">
-                <div class="label">Баланс</div>
-                <div class="amount">${bankData.balance} $</div>
-                <div style="color:#888;font-size:11px;margin-top:4px;">До окончания обучения: ${daysLeft} дней</div>
-            </div>
-
-            <div class="bank-grid">
-                <div class="bank-card" onclick="showDeposit()">
-                    <div class="title">💰 Вклад</div>
-                    <div class="sub">${bankData.deposit > 0 ? 'Активен: ' + bankData.deposit + ' $' : 'Нет активного вклада'}</div>
-                    ${bankData.deposit > 0 ? '<div class="amount" style="font-size:14px;color:#2ecc71;">+10% в день</div>' : ''}
+            <div class="sber-card">
+                <div class="bank-name">СБЕРБАНК</div>
+                <div class="card-number">${bankData.cardNumber}</div>
+                <div class="balance-row">
+                    <span class="label">Баланс</span>
+                    <span class="amount">${bankData.balance} ₽</span>
                 </div>
-                <div class="bank-card" onclick="showCredit()">
-                    <div class="title">💳 Кредит</div>
-                    <div class="sub">${bankData.credit > 0 ? 'Долг: ' + bankData.credit + ' $' : 'Нет кредита'}</div>
-                    ${bankData.credit > 0 ? '<div class="amount" style="font-size:14px;color:#e74c3c;">Осталось: ' + daysLeft + ' дней</div>' : ''}
+                <div class="card-holder">${bankData.name}</div>
+                <div class="card-bottom">
+                    <span>${prof || 'Без профессии'}</span>
+                    <span>До обучения: ${daysLeft} дн.</span>
                 </div>
             </div>
 
-            <button class="bank-btn" onclick="showTransfer()" style="margin-top:12px;">📤 Перевод</button>
-            <button class="bank-btn red" onclick="logoutBank()" style="margin-top:8px;box-shadow:none;">Выйти</button>
+            <div class="sber-menu">
+                <div class="sber-menu-item" onclick="showDeposit()">
+                    <span class="icon">💰</span>
+                    <span class="label">Вклад</span>
+                </div>
+                <div class="sber-menu-item" onclick="showCredit()">
+                    <span class="icon">💳</span>
+                    <span class="label">Кредит</span>
+                </div>
+                <div class="sber-menu-item" onclick="showTransfer()">
+                    <span class="icon">📤</span>
+                    <span class="label">Перевод</span>
+                </div>
+                <div class="sber-menu-item" onclick="logoutBank()">
+                    <span class="icon">🚪</span>
+                    <span class="label">Выйти</span>
+                </div>
+            </div>
         `;
     }
 
-    // ===== ПЕРЕКЛЮЧЕНИЕ МЕЖДУ ВХОДОМ И РЕГИСТРАЦИЕЙ =====
-    function showLogin() {
-        renderBank();
-    }
+    function showLogin() { renderBank(); }
+    function showRegistration() { bankData.loggedIn = false; saveBankData(); renderBank(); }
 
-    function showRegistration() {
-        bankData.loggedIn = false;
-        saveBankData();
-        renderBank();
-    }
-
-    // ===== РЕГИСТРАЦИЯ =====
     function registerBank() {
         var name = document.getElementById('regName').value.trim();
         var password = document.getElementById('regPassword').value.trim();
@@ -774,7 +837,7 @@
         if (!name) { showToast('Введите имя'); return; }
         if (name.length < 2) { showToast('Имя минимум 2 символа'); return; }
         if (!password || password.length !== 4 || isNaN(password)) {
-            showToast('Пароль — 4 цифры');
+            showToast('Пин-код — 4 цифры');
             return;
         }
 
@@ -782,14 +845,15 @@
         bankData.name = name;
         bankData.password = password;
         bankData.balance = 100;
+        bankData.cardNumber = generateCardNumber();
+        bankData.phone = generatePhone();
         bankData.profession = getProfessionFromStudy();
         bankData.loggedIn = true;
         saveBankData();
         renderBank();
-        showToast('✅ Регистрация успешна! Получен бонус 100 $');
+        showToast('✅ Регистрация успешна! Получен бонус 100 ₽');
     }
 
-    // ===== ВХОД =====
     function loginBank() {
         var password = document.getElementById('loginPassword').value.trim();
 
@@ -808,6 +872,14 @@
         }
     }
 
+    function logoutBank() {
+        bankData.loggedIn = false;
+        saveBankData();
+        renderBank();
+        showToast('👋 Вы вышли из банка');
+    }
+    </script>
+    <script>
     // ===== ВКЛАД =====
     function showDeposit() {
         var content = document.getElementById('bankContent');
@@ -817,36 +889,39 @@
             var earned = Math.floor(bankData.deposit * 0.1 * (14 - daysLeft));
             content.innerHTML = `
                 <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
-                    <button class="bank-btn" onclick="renderBank()" style="width:auto;padding:6px 16px;font-size:13px;">← Назад</button>
+                    <button class="sber-back" onclick="renderBank()">← Назад</button>
                 </div>
-                <div class="bank-balance">
-                    <div class="label">💰 Активный вклад</div>
-                    <div class="amount">${bankData.deposit} $</div>
+                <div class="sber-card">
+                    <div class="bank-name">💰 ВКЛАД</div>
+                    <div class="balance-row">
+                        <span class="label">Сумма</span>
+                        <span class="amount">${bankData.deposit} ₽</span>
+                    </div>
                     <div style="color:#2ecc71;font-size:14px;margin-top:6px;">Доход: +10% в день</div>
-                    <div style="color:#888;font-size:13px;margin-top:4px;">Заработано: ${earned} $</div>
-                    <div style="color:#888;font-size:12px;margin-top:2px;">Осталось дней: ${daysLeft}</div>
+                    <div style="color:#888;font-size:13px;">Заработано: ${earned} ₽</div>
+                    <div style="color:#888;font-size:12px;">Осталось дней: ${daysLeft}</div>
                 </div>
-                <button class="bank-btn red" onclick="closeDeposit()">Закрыть вклад</button>
+                <button class="sber-btn red" onclick="closeDeposit()">Закрыть вклад</button>
             `;
             return;
         }
 
         content.innerHTML = `
             <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
-                <button class="bank-btn" onclick="renderBank()" style="width:auto;padding:6px 16px;font-size:13px;">← Назад</button>
+                <button class="sber-back" onclick="renderBank()">← Назад</button>
             </div>
-            <div style="color:#fff;font-size:16px;font-weight:600;margin-bottom:12px;">💰 Открыть вклад</div>
-            <div style="color:#888;font-size:13px;margin-bottom:12px;">Минимальная сумма: 50 $</div>
-            <div style="color:#888;font-size:13px;margin-bottom:12px;">Доход: 10% от суммы каждый день</div>
-            <div style="color:#888;font-size:13px;margin-bottom:16px;">Ваш баланс: ${bankData.balance} $</div>
-            <input class="bank-input" id="depositAmount" placeholder="Сумма вклада" type="number" min="50">
-            <button class="bank-btn green" onclick="openDeposit()" style="margin-top:12px;">Открыть вклад</button>
+            <div style="color:#fff;font-size:18px;font-weight:600;margin-bottom:12px;">💰 Открыть вклад</div>
+            <div style="color:#888;font-size:13px;margin-bottom:6px;">Минимальная сумма: 50 ₽</div>
+            <div style="color:#888;font-size:13px;margin-bottom:6px;">Доход: 10% от суммы каждый день</div>
+            <div style="color:#888;font-size:13px;margin-bottom:16px;">Ваш баланс: ${bankData.balance} ₽</div>
+            <input class="sber-input" id="depositAmount" placeholder="Сумма вклада" type="number" min="50">
+            <button class="sber-btn green" onclick="openDeposit()">Открыть вклад</button>
         `;
     }
 
     function openDeposit() {
         var amount = parseInt(document.getElementById('depositAmount').value);
-        if (!amount || amount < 50) { showToast('Минимальная сумма: 50 $'); return; }
+        if (!amount || amount < 50) { showToast('Минимальная сумма: 50 ₽'); return; }
         if (amount > bankData.balance) { showToast('Недостаточно средств'); return; }
 
         bankData.balance -= amount;
@@ -866,7 +941,7 @@
         bankData.depositDate = null;
         saveBankData();
         renderBank();
-        showToast('💰 Вклад закрыт. Получено: ' + total + ' $');
+        showToast('💰 Вклад закрыт. Получено: ' + total + ' ₽');
     }
 
     // ===== КРЕДИТ =====
@@ -877,16 +952,19 @@
         if (bankData.credit > 0) {
             content.innerHTML = `
                 <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
-                    <button class="bank-btn" onclick="renderBank()" style="width:auto;padding:6px 16px;font-size:13px;">← Назад</button>
+                    <button class="sber-back" onclick="renderBank()">← Назад</button>
                 </div>
-                <div class="bank-balance" style="border-color:#e74c3c;">
-                    <div class="label">💳 Активный кредит</div>
-                    <div class="amount" style="color:#e74c3c;">${bankData.credit} $</div>
+                <div class="sber-card" style="background:linear-gradient(135deg,#6d1a1a,#4a0d0d);">
+                    <div class="bank-name">💳 КРЕДИТ</div>
+                    <div class="balance-row">
+                        <span class="label">Долг</span>
+                        <span class="amount" style="color:#e74c3c;">${bankData.credit} ₽</span>
+                    </div>
                     <div style="color:#f5c842;font-size:14px;margin-top:6px;">Проценты: +20%</div>
-                    <div style="color:#888;font-size:13px;margin-top:4px;">К возврату: ${Math.floor(bankData.credit * 1.2)} $</div>
-                    <div style="color:#888;font-size:12px;margin-top:2px;">Осталось дней: ${daysLeft}</div>
+                    <div style="color:#888;font-size:13px;">К возврату: ${Math.floor(bankData.credit * 1.2)} ₽</div>
+                    <div style="color:#888;font-size:12px;">Осталось дней: ${daysLeft}</div>
                 </div>
-                <button class="bank-btn green" onclick="payCredit()" ${bankData.balance < Math.floor(bankData.credit * 1.2) ? 'disabled' : ''}>
+                <button class="sber-btn green" onclick="payCredit()" ${bankData.balance < Math.floor(bankData.credit * 1.2) ? 'disabled' : ''}>
                     ${bankData.balance >= Math.floor(bankData.credit * 1.2) ? 'Погасить кредит' : 'Недостаточно средств'}
                 </button>
             `;
@@ -895,22 +973,22 @@
 
         content.innerHTML = `
             <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
-                <button class="bank-btn" onclick="renderBank()" style="width:auto;padding:6px 16px;font-size:13px;">← Назад</button>
+                <button class="sber-back" onclick="renderBank()">← Назад</button>
             </div>
-            <div style="color:#fff;font-size:16px;font-weight:600;margin-bottom:12px;">💳 Взять кредит</div>
-            <div style="color:#888;font-size:13px;margin-bottom:12px;">Максимальная сумма: ${bankData.balance * 2} $</div>
-            <div style="color:#888;font-size:13px;margin-bottom:12px;">Проценты: 20% от суммы</div>
+            <div style="color:#fff;font-size:18px;font-weight:600;margin-bottom:12px;">💳 Взять кредит</div>
+            <div style="color:#888;font-size:13px;margin-bottom:6px;">Максимальная сумма: ${bankData.balance * 2} ₽</div>
+            <div style="color:#888;font-size:13px;margin-bottom:6px;">Проценты: 20% от суммы</div>
             <div style="color:#888;font-size:13px;margin-bottom:16px;">Срок: до окончания обучения</div>
-            <input class="bank-input" id="creditAmount" placeholder="Сумма кредита" type="number" min="10">
-            <button class="bank-btn" onclick="takeCredit()" style="margin-top:12px;">Взять кредит</button>
+            <input class="sber-input" id="creditAmount" placeholder="Сумма кредита" type="number" min="10">
+            <button class="sber-btn" onclick="takeCredit()">Взять кредит</button>
         `;
     }
 
     function takeCredit() {
         var amount = parseInt(document.getElementById('creditAmount').value);
-        if (!amount || amount < 10) { showToast('Минимальная сумма: 10 $'); return; }
+        if (!amount || amount < 10) { showToast('Минимальная сумма: 10 ₽'); return; }
         var maxCredit = bankData.balance * 2;
-        if (amount > maxCredit) { showToast('Максимальная сумма: ' + maxCredit + ' $'); return; }
+        if (amount > maxCredit) { showToast('Максимальная сумма: ' + maxCredit + ' ₽'); return; }
 
         bankData.balance += amount;
         bankData.credit = amount;
@@ -918,7 +996,7 @@
         bankData.creditDate = new Date().toISOString();
         saveBankData();
         renderBank();
-        showToast('✅ Кредит выдан! Сумма: ' + amount + ' $');
+        showToast('✅ Кредит выдан! Сумма: ' + amount + ' ₽');
     }
 
     function payCredit() {
@@ -934,42 +1012,77 @@
         showToast('✅ Кредит погашен!');
     }
 
-    // ===== ПЕРЕВОД =====
+    // ===== ПЕРЕВОД ПО КАРТЕ ИЛИ ТЕЛЕФОНУ =====
+    var transferMethod = 'card';
+
     function showTransfer() {
         var content = document.getElementById('bankContent');
         content.innerHTML = `
             <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
-                <button class="bank-btn" onclick="renderBank()" style="width:auto;padding:6px 16px;font-size:13px;">← Назад</button>
+                <button class="sber-back" onclick="renderBank()">← Назад</button>
             </div>
-            <div style="color:#fff;font-size:16px;font-weight:600;margin-bottom:12px;">📤 Перевод</div>
-            <div style="color:#888;font-size:13px;margin-bottom:16px;">Ваш баланс: ${bankData.balance} $</div>
-            <input class="bank-input" id="transferTo" placeholder="Кому перевести (имя)" style="margin-bottom:10px;">
-            <input class="bank-input" id="transferAmount" placeholder="Сумма перевода" type="number" min="1">
-            <button class="bank-btn green" onclick="makeTransfer()" style="margin-top:12px;">Перевести</button>
-            <div style="color:#555;font-size:12px;text-align:center;margin-top:8px;">Сейчас доступен перевод только самому себе</div>
+            <div style="color:#fff;font-size:18px;font-weight:600;margin-bottom:12px;">📤 Перевод</div>
+            <div style="color:#888;font-size:13px;margin-bottom:12px;">Ваш баланс: ${bankData.balance} ₽</div>
+
+            <div class="transfer-method">
+                <button id="transferCardBtn" class="active" onclick="setTransferMethod('card')">💳 По карте</button>
+                <button id="transferPhoneBtn" onclick="setTransferMethod('phone')">📱 По телефону</button>
+            </div>
+
+            <div id="transferInputs">
+                <input class="sber-input" id="transferRecipient" placeholder="Номер карты (16 цифр)">
+                <input class="sber-input" id="transferAmount" placeholder="Сумма перевода" type="number" min="1">
+            </div>
+
+            <button class="sber-btn green" onclick="makeTransfer()">Перевести</button>
+            <div style="color:#555;font-size:12px;text-align:center;margin-top:8px;">Комиссия: 0 ₽</div>
         `;
+        updateTransferMethodUI();
+    }
+
+    function setTransferMethod(method) {
+        transferMethod = method;
+        updateTransferMethodUI();
+        var input = document.getElementById('transferRecipient');
+        if (method === 'card') {
+            input.placeholder = 'Номер карты (16 цифр)';
+            input.maxLength = 19;
+            input.type = 'text';
+        } else {
+            input.placeholder = 'Номер телефона (10 цифр)';
+            input.maxLength = 10;
+            input.type = 'tel';
+        }
+    }
+
+    function updateTransferMethodUI() {
+        var cardBtn = document.getElementById('transferCardBtn');
+        var phoneBtn = document.getElementById('transferPhoneBtn');
+        if (cardBtn) cardBtn.className = transferMethod === 'card' ? 'active' : '';
+        if (phoneBtn) phoneBtn.className = transferMethod === 'phone' ? 'active' : '';
     }
 
     function makeTransfer() {
-        var to = document.getElementById('transferTo').value.trim();
+        var recipient = document.getElementById('transferRecipient').value.replace(/\s/g, '');
         var amount = parseInt(document.getElementById('transferAmount').value);
 
-        if (!to) { showToast('Введите имя получателя'); return; }
-        if (!amount || amount < 1) { showToast('Введите сумму'); return; }
-        if (amount > bankData.balance) { showToast('Недостаточно средств'); return; }
+        if (!recipient) { showToast('Введите номер получателя'); return; }
+
+        if (transferMethod === 'card') {
+            if (recipient.length < 16) { showToast('Введите 16 цифр карты'); return; }
+            if (recipient === bankData.cardNumber.replace(/\s/g, '')) { showToast('❌ Нельзя перевести себе'); return; }
+        } else {
+            if (recipient.length < 10) { showToast('Введите 10 цифр телефона'); return; }
+            if (recipient === bankData.phone.replace('+7', '')) { showToast('❌ Нельзя перевести себе'); return; }
+        }
+
+        if (!amount || amount < 1) { showToast('Введите сумму перевода'); return; }
+        if (amount > bankData.balance) { showToast('❌ Недостаточно средств'); return; }
 
         bankData.balance -= amount;
         saveBankData();
         renderBank();
-        showToast('✅ Перевод выполнен! Сумма: ' + amount + ' $');
-    }
-
-    // ===== ВЫХОД =====
-    function logoutBank() {
-        bankData.loggedIn = false;
-        saveBankData();
-        renderBank();
-        showToast('👋 Вы вышли из банка');
+        showToast('✅ Перевод выполнен! Сумма: ' + amount + ' ₽');
     }
 
     // ===== ОТКРЫТИЕ/ЗАКРЫТИЕ ПРИЛОЖЕНИЙ =====
@@ -989,13 +1102,12 @@
     }
 
     function closeBank() {
-        // При закрытии банка (крестик) — выходим из аккаунта
         bankData.loggedIn = false;
         saveBankData();
         document.getElementById('bankModal').classList.remove('active');
     }
 
-    // ===== НАЗНАЧАЕМ СОБЫТИЯ =====
+    // ===== СОБЫТИЯ =====
     document.getElementById('studyAppBtn').addEventListener('click', openStudy);
     document.getElementById('bankAppBtn').addEventListener('click', openBank);
     document.getElementById('closeStudyBtn').addEventListener('click', closeStudy);
@@ -1015,7 +1127,6 @@
     // ===== ЗАПУСК =====
     renderStudy();
 
-    // Обновление счётчика дней
     setInterval(function() {
         var counter = document.getElementById('daysCounter');
         if (counter) {
@@ -1030,7 +1141,7 @@
                 if (status) status.textContent = 'Обучение завершено';
             }
         }
-        }, 1000);
-        </script>
+    }, 1000);
+</script>
 </body>
 </html>
