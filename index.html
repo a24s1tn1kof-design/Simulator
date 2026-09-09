@@ -15,7 +15,7 @@
             font-family: 'Segoe UI', system-ui, sans-serif;
             touch-action: manipulation;
             padding: 10px;
-            transition: background 0.3s, color 0.3s;
+            transition: background 0.5s, color 0.3s;
         }
         body.light-theme {
             background: #e8e8e8;
@@ -40,6 +40,14 @@
         body.light-theme .settings-modal .modal-close:active { background: rgba(0,0,0,0.1); }
         body.light-theme .settings-modal select { background: #fff; color: #333; border-color: #ccc; }
 
+        /* ЗАСТАВКА */
+        body.wallpaper-space .phone-screen { background: radial-gradient(ellipse at center, #0a0a2e 0%, #000 100%) !important; }
+        body.wallpaper-flowers .phone-screen { background: radial-gradient(ellipse at center, #2d1b3d 0%, #1a0a1a 100%) !important; }
+        body.wallpaper-city .phone-screen { background: radial-gradient(ellipse at center, #1a2a3a 0%, #0a0a1a 100%) !important; }
+        body.light-theme.wallpaper-space .phone-screen { background: radial-gradient(ellipse at center, #1a1a3e 0%, #0a0a1e 100%) !important; }
+        body.light-theme.wallpaper-flowers .phone-screen { background: radial-gradient(ellipse at center, #3d2b4d 0%, #2a1a2a 100%) !important; }
+        body.light-theme.wallpaper-city .phone-screen { background: radial-gradient(ellipse at center, #2a3a4a 0%, #1a2a3a 100%) !important; }
+
         .phone {
             width: 375px;
             max-width: 100%;
@@ -62,7 +70,7 @@
             position: relative;
             scroll-behavior: smooth;
             -webkit-tap-highlight-color: transparent;
-            transition: background 0.3s;
+            transition: background 0.5s;
         }
         .status-bar {
             display: flex;
@@ -73,7 +81,7 @@
             font-weight: 600;
             padding-bottom: 12px;
             border-bottom: 1px solid #1a1a2a;
-            margin-bottom: 16px;
+            margin-bottom: 12px;
             -webkit-tap-highlight-color: transparent;
             transition: color 0.3s, border-color 0.3s;
         }
@@ -82,10 +90,10 @@
         .apps-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            gap: 18px 12px;
-            margin-top: 20px;
+            gap: 6px 6px;
+            margin-top: 12px;
             position: relative;
-            min-height: 350px;
+            min-height: 300px;
             -webkit-tap-highlight-color: transparent;
         }
 
@@ -93,39 +101,39 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 6px;
+            gap: 4px;
             cursor: pointer;
             touch-action: manipulation;
             transition: transform 0.15s;
             z-index: 1;
-            padding: 10px 8px;
-            border-radius: 14px;
+            padding: 6px 4px;
+            border-radius: 12px;
             -webkit-tap-highlight-color: transparent;
         }
         .app-item:active { transform: scale(0.92); }
         .app-icon {
-            width: 62px;
-            height: 62px;
+            width: 58px;
+            height: 58px;
             border-radius: 16px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 28px;
+            font-size: 26px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.3);
             pointer-events: none;
             flex-shrink: 0;
             -webkit-tap-highlight-color: transparent;
             transition: width 0.3s, height 0.3s, font-size 0.3s;
         }
-        .app-icon.small { width: 46px; height: 46px; font-size: 20px; }
-        .app-icon.large { width: 78px; height: 78px; font-size: 36px; }
+        .app-icon.small { width: 44px; height: 44px; font-size: 20px; }
+        .app-icon.large { width: 72px; height: 72px; font-size: 34px; }
         .app-icon.study { background: linear-gradient(135deg, #4facfe, #00f2fe); }
         .app-icon.bank { background: linear-gradient(135deg, #43e97b, #38f9d7); }
-        .app-icon.settings-icon { background: linear-gradient(135deg, #f093fb, #f5576c); }
+        .app-icon.settings-icon { background: linear-gradient(135deg, #6b7280, #4b5563); }
         .app-icon.locked { background: linear-gradient(135deg, #2d2d44, #3d3d5c); opacity: 0.5; }
         .app-name {
             color: #ddd;
-            font-size: 11px;
+            font-size: 10px;
             font-weight: 500;
             pointer-events: none;
             -webkit-tap-highlight-color: transparent;
@@ -133,27 +141,10 @@
             line-height: 1.2;
             transition: font-size 0.3s, color 0.3s;
         }
-        .app-name.small { font-size: 9px; }
-        .app-name.large { font-size: 14px; }
+        .app-name.small { font-size: 8px; }
+        .app-name.large { font-size: 13px; }
 
         /* Настройки */
-        .settings-btn {
-            background: rgba(255,255,255,0.05);
-            border: none;
-            color: #fff;
-            padding: 6px 12px;
-            border-radius: 20px;
-            font-size: 12px;
-            cursor: pointer;
-            touch-action: manipulation;
-            transition: 0.2s;
-            -webkit-tap-highlight-color: transparent;
-            margin-top: 16px;
-            width: 100%;
-            text-align: center;
-        }
-        .settings-btn:active { transform: scale(0.96); }
-
         .settings-modal {
             display: none;
             position: absolute;
@@ -177,8 +168,8 @@
             text-align: center;
         }
         .settings-modal .setting-group {
-            margin-bottom: 20px;
-            padding: 16px;
+            margin-bottom: 18px;
+            padding: 14px 16px;
             background: rgba(255,255,255,0.04);
             border-radius: 14px;
             border: 1px solid rgba(255,255,255,0.06);
@@ -192,7 +183,7 @@
         .settings-modal .setting-desc {
             color: #888;
             font-size: 12px;
-            margin-bottom: 10px;
+            margin-bottom: 8px;
         }
         .settings-modal select {
             background: rgba(255,255,255,0.08);
@@ -208,12 +199,11 @@
         .settings-modal select:focus { border-color: #4facfe; }
         .settings-modal select option { background: #1a1a2e; color: #fff; }
 
-        /* Переключатель темы */
         .theme-toggle {
             display: flex;
             align-items: center;
             gap: 12px;
-            padding: 6px 0;
+            padding: 4px 0;
         }
         .theme-toggle .toggle-track {
             width: 50px;
@@ -235,17 +225,122 @@
             left: 3px;
             transition: 0.3s;
         }
-        .theme-toggle .toggle-track.active {
-            background: #2ecc71;
+        .theme-toggle .toggle-track.active { background: #2ecc71; }
+        .theme-toggle .toggle-track.active .toggle-thumb { left: 25px; }
+        .theme-toggle .toggle-label { color: #ddd; font-size: 14px; font-weight: 500; }
+
+        /* Заставка */
+        .wallpaper-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+            margin-top: 6px;
         }
-        .theme-toggle .toggle-track.active .toggle-thumb {
-            left: 25px;
+        .wallpaper-item {
+            padding: 10px;
+            border-radius: 12px;
+            text-align: center;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: 0.2s;
+            background: rgba(255,255,255,0.04);
+            color: #aaa;
+            font-size: 12px;
         }
-        .theme-toggle .toggle-label {
-            color: #ddd;
+        .wallpaper-item:active { transform: scale(0.95); }
+        .wallpaper-item.active {
+            border-color: #2ecc71;
+            background: rgba(46,204,113,0.1);
+            color: #fff;
+        }
+        .wallpaper-item .preview {
+            width: 100%;
+            height: 50px;
+            border-radius: 8px;
+            margin-bottom: 4px;
+        }
+        .wallpaper-item .preview.space { background: radial-gradient(ellipse at center, #0a0a2e, #000); }
+        .wallpaper-item .preview.flowers { background: radial-gradient(ellipse at center, #2d1b3d, #1a0a1a); }
+        .wallpaper-item .preview.city { background: radial-gradient(ellipse at center, #1a2a3a, #0a0a1a); }
+
+        /* Кнопка сброса */
+        .reset-btn {
+            background: #e74c3c;
+            border: none;
+            color: #fff;
+            padding: 12px 20px;
+            border-radius: 30px;
+            font-weight: 700;
+            font-size: 15px;
+            cursor: pointer;
+            touch-action: manipulation;
+            transition: 0.2s;
+            width: 100%;
+            margin-top: 4px;
+            box-shadow: 0 4px 15px rgba(231,76,60,0.3);
+        }
+        .reset-btn:active { transform: scale(0.96); }
+
+        /* Модалка сброса */
+        .reset-confirm-modal {
+            display: none;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.85);
+            backdrop-filter: blur(12px);
+            border-radius: 28px;
+            padding: 30px 22px;
+            z-index: 400;
+            overflow-y: auto;
+            align-items: center;
+            justify-content: center;
+        }
+        .reset-confirm-modal.active {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        .reset-confirm-modal .icon {
+            font-size: 56px;
+            margin-bottom: 12px;
+        }
+        .reset-confirm-modal .title {
+            color: #fff;
+            font-size: 20px;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 6px;
+        }
+        .reset-confirm-modal .desc {
+            color: #aaa;
             font-size: 14px;
-            font-weight: 500;
+            text-align: center;
+            margin-bottom: 20px;
+            line-height: 1.5;
         }
+        .reset-confirm-modal .btn-group {
+            display: flex;
+            gap: 12px;
+            width: 100%;
+        }
+        .reset-confirm-modal .btn-group button {
+            flex: 1;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 30px;
+            font-weight: 700;
+            font-size: 16px;
+            cursor: pointer;
+            touch-action: manipulation;
+            transition: 0.2s;
+        }
+        .reset-confirm-modal .btn-group button:active { transform: scale(0.96); }
+        .reset-confirm-modal .btn-group .btn-yes { background: #e74c3c; color: #fff; box-shadow: 0 4px 15px rgba(231,76,60,0.3); }
+        .reset-confirm-modal .btn-group .btn-no { background: #2ecc71; color: #fff; box-shadow: 0 4px 15px rgba(46,204,113,0.3); }
 
         /* Остальные модалки */
         .modal {
@@ -436,9 +531,9 @@
         @media (max-width: 400px) {
             .phone { height: 95vh; border-radius: 28px; padding: 12px; }
             .phone-screen { border-radius: 20px; padding: 14px; }
-            .app-icon { width: 52px; height: 52px; font-size: 24px; }
-            .app-name { font-size: 10px; }
-            .app-item { padding: 6px; }
+            .app-icon { width: 48px; height: 48px; font-size: 22px; }
+            .app-name { font-size: 9px; }
+            .app-item { padding: 4px; }
         }
 
         /* ===== БАНК ===== */
@@ -688,7 +783,7 @@
             <div id="bankContent"></div>
         </div>
 
-        <!-- Настройки -->
+        <!-- НАСТРОЙКИ -->
         <div class="settings-modal" id="settingsModal">
             <div class="modal-header">
                 <h2>⚙️ Настройки</h2>
@@ -703,6 +798,25 @@
                         <div class="toggle-thumb"></div>
                     </div>
                     <span class="toggle-label" id="themeLabel">Тёмная</span>
+                </div>
+            </div>
+
+            <div class="setting-group">
+                <div class="setting-label">Заставка</div>
+                <div class="setting-desc">Выберите фоновое изображение</div>
+                <div class="wallpaper-grid">
+                    <div class="wallpaper-item" data-wallpaper="space" onclick="setWallpaper('space')">
+                        <div class="preview space"></div>
+                        🌌 Космос
+                    </div>
+                    <div class="wallpaper-item" data-wallpaper="flowers" onclick="setWallpaper('flowers')">
+                        <div class="preview flowers"></div>
+                        🌸 Цветы
+                    </div>
+                    <div class="wallpaper-item" data-wallpaper="city" onclick="setWallpaper('city')">
+                        <div class="preview city"></div>
+                        🌃 Город
+                    </div>
                 </div>
             </div>
 
@@ -725,6 +839,19 @@
                     <option value="large">Большой</option>
                 </select>
             </div>
+
+            <button class="reset-btn" onclick="openResetConfirm()">🗑️ Сбросить все</button>
+        </div>
+
+        <!-- МОДАЛКА ПОДТВЕРЖДЕНИЯ СБРОСА -->
+        <div class="reset-confirm-modal" id="resetConfirmModal">
+            <div class="icon">⚠️</div>
+            <div class="title">Внимание!</div>
+            <div class="desc">Весь прогресс будет полностью стёрт.<br>Вы уверены, что хотите продолжить?</div>
+            <div class="btn-group">
+                <button class="btn-yes" onclick="resetAll()">Да</button>
+                <button class="btn-no" onclick="closeResetConfirm()">Отменить</button>
+            </div>
         </div>
 
         <div class="book-modal" id="bookModal">
@@ -745,6 +872,7 @@
     function loadSettings() {
         try {
             var theme = localStorage.getItem('appTheme') || 'dark';
+            var wallpaper = localStorage.getItem('appWallpaper') || 'space';
             var fontSize = localStorage.getItem('appFontSize') || 'medium';
             var iconSize = localStorage.getItem('appIconSize') || 'medium';
 
@@ -754,6 +882,9 @@
                 document.getElementById('themeToggle').classList.add('active');
                 document.getElementById('themeLabel').textContent = 'Светлая';
             }
+
+            // Заставка
+            setWallpaper(wallpaper, true);
 
             // Шрифт
             document.getElementById('fontSizeSelect').value = fontSize;
@@ -781,6 +912,21 @@
         }
     }
 
+    function setWallpaper(name, noSave) {
+        // Убираем все классы заставок
+        document.body.classList.remove('wallpaper-space', 'wallpaper-flowers', 'wallpaper-city');
+        document.body.classList.add('wallpaper-' + name);
+
+        // Подсветка в настройках
+        document.querySelectorAll('.wallpaper-item').forEach(function(el) {
+            el.classList.toggle('active', el.dataset.wallpaper === name);
+        });
+
+        if (!noSave) {
+            localStorage.setItem('appWallpaper', name);
+        }
+    }
+
     function applyFontSize(size) {
         var names = document.querySelectorAll('.app-name');
         names.forEach(function(el) {
@@ -799,6 +945,50 @@
             else if (size === 'large') el.classList.add('large');
         });
         localStorage.setItem('appIconSize', size);
+    }
+
+    // ============================================================
+    // СБРОС ВСЕХ ДАННЫХ
+    // ============================================================
+    function openResetConfirm() {
+        document.getElementById('resetConfirmModal').classList.add('active');
+    }
+
+    function closeResetConfirm() {
+        document.getElementById('resetConfirmModal').classList.remove('active');
+    }
+
+    function resetAll() {
+        // Очищаем всё из localStorage
+        localStorage.clear();
+
+        // Сбрасываем тему на тёмную
+        document.body.classList.remove('light-theme');
+        document.getElementById('themeToggle').classList.remove('active');
+        document.getElementById('themeLabel').textContent = 'Тёмная';
+
+        // Сбрасываем заставку
+        document.body.classList.remove('wallpaper-space', 'wallpaper-flowers', 'wallpaper-city');
+        document.body.classList.add('wallpaper-space');
+        document.querySelectorAll('.wallpaper-item').forEach(function(el) {
+            el.classList.toggle('active', el.dataset.wallpaper === 'space');
+        });
+
+        // Сбрасываем шрифт
+        document.getElementById('fontSizeSelect').value = 'medium';
+        applyFontSize('medium');
+
+        // Сбрасываем иконки
+        document.getElementById('iconSizeSelect').value = 'medium';
+        applyIconSize('medium');
+
+        // Закрываем окно подтверждения
+        closeResetConfirm();
+
+        // Перезагружаем страницу для полного сброса
+        setTimeout(function() {
+            location.reload();
+        }, 300);
     }
 
     // ============================================================
@@ -1419,6 +1609,9 @@
     document.getElementById('settingsModal').addEventListener('click', function(e) {
         if (e.target === this) closeSettings();
     });
+    document.getElementById('resetConfirmModal').addEventListener('click', function(e) {
+        if (e.target === this) closeResetConfirm();
+    });
     document.getElementById('bookModal').addEventListener('click', function(e) {
         if (e.target === this) closeBook();
     });
@@ -1450,4 +1643,4 @@
     }, 1000);
 </script>
 </body>
-    </html>
+            </html>
