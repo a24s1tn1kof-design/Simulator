@@ -76,7 +76,7 @@
             background: transparent;
             border: none;
             -webkit-tap-highlight-color: transparent;
-            width: 74px;
+            width: 80px;
         }
         .app-item:active { transform: scale(0.92); }
         .app-item.dragging {
@@ -93,13 +93,13 @@
             border-radius: 14px;
         }
         .app-icon {
-            width: 52px;
-            height: 52px;
-            border-radius: 14px;
+            width: 62px;
+            height: 62px;
+            border-radius: 16px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 24px;
+            font-size: 28px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.3);
             pointer-events: none;
             flex-shrink: 0;
@@ -110,7 +110,7 @@
         .app-icon.locked { background: linear-gradient(135deg, #2d2d44, #3d3d5c); opacity: 0.5; }
         .app-name {
             color: #ddd;
-            font-size: 10px;
+            font-size: 11px;
             font-weight: 500;
             pointer-events: none;
             -webkit-tap-highlight-color: transparent;
@@ -118,7 +118,6 @@
             line-height: 1.2;
             text-shadow: 0 1px 4px rgba(0,0,0,0.5);
         }
-        .app-item .drag-indicator { display: none; }
 
         .modal {
             display: none;
@@ -308,9 +307,9 @@
         @media (max-width: 400px) {
             .phone { height: 95vh; border-radius: 28px; padding: 12px; }
             .phone-screen { border-radius: 20px; padding: 14px; }
-            .app-icon { width: 44px; height: 44px; font-size: 20px; }
-            .app-name { font-size: 9px; }
-            .app-item { width: 64px; }
+            .app-icon { width: 52px; height: 52px; font-size: 24px; }
+            .app-name { font-size: 10px; }
+            .app-item { width: 70px; }
         }
     </style>
 </head>
@@ -332,11 +331,11 @@
                 <div class="app-icon study">📚</div>
                 <span class="app-name">Учеба</span>
             </div>
-            <div class="app-item" id="bankAppBtn" style="left: 110px; top: 10px;">
+            <div class="app-item" id="bankAppBtn" style="left: 120px; top: 10px;">
                 <div class="app-icon bank">🏦</div>
                 <span class="app-name">Банк</span>
             </div>
-            <div class="app-item" style="left: 200px; top: 10px;">
+            <div class="app-item" style="left: 220px; top: 10px;">
                 <div class="app-icon locked">🔒</div>
                 <span class="app-name">Скоро</span>
             </div>
@@ -367,9 +366,9 @@
         </div>
 
     </div>
-    </div>
-    <script>
-    // ===== DRAG-AND-DROP С АБСОЛЮТНЫМ ПОЗИЦИОНИРОВАНИЕМ =====
+                    </div>
+                  <script>
+    // ===== DRAG-AND-DROP С СОХРАНЕНИЕМ ПОЗИЦИЙ =====
     var dragData = {
         dragEl: null,
         offsetX: 0,
@@ -382,8 +381,7 @@
         var items = document.querySelectorAll('.app-item');
         items.forEach(function(item) {
             item.addEventListener('pointerdown', function(e) {
-                var target = e.target;
-                if (target.closest('.app-icon') || target.closest('.app-name') || target.closest('.app-item')) {
+                if (e.target.closest('.app-icon') || e.target.closest('.app-name') || e.target.closest('.app-item')) {
                     e.preventDefault();
                     e.stopPropagation();
                     startDrag(e, item);
@@ -402,9 +400,6 @@
 
     function startDrag(e, item) {
         var rect = item.getBoundingClientRect();
-        var container = document.getElementById('appsContainer');
-        var containerRect = container.getBoundingClientRect();
-
         dragData.dragEl = item;
         dragData.offsetX = e.clientX - rect.left;
         dragData.offsetY = e.clientY - rect.top;
@@ -434,14 +429,11 @@
         dragData.clone.style.left = (e.clientX - dragData.offsetX) + 'px';
         dragData.clone.style.top = (e.clientY - dragData.offsetY) + 'px';
 
-        var items = document.querySelectorAll('.app-item:not(.dragging)');
-        items.forEach(function(item) {
+        document.querySelectorAll('.app-item:not(.dragging)').forEach(function(item) {
             var rect = item.getBoundingClientRect();
-            var centerX = rect.left + rect.width / 2;
-            var centerY = rect.top + rect.height / 2;
-            var dist = Math.sqrt(Math.pow(e.clientX - centerX, 2) + Math.pow(e.clientY - centerY, 2));
-            if (dist < 60) item.classList.add('drag-over');
-            else item.classList.remove('drag-over');
+            var cx = rect.left + rect.width/2, cy = rect.top + rect.height/2;
+            var dist = Math.sqrt(Math.pow(e.clientX - cx, 2) + Math.pow(e.clientY - cy, 2));
+            item.classList.toggle('drag-over', dist < 60);
         });
     }
 
@@ -450,77 +442,63 @@
         if (dragData.clone) { dragData.clone.remove(); dragData.clone = null; }
 
         var items = document.querySelectorAll('.app-item:not(.dragging)');
-        var targetItem = null;
-        var minDist = Infinity;
-
+        var target = null, minDist = Infinity;
         items.forEach(function(item) {
             var rect = item.getBoundingClientRect();
-            var centerX = rect.left + rect.width / 2;
-            var centerY = rect.top + rect.height / 2;
-            var dist = Math.sqrt(Math.pow(e.clientX - centerX, 2) + Math.pow(e.clientY - centerY, 2));
-            if (dist < 60 && dist < minDist) { minDist = dist; targetItem = item; }
+            var cx = rect.left + rect.width/2, cy = rect.top + rect.height/2;
+            var dist = Math.sqrt(Math.pow(e.clientX - cx, 2) + Math.pow(e.clientY - cy, 2));
+            if (dist < 60 && dist < minDist) { minDist = dist; target = item; }
         });
 
         var dragEl = dragData.dragEl;
         dragEl.classList.remove('dragging');
         items.forEach(function(item) { item.classList.remove('drag-over'); });
 
-        if (targetItem && targetItem !== dragEl) {
+        if (target && target !== dragEl) {
             var container = document.getElementById('appsContainer');
-
-            var dragLeft = dragEl.style.left;
-            var dragTop = dragEl.style.top;
-            var targetLeft = targetItem.style.left;
-            var targetTop = targetItem.style.top;
+            var dragLeft = dragEl.style.left, dragTop = dragEl.style.top;
+            var targetLeft = target.style.left, targetTop = target.style.top;
 
             dragEl.style.left = targetLeft;
             dragEl.style.top = targetTop;
-            targetItem.style.left = dragLeft;
-            targetItem.style.top = dragTop;
+            target.style.left = dragLeft;
+            target.style.top = dragTop;
 
-            var dragIndex = Array.from(container.children).indexOf(dragEl);
-            var targetIndex = Array.from(container.children).indexOf(targetItem);
+            var di = Array.from(container.children).indexOf(dragEl);
+            var ti = Array.from(container.children).indexOf(target);
+            if (di < ti) container.insertBefore(dragEl, target.nextSibling);
+            else container.insertBefore(dragEl, target);
 
-            if (dragIndex < targetIndex) {
-                container.insertBefore(dragEl, targetItem.nextSibling);
-            } else {
-                container.insertBefore(dragEl, targetItem);
-            }
-
-            saveAppPositions();
+            savePositions();
         }
 
         dragData.isDragging = false;
         dragData.dragEl = null;
     }
 
-    function saveAppPositions() {
+    function savePositions() {
         var container = document.getElementById('appsContainer');
-        var positions = [];
+        var data = [];
         container.querySelectorAll('.app-item').forEach(function(item) {
-            positions.push({
-                id: item.id || '',
-                left: item.style.left,
-                top: item.style.top
-            });
+            data.push({ id: item.id || '', left: item.style.left, top: item.style.top });
         });
-        localStorage.setItem('appPositions', JSON.stringify(positions));
+        localStorage.setItem('appPositions', JSON.stringify(data));
     }
 
-    function loadAppPositions() {
+    function loadPositions() {
         try {
             var saved = localStorage.getItem('appPositions');
             if (saved) {
-                var positions = JSON.parse(saved);
+                var data = JSON.parse(saved);
                 var container = document.getElementById('appsContainer');
-                var items = container.querySelectorAll('.app-item');
                 var map = {};
-                items.forEach(function(item) { if (item.id) map[item.id] = item; });
-
-                positions.forEach(function(pos) {
-                    if (pos.id && map[pos.id]) {
-                        map[pos.id].style.left = pos.left || '20px';
-                        map[pos.id].style.top = pos.top || '10px';
+                container.querySelectorAll('.app-item').forEach(function(item) {
+                    if (item.id) map[item.id] = item;
+                });
+                data.forEach(function(p) {
+                    if (p.id && map[p.id]) {
+                        map[p.id].style.left = p.left || '20px';
+                        map[p.id].style.top = p.top || '10px';
                     }
                 });
                 setTimeout(initDrag, 50);
@@ -528,13 +506,9 @@
         } catch(e) {}
     }
 
-    setTimeout(function() {
-        loadAppPositions();
-        initDrag();
-    }, 100);
-    </script>
+    setTimeout(function() { loadPositions(); initDrag(); }, 100);
+                  </script>
     <style>
-    /* ===== БАНК В СТИЛЕ СБЕРБАНКА ===== */
     .sber-card {
         background: linear-gradient(135deg, #1a6d3e, #0d4a2a);
         border-radius: 16px;
@@ -557,11 +531,7 @@
     }
     .sber-card .bank-name { font-size: 12px; opacity: 0.7; letter-spacing: 1px; }
     .sber-card .card-holder { font-size: 11px; opacity: 0.6; margin-top: 6px; text-transform: uppercase; }
-    .sber-card .card-bottom {
-        display: flex;
-        justify-content: space-between;
-        margin-top: 6px;
-    }
+    .sber-card .card-bottom { display: flex; justify-content: space-between; margin-top: 6px; }
     .sber-card .card-bottom span { font-size: 10px; opacity: 0.5; }
 
     .card-number-box {
@@ -577,10 +547,7 @@
         overflow: hidden;
         -webkit-tap-highlight-color: transparent;
     }
-    .card-number-box.collapsed {
-        padding: 4px 14px;
-        background: rgba(0,0,0,0.15);
-    }
+    .card-number-box.collapsed { padding: 4px 14px; background: rgba(0,0,0,0.15); }
     .card-number-box .number {
         font-size: 20px;
         font-weight: 600;
@@ -593,14 +560,8 @@
         justify-content: center;
         gap: 6px;
     }
-    .card-number-box .number .group {
-        display: inline-block;
-    }
-    .card-number-box .number.collapsed {
-        font-size: 13px;
-        letter-spacing: 2px;
-        gap: 4px;
-    }
+    .card-number-box .number .group { display: inline-block; }
+    .card-number-box .number.collapsed { font-size: 13px; letter-spacing: 2px; gap: 4px; }
 
     .sber-balance {
         background: rgba(255,255,255,0.04);
@@ -634,12 +595,7 @@
         border-bottom: 1px solid rgba(255,255,255,0.05);
         padding-bottom: 6px;
     }
-    .sber-history .history-empty {
-        color: #555;
-        font-size: 13px;
-        text-align: center;
-        padding: 16px 0;
-    }
+    .sber-history .history-empty { color: #555; font-size: 13px; text-align: center; padding: 16px 0; }
     .sber-history .history-item {
         display: flex;
         justify-content: space-between;
@@ -744,40 +700,29 @@
         -webkit-tap-highlight-color: transparent;
     }
     .transfer-method button:active { transform: scale(0.95); }
-    .transfer-method button.active {
-        border-color: #1a6d3e;
-        color: #fff;
-        background: rgba(26,109,62,0.2);
-    }
+    .transfer-method button.active { border-color: #1a6d3e; color: #fff; background: rgba(26,109,62,0.2); }
 
     .sber-history::-webkit-scrollbar { width: 3px; }
     .sber-history::-webkit-scrollbar-track { background: transparent; }
     .sber-history::-webkit-scrollbar-thumb { background: #333; border-radius: 10px; }
     </style>
     <script>
-    // ===== НАСТОЯЩЕЕ ВРЕМЯ =====
     function updateTime() {
         var now = new Date();
-        var h = String(now.getHours()).padStart(2, '0');
-        var m = String(now.getMinutes()).padStart(2, '0');
-        document.getElementById('statusTime').textContent = h + ':' + m;
+        document.getElementById('statusTime').textContent =
+            String(now.getHours()).padStart(2,'0') + ':' + String(now.getMinutes()).padStart(2,'0');
     }
     updateTime();
     setInterval(updateTime, 5000);
 
-    // ===== НАСТОЯЩАЯ БАТАРЕЯ =====
     function updateBattery() {
         if (navigator.getBattery) {
             navigator.getBattery().then(function(battery) {
                 var level = Math.round(battery.level * 100);
                 var el = document.getElementById('batteryDisplay');
                 el.textContent = '🔋 ' + level + '%';
-                if (level < 20) el.style.color = '#e74c3c';
-                else if (level < 50) el.style.color = '#f5c842';
-                else el.style.color = '#2ecc71';
-            }).catch(function() {
-                document.getElementById('batteryDisplay').textContent = '🔋 72%';
-            });
+                el.style.color = level < 20 ? '#e74c3c' : level < 50 ? '#f5c842' : '#2ecc71';
+            }).catch(function() { document.getElementById('batteryDisplay').textContent = '🔋 72%'; });
         } else {
             document.getElementById('batteryDisplay').textContent = '🔋 68%';
         }
@@ -785,7 +730,6 @@
     updateBattery();
     setInterval(updateBattery, 5000);
 
-    // ===== ПРОФЕССИИ =====
     var professions = [
         { id: 'fsb', name: 'ФСБ', desc: 'Федеральная служба безопасности' },
         { id: 'mchs', name: 'МЧС', desc: 'Спасатель, пожарный' },
@@ -793,44 +737,31 @@
         { id: 'mvd', name: 'МВД', desc: 'Полицейский, следователь' },
         { id: 'teacher', name: 'Учитель', desc: 'Преподаватель, наставник' }
     ];
-
     var selectedProfession = localStorage.getItem('selectedProfession') || null;
     var startDate = localStorage.getItem('startDate') || null;
 
     function getDaysLeft() {
         if (!startDate) return 14;
-        var start = new Date(startDate);
-        var now = new Date();
-        var diff = Math.floor((now - start) / (1000 * 60 * 60 * 24));
-        var left = 14 - diff;
-        return left < 0 ? 0 : left;
+        var diff = Math.floor((new Date() - new Date(startDate)) / (1000*60*60*24));
+        return Math.max(0, 14 - diff);
     }
-
     function getDaysPassed() {
         if (!startDate) return 0;
-        var start = new Date(startDate);
-        var now = new Date();
-        return Math.floor((now - start) / (1000 * 60 * 60 * 24));
+        return Math.floor((new Date() - new Date(startDate)) / (1000*60*60*24));
     }
 
     function renderStudy() {
         var content = document.getElementById('studyContent');
         if (selectedProfession) {
-            var prof = null;
-            for (var i = 0; i < professions.length; i++) {
-                if (professions[i].id === selectedProfession) { prof = professions[i]; break; }
-            }
-            var daysLeft = getDaysLeft();
-            var daysPassed = getDaysPassed();
-            var finished = daysLeft <= 0;
-
+            var prof = professions.find(function(p) { return p.id === selectedProfession; });
+            var daysLeft = getDaysLeft(), daysPassed = getDaysPassed(), finished = daysLeft <= 0;
             content.innerHTML = `
                 <div class="selected-profession-block">
                     <div class="prof-name">${prof ? prof.name : ''}</div>
                     <div class="prof-desc">${prof ? prof.desc : ''}</div>
                     <div class="status-text">${finished ? 'Обучение завершено' : 'Профессия выбрана'}</div>
                     <div class="days-left-big">${finished ? 'Обучение завершено' : 'Осталось дней: ' + daysLeft}</div>
-                    <div style="color:#888;font-size:12px;margin-top:4px;">${finished ? 'Вы успешно освоили профессию' : 'День ' + Math.min(daysPassed, 14) + ' из 14'}</div>
+                    <div style="color:#888;font-size:12px;margin-top:4px;">${finished ? 'Вы успешно освоили профессию' : 'День ' + Math.min(daysPassed,14) + ' из 14'}</div>
                 </div>
                 <div class="profession-detail open">
                     <div class="row"><span class="label">Время обучения</span><span class="value">14 дней</span></div>
@@ -841,22 +772,16 @@
             `;
             return;
         }
-
         var html = '<div class="profession-list">';
-        for (var j = 0; j < professions.length; j++) {
-            var p = professions[j];
+        professions.forEach(function(p) {
             html += `
                 <div class="profession-card" onclick="selectProfession('${p.id}')">
-                    <div class="info">
-                        <h3>${p.name}</h3>
-                        <p>${p.desc}</p>
-                    </div>
+                    <div class="info"><h3>${p.name}</h3><p>${p.desc}</p></div>
                     <button class="profession-btn">Выбрать</button>
                 </div>
             `;
-        }
-        html += '</div>';
-        content.innerHTML = html;
+        });
+        content.innerHTML = html + '</div>';
     }
 
     function selectProfession(id) {
@@ -873,10 +798,7 @@
         document.getElementById('bookModal').classList.add('active');
         renderBook();
     }
-
-    function closeBook() {
-        document.getElementById('bookModal').classList.remove('active');
-    }
+    function closeBook() { document.getElementById('bookModal').classList.remove('active'); }
 
     function showToast(text) {
         var old = document.querySelector('.toast-custom');
@@ -889,27 +811,26 @@
     }
     </script>
     <script>
-    // ===== КНИГА ДЛЯ УЧЕНИЯ =====
     var bookQuestions = {
         fsb: [
-            { q: 'В торговом центре неизвестные открыли стрельбу. Вы сотрудник ФСБ. Какие номера набрать и как организовать эвакуацию?', a: 'Набрать 112, 102 и 101. Немедленно начать координацию с охраной ТЦ: перекрыть выходы, направить людей к ближайшим эвакуационным выходам. Организовать группы по 5-10 человек. Укрыть раненых. Оценить обстановку.' },
-            { q: 'Вы получили сообщение о заложенной бомбе. Вы сотрудник ФСБ. Ваши действия?', a: 'Набрать 112, 102, 101. Не паниковать, сообщить руководству. Начать эвакуацию по плану: выводить людей поэтапно. Проверить подозрительные места, оцепить здание.' }
+            { q: 'В ТЦ стрельба. Вы ФСБ. Ваши действия?', a: 'Набрать 112, 102, 101. Координировать эвакуацию, перекрыть выходы, организовать группы людей, укрыть раненых.' },
+            { q: 'Сообщение о бомбе в школе. Ваши действия?', a: 'Набрать 112, 102, 101. Эвакуация по плану, проверка подозрительных мест, оцепление.' }
         ],
         mchs: [
-            { q: 'Произошло землетрясение силой 7 баллов. Вы спасатель МЧС. Как действовать?', a: 'Набрать 112 или 101. Лечь на пол рядом с кроватью, защитить голову. После толчков — покинуть здание по лестнице.' },
-            { q: 'Обнаружено возгорание в многоквартирном доме. Что делать?', a: 'Вызвать пожарную службу по номеру 101 или 112. Если пожар небольшой — потушить огнетушителем. Если сильный — покинуть помещение.' }
+            { q: 'Землетрясение 7 баллов. Ваши действия?', a: 'Набрать 112, 101. Лечь на пол, защитить голову. После толчков покинуть здание.' },
+            { q: 'Пожар в многоэтажке. Ваши действия?', a: 'Набрать 101, 112. Потушить огнетушителем, если слабый. При сильном — покинуть помещение.' }
         ],
         medic: [
-            { q: 'У человека остановилось сердце. Что делать?', a: 'Набрать 103 или 112. Начать СЛР: 30 компрессий грудной клетки, 2 вдоха. Продолжать до приезда скорой.' },
-            { q: 'Человек с признаками инсульта. Что делать?', a: 'Вызвать скорую по номеру 103 или 112. Уложить с приподнятой головой. Не давать еду и воду.' }
+            { q: 'Остановка сердца. Ваши действия?', a: 'Набрать 103, 112. Начать СЛР: 30 компрессий, 2 вдоха.' },
+            { q: 'Инсульт. Ваши действия?', a: 'Набрать 103, 112. Уложить с приподнятой головой, не давать еду и воду.' }
         ],
         mvd: [
-            { q: 'Вы стали свидетелем ограбления. Что делать?', a: 'Набрать 102 или 112. Сообщить приметы преступников. Не вступать в конфликт.' },
-            { q: 'Нашли подозрительный предмет в автобусе. Что делать?', a: 'Сообщить водителю, вызвать полицию по 102 или 112. Не трогать предмет, вывести людей.' }
+            { q: 'Ограбление с оружием. Ваши действия?', a: 'Набрать 102, 112. Сообщить приметы, не вступать в конфликт.' },
+            { q: 'Подозрительный предмет в автобусе. Ваши действия?', a: 'Набрать 102, 112. Вывести людей, не трогать предмет.' }
         ],
         teacher: [
-            { q: 'В классе паника из-за сообщения о стрельбе. Как успокоить детей?', a: 'Набрать 112 или 102. Успокоить учеников, закрыть двери, выключить свет.' },
-            { q: 'Свидетель буллинга с ножом. Что делать?', a: 'Вызвать полицию по 102 или 112. Вмешаться, развести учеников.' }
+            { q: 'Паника в классе из-за стрельбы. Ваши действия?', a: 'Набрать 112, 102. Успокоить детей, закрыть двери, выключить свет.' },
+            { q: 'Буллинг с ножом. Ваши действия?', a: 'Набрать 102, 112. Вмешаться, развести учеников.' }
         ]
     };
 
@@ -918,56 +839,31 @@
         if (!prof) { document.getElementById('bookContent').innerHTML = '<div style="color:#888;">Сначала выберите профессию</div>'; return; }
         var questions = bookQuestions[prof];
         if (!questions) { document.getElementById('bookContent').innerHTML = '<div style="color:#888;">Нет вопросов</div>'; return; }
-
         var html = '';
-        for (var j = 0; j < questions.length; j++) {
-            var q = questions[j];
-            html += `
-                <div class="question-block">
-                    <div class="q">❓ ${q.q}</div>
-                    <div class="a">${q.a}</div>
-                </div>
-            `;
-        }
+        questions.forEach(function(q) {
+            html += `<div class="question-block"><div class="q">❓ ${q.q}</div><div class="a">${q.a}</div></div>`;
+        });
         document.getElementById('bookContent').innerHTML = html;
     }
 
-    // ===== БАНК ДАННЫЕ =====
     var bankData = {
-        registered: false,
-        name: '',
-        password: '',
-        balance: 0,
-        deposit: 0,
-        depositDate: null,
-        credit: 0,
-        creditDate: null,
-        creditAmount: 0,
-        profession: '',
-        loggedIn: false,
-        cardNumber: '',
-        phone: '',
-        history: [],
-        cardHidden: false
+        registered: false, name: '', password: '', balance: 0, deposit: 0, depositDate: null,
+        credit: 0, creditDate: null, creditAmount: 0, profession: '', loggedIn: false,
+        cardNumber: '', phone: '', history: [], cardHidden: false
     };
 
     function generateCardNumber() {
         var groups = [];
         for (var g = 0; g < 4; g++) {
             var group = '';
-            for (var i = 0; i < 4; i++) {
-                group += Math.floor(Math.random() * 10);
-            }
+            for (var i = 0; i < 4; i++) group += Math.floor(Math.random() * 10);
             groups.push(group);
         }
         return groups.join(' ');
     }
-
     function generatePhone() {
         var num = '';
-        for (var i = 0; i < 11; i++) {
-            num += Math.floor(Math.random() * 10);
-        }
+        for (var i = 0; i < 11; i++) num += Math.floor(Math.random() * 10);
         return num;
     }
 
@@ -976,81 +872,42 @@
             var saved = localStorage.getItem('bankData');
             if (saved) {
                 var data = JSON.parse(saved);
-                bankData.registered = data.registered || false;
-                bankData.name = data.name || '';
-                bankData.password = data.password || '';
-                bankData.balance = data.balance || 0;
-                bankData.deposit = data.deposit || 0;
-                bankData.depositDate = data.depositDate || null;
-                bankData.credit = data.credit || 0;
-                bankData.creditDate = data.creditDate || null;
-                bankData.creditAmount = data.creditAmount || 0;
-                bankData.profession = data.profession || '';
-                bankData.cardNumber = data.cardNumber || generateCardNumber();
-                bankData.phone = data.phone || generatePhone();
-                bankData.history = data.history || [];
-                bankData.cardHidden = data.cardHidden || false;
+                Object.assign(bankData, data);
                 bankData.loggedIn = false;
+                if (!bankData.cardNumber) bankData.cardNumber = generateCardNumber();
+                if (!bankData.phone) bankData.phone = generatePhone();
             }
         } catch(e) {}
     }
-
     function saveBankData() {
         try {
-            var dataToSave = {
-                registered: bankData.registered,
-                name: bankData.name,
-                password: bankData.password,
-                balance: bankData.balance,
-                deposit: bankData.deposit,
-                depositDate: bankData.depositDate,
-                credit: bankData.credit,
-                creditDate: bankData.creditDate,
-                creditAmount: bankData.creditAmount,
-                profession: bankData.profession,
-                cardNumber: bankData.cardNumber,
-                phone: bankData.phone,
-                history: bankData.history,
-                cardHidden: bankData.cardHidden
-            };
-            localStorage.setItem('bankData', JSON.stringify(dataToSave));
+            var data = Object.assign({}, bankData);
+            data.loggedIn = false;
+            localStorage.setItem('bankData', JSON.stringify(data));
         } catch(e) {}
     }
 
     function getProfessionFromStudy() {
         var prof = localStorage.getItem('selectedProfession') || '';
-        if (prof) {
-            var professionsMap = {
-                'fsb': 'ФСБ',
-                'mchs': 'МЧС',
-                'medic': 'Медик',
-                'mvd': 'МВД',
-                'teacher': 'Учитель'
-            };
-            return professionsMap[prof] || prof;
-        }
-        return '';
+        var map = { fsb: 'ФСБ', mchs: 'МЧС', medic: 'Медик', mvd: 'МВД', teacher: 'Учитель' };
+        return map[prof] || prof;
     }
     </script>
     <script>
-    // ===== РЕГИСТРАЦИЯ И ВХОД =====
     function renderBank() {
         var content = document.getElementById('bankContent');
-
         if (!bankData.registered) {
             var prof = getProfessionFromStudy();
             if (!prof) {
                 content.innerHTML = `
                     <div style="color:#888;text-align:center;padding:30px 0;">
                         <div style="font-size:48px;margin-bottom:16px;">🏦</div>
-                        <p style="font-size:15px;color:#ddd;">Для регистрации в банке</p>
-                        <p style="font-size:13px;color:#888;margin-top:6px;">Сначала выберите профессию в учёбе</p>
+                        <p style="font-size:15px;color:#ddd;">Для регистрации выберите профессию в учёбе</p>
                         <button class="sber-btn" onclick="closeBank();openStudy();" style="margin-top:16px;">Перейти к учёбе</button>
                     </div>
                 `;
                 return;
             }
-
             content.innerHTML = `
                 <div style="text-align:center;margin-bottom:20px;">
                     <div style="font-size:48px;">🏦</div>
@@ -1068,13 +925,12 @@
             `;
             return;
         }
-
         if (!bankData.loggedIn) {
             content.innerHTML = `
                 <div style="text-align:center;margin-bottom:20px;">
                     <div style="font-size:48px;">🏦</div>
                     <div style="color:#fff;font-size:18px;font-weight:600;margin-top:8px;">Здравствуйте, ${bankData.name}!</div>
-                    <div style="color:#888;font-size:13px;margin-top:4px;">Введите пин-код для входа</div>
+                    <div style="color:#888;font-size:13px;margin-top:4px;">Введите пин-код</div>
                 </div>
                 <div style="display:flex;flex-direction:column;gap:10px;">
                     <input class="sber-input" id="loginPassword" placeholder="Пин-код (4 цифры)" type="password" maxlength="4" inputmode="numeric">
@@ -1086,7 +942,6 @@
             `;
             return;
         }
-
         renderBankMain();
     }
 
@@ -1096,13 +951,8 @@
     function registerBank() {
         var name = document.getElementById('regName').value.trim();
         var password = document.getElementById('regPassword').value.trim();
-
-        if (!name) { showToast('Введите имя'); return; }
-        if (name.length < 2) { showToast('Имя минимум 2 символа'); return; }
-        if (!password || password.length !== 4 || isNaN(password)) {
-            showToast('Пин-код — 4 цифры');
-            return;
-        }
+        if (!name || name.length < 2) { showToast('Введите имя (мин. 2 символа)'); return; }
+        if (!password || password.length !== 4 || isNaN(password)) { showToast('Пин-код — 4 цифры'); return; }
 
         bankData.registered = true;
         bankData.name = name;
@@ -1115,17 +965,12 @@
         bankData.loggedIn = true;
         saveBankData();
         renderBank();
-        showToast('✅ Регистрация успешна! Получен бонус 100 ₽');
+        showToast('✅ Регистрация успешна! Бонус 100 ₽');
     }
 
     function loginBank() {
         var password = document.getElementById('loginPassword').value.trim();
-
-        if (!password || password.length !== 4 || isNaN(password)) {
-            showToast('Введите пин-код (4 цифры)');
-            return;
-        }
-
+        if (!password || password.length !== 4 || isNaN(password)) { showToast('Введите пин-код (4 цифры)'); return; }
         if (password === bankData.password) {
             bankData.loggedIn = true;
             saveBankData();
@@ -1140,16 +985,14 @@
         bankData.loggedIn = false;
         saveBankData();
         renderBank();
-        showToast('👋 Вы вышли из банка');
+        showToast('👋 Вы вышли');
     }
     </script>
     <script>
-    // ===== ГЛАВНЫЙ ЭКРАН БАНКА =====
     function renderBankMain() {
         var content = document.getElementById('bankContent');
         var daysLeft = getDaysLeft();
         var prof = getProfessionFromStudy();
-
         var groups = bankData.cardNumber.split(' ');
         var displayNumber = '';
         for (var i = 0; i < groups.length; i++) {
@@ -1160,44 +1003,25 @@
         content.innerHTML = `
             <div class="sber-card">
                 <div class="bank-name">СБЕРБАНК</div>
-
                 <div class="card-number-box ${bankData.cardHidden ? 'collapsed' : ''}" onclick="toggleCardHide()">
-                    <div class="number ${bankData.cardHidden ? 'collapsed' : ''}">
-                        ${displayNumber}
-                    </div>
+                    <div class="number ${bankData.cardHidden ? 'collapsed' : ''}">${displayNumber}</div>
                 </div>
-
                 <div class="card-holder">${bankData.name}</div>
                 <div class="card-bottom">
                     <span>${prof || 'Без профессии'}</span>
                     <span>До обучения: ${daysLeft} дн.</span>
                 </div>
             </div>
-
             <div class="sber-balance">
                 <span class="label">Баланс</span>
                 <span class="amount">${bankData.balance} ₽</span>
             </div>
-
             <div class="sber-menu">
-                <div class="sber-menu-item" onclick="showDeposit()">
-                    <span class="icon">💰</span>
-                    <span class="label">Вклад</span>
-                </div>
-                <div class="sber-menu-item" onclick="showCredit()">
-                    <span class="icon">💳</span>
-                    <span class="label">Кредит</span>
-                </div>
-                <div class="sber-menu-item" onclick="showTransfer()">
-                    <span class="icon">📤</span>
-                    <span class="label">Перевод</span>
-                </div>
-                <div class="sber-menu-item" onclick="logoutBank()">
-                    <span class="icon">🚪</span>
-                    <span class="label">Выйти</span>
-                </div>
+                <div class="sber-menu-item" onclick="showDeposit()"><span class="icon">💰</span><span class="label">Вклад</span></div>
+                <div class="sber-menu-item" onclick="showCredit()"><span class="icon">💳</span><span class="label">Кредит</span></div>
+                <div class="sber-menu-item" onclick="showTransfer()"><span class="icon">📤</span><span class="label">Перевод</span></div>
+                <div class="sber-menu-item" onclick="logoutBank()"><span class="icon">🚪</span><span class="label">Выйти</span></div>
             </div>
-
             <div class="sber-history">
                 <div class="history-title">📋 История переводов</div>
                 ${renderHistory()}
@@ -1206,21 +1030,16 @@
     }
 
     function renderHistory() {
-        if (bankData.history.length === 0) {
-            return '<div class="history-empty">История пуста</div>';
-        }
+        if (bankData.history.length === 0) return '<div class="history-empty">История пуста</div>';
         var html = '';
         for (var i = bankData.history.length - 1; i >= 0; i--) {
             var h = bankData.history[i];
-            var amountClass = h.type === 'out' ? 'minus' : '';
             var sign = h.type === 'out' ? '-' : '+';
+            var cls = h.type === 'out' ? 'minus' : '';
             html += `
                 <div class="history-item">
-                    <div class="h-left">
-                        ${h.recipient || 'Перевод'}
-                        <div class="h-detail">${h.time || ''}</div>
-                    </div>
-                    <div class="h-amount ${amountClass}">${sign}${h.amount} ₽</div>
+                    <div class="h-left">${h.recipient || 'Перевод'}<div class="h-detail">${h.time || ''}</div></div>
+                    <div class="h-amount ${cls}">${sign}${h.amount} ₽</div>
                 </div>
             `;
         }
@@ -1234,7 +1053,6 @@
     }
     </script>
     <script>
-    // ===== ВКЛАД =====
     function showDeposit() {
         var content = document.getElementById('bankContent');
         var daysLeft = getDaysLeft();
@@ -1266,7 +1084,7 @@
             </div>
             <div style="color:#fff;font-size:18px;font-weight:600;margin-bottom:12px;">💰 Открыть вклад</div>
             <div style="color:#888;font-size:13px;margin-bottom:6px;">Минимальная сумма: 50 ₽</div>
-            <div style="color:#888;font-size:13px;margin-bottom:6px;">Доход: 10% от суммы каждый день</div>
+            <div style="color:#888;font-size:13px;margin-bottom:6px;">Доход: 10% в день</div>
             <div style="color:#888;font-size:13px;margin-bottom:16px;">Ваш баланс: ${bankData.balance} ₽</div>
             <input class="sber-input" id="depositAmount" placeholder="Сумма вклада" type="number" min="50">
             <button class="sber-btn green" onclick="openDeposit()">Открыть вклад</button>
@@ -1299,7 +1117,6 @@
     }
     </script>
     <script>
-    // ===== КРЕДИТ =====
     function showCredit() {
         var content = document.getElementById('bankContent');
         var daysLeft = getDaysLeft();
@@ -1331,8 +1148,8 @@
                 <button class="sber-back" onclick="renderBank()">← Назад</button>
             </div>
             <div style="color:#fff;font-size:18px;font-weight:600;margin-bottom:12px;">💳 Взять кредит</div>
-            <div style="color:#888;font-size:13px;margin-bottom:6px;">Максимальная сумма: ${bankData.balance * 2} ₽</div>
-            <div style="color:#888;font-size:13px;margin-bottom:6px;">Проценты: 20% от суммы</div>
+            <div style="color:#888;font-size:13px;margin-bottom:6px;">Максимум: ${bankData.balance * 2} ₽</div>
+            <div style="color:#888;font-size:13px;margin-bottom:6px;">Проценты: 20%</div>
             <div style="color:#888;font-size:13px;margin-bottom:16px;">Срок: до окончания обучения</div>
             <input class="sber-input" id="creditAmount" placeholder="Сумма кредита" type="number" min="10">
             <button class="sber-btn" onclick="takeCredit()">Взять кредит</button>
@@ -1368,7 +1185,6 @@
     }
     </script>
     <script>
-    // ===== ПЕРЕВОД ПО КАРТЕ ИЛИ ТЕЛЕФОНУ =====
     var transferMethod = 'card';
 
     function showTransfer() {
@@ -1379,17 +1195,14 @@
             </div>
             <div style="color:#fff;font-size:18px;font-weight:600;margin-bottom:12px;">📤 Перевод</div>
             <div style="color:#888;font-size:13px;margin-bottom:12px;">Ваш баланс: ${bankData.balance} ₽</div>
-
             <div class="transfer-method">
                 <button id="transferCardBtn" class="active" onclick="setTransferMethod('card')">💳 По карте</button>
                 <button id="transferPhoneBtn" onclick="setTransferMethod('phone')">📱 По телефону</button>
             </div>
-
             <div id="transferInputs">
                 <input class="sber-input" id="transferRecipient" placeholder="Номер карты (16 цифр)">
                 <input class="sber-input" id="transferAmount" placeholder="Сумма перевода" type="number" min="1">
             </div>
-
             <button class="sber-btn green" onclick="makeTransfer()">Перевести</button>
             <div style="color:#555;font-size:12px;text-align:center;margin-top:8px;">Комиссия: 0 ₽</div>
         `;
@@ -1440,12 +1253,7 @@
 
         var now = new Date();
         var timeStr = String(now.getHours()).padStart(2, '0') + ':' + String(now.getMinutes()).padStart(2, '0');
-        bankData.history.push({
-            type: 'out',
-            amount: amount,
-            recipient: recipientDisplay,
-            time: timeStr
-        });
+        bankData.history.push({ type: 'out', amount: amount, recipient: recipientDisplay, time: timeStr });
 
         bankData.balance -= amount;
         saveBankData();
@@ -1453,59 +1261,39 @@
         showToast('✅ Перевод выполнен! Сумма: ' + amount + ' ₽');
     }
 
-    // ===== ОТКРЫТИЕ/ЗАКРЫТИЕ ПРИЛОЖЕНИЙ =====
     function openStudy() {
         document.getElementById('studyModal').classList.add('active');
         renderStudy();
     }
-
-    function closeStudy() {
-        document.getElementById('studyModal').classList.remove('active');
-    }
+    function closeStudy() { document.getElementById('studyModal').classList.remove('active'); }
 
     function openBank() {
         document.getElementById('bankModal').classList.add('active');
         loadBankData();
         renderBank();
     }
-
     function closeBank() {
         bankData.loggedIn = false;
         saveBankData();
         document.getElementById('bankModal').classList.remove('active');
     }
 
-    // ===== СОБЫТИЯ =====
     document.getElementById('closeStudyBtn').addEventListener('click', closeStudy);
     document.getElementById('closeBankBtn').addEventListener('click', closeBank);
     document.getElementById('closeBookBtn').addEventListener('click', closeBook);
 
-    document.getElementById('studyModal').addEventListener('click', function(e) {
-        if (e.target === this) closeStudy();
-    });
-    document.getElementById('bankModal').addEventListener('click', function(e) {
-        if (e.target === this) closeBank();
-    });
-    document.getElementById('bookModal').addEventListener('click', function(e) {
-        if (e.target === this) closeBook();
-    });
+    document.getElementById('studyModal').addEventListener('click', function(e) { if (e.target === this) closeStudy(); });
+    document.getElementById('bankModal').addEventListener('click', function(e) { if (e.target === this) closeBank(); });
+    document.getElementById('bookModal').addEventListener('click', function(e) { if (e.target === this) closeBook(); });
 
-    // Открытие приложений по клику на иконку
     document.getElementById('studyAppBtn').addEventListener('click', function(e) {
-        if (!dragData.isDragging) {
-            openStudy();
-        }
+        if (!dragData.isDragging) openStudy();
     });
-
     document.getElementById('bankAppBtn').addEventListener('click', function(e) {
-        if (!dragData.isDragging) {
-            openBank();
-        }
+        if (!dragData.isDragging) openBank();
     });
 
-    // ===== ЗАПУСК =====
     renderStudy();
-
     setInterval(function() {
         var counter = document.getElementById('daysCounter');
         if (counter) {
