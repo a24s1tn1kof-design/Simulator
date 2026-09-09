@@ -14,7 +14,7 @@
             min-height: 100vh;
             font-family: 'Segoe UI', system-ui, sans-serif;
             touch-action: manipulation;
-            padding: 10px;
+            padding: 0;
             transition: background 0.5s, color 0.3s;
         }
         body.light-theme {
@@ -22,15 +22,17 @@
         }
         body.light-theme .phone {
             background: #f0f0f0;
-            box-shadow: 0 30px 80px rgba(0,0,0,0.15), inset 0 0 0 2px #ccc;
         }
         body.light-theme .phone-screen {
             background: linear-gradient(180deg, #f5f5f5 0%, #e0e0e0 100%);
         }
+        body.light-theme .phone-screen.default-light {
+            background: #f0f0f0 !important;
+        }
         body.light-theme .status-bar { color: #333; border-bottom-color: #ccc; }
         body.light-theme .status-bar .time { color: #333; }
         body.light-theme .app-name { color: #333; text-shadow: none; }
-        body.light-theme .app-icon { box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+        body.light-theme .app-icon { box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
         body.light-theme .settings-modal { background: rgba(255,255,255,0.95); }
         body.light-theme .settings-modal h2 { color: #333; }
         body.light-theme .settings-modal .setting-label { color: #333; }
@@ -42,104 +44,21 @@
         body.light-theme .settings-modal .wallpaper-item.active { border-color: #2ecc71; background: rgba(46,204,113,0.1); color: #333; }
         body.light-theme .settings-modal .setting-group { background: rgba(0,0,0,0.02); border-color: rgba(0,0,0,0.06); }
 
-        /* ЗАСТАВКИ С РИСУНКАМИ */
+        /* ЗАСТАВКИ С ТВОИМИ КАРТИНКАМИ */
         body.wallpaper-space .phone-screen {
-            background: radial-gradient(ellipse at 30% 40%, #0a0a3e 0%, #000 100%) !important;
-            position: relative;
+            background-image: url('https://i.ibb.co/JFKZZrPh/i-1.jpg') !important;
+            background-size: cover !important;
+            background-position: center !important;
         }
-        body.wallpaper-space .phone-screen::before {
-            content: '🌙 ✨ ⭐ 🌟 ✨ 🌙';
-            position: absolute;
-            top: 10%;
-            left: 5%;
-            font-size: 28px;
-            opacity: 0.4;
-            letter-spacing: 20px;
-            pointer-events: none;
-            white-space: nowrap;
-            z-index: 0;
-        }
-        body.wallpaper-space .phone-screen::after {
-            content: '🪐 🌌 🚀 🌠 🛸';
-            position: absolute;
-            bottom: 15%;
-            right: 5%;
-            font-size: 24px;
-            opacity: 0.3;
-            letter-spacing: 15px;
-            pointer-events: none;
-            white-space: nowrap;
-            z-index: 0;
-        }
-
         body.wallpaper-flowers .phone-screen {
-            background: radial-gradient(ellipse at 60% 30%, #2d1b4d 0%, #1a0a1a 100%) !important;
-            position: relative;
+            background-image: url('https://i.ibb.co/dwfz0hnN/i.jpg') !important;
+            background-size: cover !important;
+            background-position: center !important;
         }
-        body.wallpaper-flowers .phone-screen::before {
-            content: '🌸 🌺 🌻 🌹 🌷 🌸 🌺';
-            position: absolute;
-            top: 8%;
-            left: 2%;
-            font-size: 26px;
-            opacity: 0.4;
-            letter-spacing: 12px;
-            pointer-events: none;
-            white-space: nowrap;
-            z-index: 0;
-        }
-        body.wallpaper-flowers .phone-screen::after {
-            content: '🌿 🍃 🌱 🌾 🌿 🍃';
-            position: absolute;
-            bottom: 20%;
-            right: 2%;
-            font-size: 20px;
-            opacity: 0.3;
-            letter-spacing: 14px;
-            pointer-events: none;
-            white-space: nowrap;
-            z-index: 0;
-        }
-
         body.wallpaper-city .phone-screen {
-            background: radial-gradient(ellipse at 50% 80%, #1a2a4a 0%, #0a0a1a 100%) !important;
-            position: relative;
-        }
-        body.wallpaper-city .phone-screen::before {
-            content: '🏙️ 🌃 🏢 🌆 🏙️ 🌃';
-            position: absolute;
-            top: 5%;
-            left: 0%;
-            font-size: 28px;
-            opacity: 0.35;
-            letter-spacing: 10px;
-            pointer-events: none;
-            white-space: nowrap;
-            width: 100%;
-            text-align: center;
-            z-index: 0;
-        }
-        body.wallpaper-city .phone-screen::after {
-            content: '🚗 🚕 🚌 🚗 🚕 🚌';
-            position: absolute;
-            bottom: 10%;
-            left: 2%;
-            font-size: 20px;
-            opacity: 0.25;
-            letter-spacing: 16px;
-            pointer-events: none;
-            white-space: nowrap;
-            z-index: 0;
-        }
-
-        body.light-theme.wallpaper-space .phone-screen {
-            background: radial-gradient(ellipse at 30% 40%, #1a1a5e 0%, #0a0a2e 100%) !important;
-        }
-        body.light-theme.wallpaper-flowers .phone-screen {
-            background: radial-gradient(ellipse at 60% 30%, #3d2b5d 0%, #2a1a2a 100%) !important;
-        }
-        body.light-theme.wallpaper-city .phone-screen {
-            background: radial-gradient(ellipse at 50% 80%, #2a3a5a 0%, #1a2a3a 100%) !important;
+            background-image: url('https://i.ibb.co/nNn0fCn0/i-2.jpg') !important;
+            background-size: cover !important;
+            background-position: center !important;
         }
 
         .phone {
@@ -147,9 +66,9 @@
             max-width: 100%;
             height: 750px;
             background: #0a0a0f;
-            border-radius: 40px;
-            padding: 18px;
-            box-shadow: 0 30px 80px rgba(0,0,0,0.8), inset 0 0 0 2px #2a2a3a;
+            border-radius: 0;
+            padding: 10px;
+            box-shadow: none;
             position: relative;
             overflow: hidden;
             transition: background 0.3s;
@@ -157,16 +76,26 @@
         .phone-screen {
             width: 100%;
             height: 100%;
-            background: linear-gradient(180deg, #0f0f1a 0%, #1a1a2e 100%);
-            border-radius: 28px;
-            padding: 20px 18px;
+            background: #0f0f1a;
+            border-radius: 0;
+            padding: 15px 12px;
             overflow-y: auto;
             position: relative;
             scroll-behavior: smooth;
             -webkit-tap-highlight-color: transparent;
-            transition: background 0.5s;
+            transition: background-image 0.5s, background-color 0.3s;
+            background-size: cover !important;
+            background-position: center !important;
+            background-repeat: no-repeat !important;
             z-index: 1;
         }
+        .phone-screen.default-dark {
+            background: #0f0f1a !important;
+        }
+        .phone-screen.default-light {
+            background: #f0f0f0 !important;
+        }
+
         .phone-screen > * { position: relative; z-index: 1; }
 
         .status-bar {
@@ -176,9 +105,9 @@
             color: #fff;
             font-size: 12px;
             font-weight: 600;
-            padding-bottom: 8px;
+            padding-bottom: 6px;
             border-bottom: 1px solid rgba(255,255,255,0.05);
-            margin-bottom: 8px;
+            margin-bottom: 6px;
             -webkit-tap-highlight-color: transparent;
             transition: color 0.3s, border-color 0.3s;
         }
@@ -187,8 +116,8 @@
         .apps-grid {
             display: grid;
             grid-template-columns: repeat(6, 1fr);
-            gap: 4px 2px;
-            margin-top: 6px;
+            gap: 2px 1px;
+            margin-top: 4px;
             position: relative;
             min-height: 200px;
             -webkit-tap-highlight-color: transparent;
@@ -198,12 +127,12 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 2px;
+            gap: 1px;
             cursor: pointer;
             touch-action: manipulation;
             transition: transform 0.15s;
             z-index: 1;
-            padding: 4px 2px;
+            padding: 2px 1px;
             border-radius: 8px;
             -webkit-tap-highlight-color: transparent;
         }
@@ -255,7 +184,7 @@
             height: 100%;
             background: rgba(0,0,0,0.92);
             backdrop-filter: blur(16px);
-            border-radius: 28px;
+            border-radius: 0;
             padding: 30px 22px;
             z-index: 300;
             overflow-y: auto;
@@ -330,7 +259,6 @@
         .theme-toggle .toggle-track.active .toggle-thumb { left: 23px; }
         .theme-toggle .toggle-label { color: #ddd; font-size: 13px; font-weight: 500; }
 
-        /* Заставка */
         .wallpaper-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -359,17 +287,10 @@
             height: 40px;
             border-radius: 8px;
             margin-bottom: 3px;
-            font-size: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: rgba(255,255,255,0.03);
+            background-size: cover !important;
+            background-position: center !important;
         }
-        .wallpaper-item .preview.space { background: radial-gradient(ellipse at 30% 40%, #0a0a3e, #000); color: #fff; font-size: 18px; }
-        .wallpaper-item .preview.flowers { background: radial-gradient(ellipse at 60% 30%, #2d1b4d, #1a0a1a); color: #fff; font-size: 18px; }
-        .wallpaper-item .preview.city { background: radial-gradient(ellipse at 50% 80%, #1a2a4a, #0a0a1a); color: #fff; font-size: 18px; }
 
-        /* Кнопка сброса */
         .reset-btn {
             background: #e74c3c;
             border: none;
@@ -387,7 +308,6 @@
         }
         .reset-btn:active { transform: scale(0.96); }
 
-        /* Модалка сброса */
         .reset-confirm-modal {
             display: none;
             position: absolute;
@@ -397,7 +317,7 @@
             height: 100%;
             background: rgba(0,0,0,0.85);
             backdrop-filter: blur(12px);
-            border-radius: 28px;
+            border-radius: 0;
             padding: 30px 22px;
             z-index: 400;
             overflow-y: auto;
@@ -429,7 +349,6 @@
         .reset-confirm-modal .btn-group .btn-yes { background: #e74c3c; color: #fff; box-shadow: 0 4px 15px rgba(231,76,60,0.3); }
         .reset-confirm-modal .btn-group .btn-no { background: #2ecc71; color: #fff; box-shadow: 0 4px 15px rgba(46,204,113,0.3); }
 
-        /* Остальные модалки */
         .modal {
             display: none;
             position: absolute;
@@ -439,7 +358,7 @@
             height: 100%;
             background: rgba(0,0,0,0.85);
             backdrop-filter: blur(12px);
-            border-radius: 28px;
+            border-radius: 0;
             padding: 30px 22px;
             z-index: 100;
             overflow-y: auto;
@@ -557,7 +476,7 @@
             height: 100%;
             background: rgba(0,0,0,0.92);
             backdrop-filter: blur(16px);
-            border-radius: 28px;
+            border-radius: 0;
             padding: 30px 22px;
             z-index: 200;
             overflow-y: auto;
@@ -616,11 +535,11 @@
         *:focus { outline: none; }
 
         @media (max-width: 400px) {
-            .phone { height: 95vh; border-radius: 28px; padding: 12px; }
-            .phone-screen { border-radius: 20px; padding: 14px; }
+            .phone { height: 95vh; padding: 6px; }
+            .phone-screen { padding: 10px 8px; }
             .app-icon { width: 40px; height: 40px; font-size: 18px; }
             .app-name { font-size: 7px; }
-            .app-item { padding: 3px 1px; }
+            .app-item { padding: 2px 1px; }
         }
 
         /* ===== БАНК ===== */
@@ -878,7 +797,6 @@
             <div id="bankContent"></div>
         </div>
 
-        <!-- НАСТРОЙКИ -->
         <div class="settings-modal" id="settingsModal">
             <div class="modal-header">
                 <h2>⚙️ Настройки</h2>
@@ -901,15 +819,15 @@
                 <div class="setting-desc">Выберите фоновое изображение</div>
                 <div class="wallpaper-grid">
                     <div class="wallpaper-item" data-wallpaper="space" onclick="setWallpaper('space')">
-                        <div class="preview space">🌙✨</div>
+                        <div class="preview" style="background-image: url('https://i.ibb.co/JFKZZrPh/i-1.jpg');"></div>
                         Космос
                     </div>
                     <div class="wallpaper-item" data-wallpaper="flowers" onclick="setWallpaper('flowers')">
-                        <div class="preview flowers">🌸🌺</div>
+                        <div class="preview" style="background-image: url('https://i.ibb.co/dwfz0hnN/i.jpg');"></div>
                         Цветы
                     </div>
                     <div class="wallpaper-item" data-wallpaper="city" onclick="setWallpaper('city')">
-                        <div class="preview city">🏙️🌃</div>
+                        <div class="preview" style="background-image: url('https://i.ibb.co/nNn0fCn0/i-2.jpg');"></div>
                         Город
                     </div>
                 </div>
@@ -938,7 +856,6 @@
             <button class="reset-btn" onclick="openResetConfirm()">🗑️ Сбросить все</button>
         </div>
 
-        <!-- МОДАЛКА ПОДТВЕРЖДЕНИЯ СБРОСА -->
         <div class="reset-confirm-modal" id="resetConfirmModal">
             <div class="icon">⚠️</div>
             <div class="title">Внимание!</div>
@@ -962,21 +879,16 @@
 
 <script>
     // ============================================================
-    // НАСТРОЙКИ
+    // НАСТРОЙКИ (С ЗАСТАВКАМИ)
     // ============================================================
     function loadSettings() {
         try {
             var theme = localStorage.getItem('appTheme') || 'dark';
-            var wallpaper = localStorage.getItem('appWallpaper') || 'space';
+            var wallpaper = localStorage.getItem('appWallpaper') || 'default';
             var fontSize = localStorage.getItem('appFontSize') || 'medium';
             var iconSize = localStorage.getItem('appIconSize') || 'medium';
 
-            if (theme === 'light') {
-                document.body.classList.add('light-theme');
-                document.getElementById('themeToggle').classList.add('active');
-                document.getElementById('themeLabel').textContent = 'Светлая';
-            }
-
+            applyTheme(theme, false);
             setWallpaper(wallpaper, true);
 
             document.getElementById('fontSizeSelect').value = fontSize;
@@ -987,25 +899,56 @@
         } catch(e) {}
     }
 
-    function toggleTheme() {
-        var isLight = document.body.classList.toggle('light-theme');
+    function applyTheme(theme, save) {
+        var isLight = theme === 'light';
+        document.body.classList.toggle('light-theme', isLight);
         var toggle = document.getElementById('themeToggle');
         var label = document.getElementById('themeLabel');
 
         if (isLight) {
             toggle.classList.add('active');
             label.textContent = 'Светлая';
-            localStorage.setItem('appTheme', 'light');
         } else {
             toggle.classList.remove('active');
             label.textContent = 'Тёмная';
-            localStorage.setItem('appTheme', 'dark');
+        }
+
+        var screen = document.getElementById('phoneScreen');
+        screen.classList.remove('default-dark', 'default-light');
+        if (isLight) {
+            screen.classList.add('default-light');
+        } else {
+            screen.classList.add('default-dark');
+        }
+
+        if (save) {
+            localStorage.setItem('appTheme', theme);
+        }
+    }
+
+    function toggleTheme() {
+        var isLight = document.body.classList.contains('light-theme');
+        var newTheme = isLight ? 'dark' : 'light';
+        applyTheme(newTheme, true);
+        var wallpaper = localStorage.getItem('appWallpaper') || 'default';
+        if (wallpaper === 'default') {
+            setWallpaper('default', true);
         }
     }
 
     function setWallpaper(name, noSave) {
+        var screen = document.getElementById('phoneScreen');
+
         document.body.classList.remove('wallpaper-space', 'wallpaper-flowers', 'wallpaper-city');
-        document.body.classList.add('wallpaper-' + name);
+        screen.classList.remove('default-dark', 'default-light');
+
+        if (name === 'default' || !name) {
+            var isLight = document.body.classList.contains('light-theme');
+            screen.classList.add(isLight ? 'default-light' : 'default-dark');
+            screen.style.backgroundImage = 'none';
+        } else {
+            document.body.classList.add('wallpaper-' + name);
+        }
 
         document.querySelectorAll('.wallpaper-item').forEach(function(el) {
             el.classList.toggle('active', el.dataset.wallpaper === name);
@@ -1051,10 +994,7 @@
         document.getElementById('themeToggle').classList.remove('active');
         document.getElementById('themeLabel').textContent = 'Тёмная';
         document.body.classList.remove('wallpaper-space', 'wallpaper-flowers', 'wallpaper-city');
-        document.body.classList.add('wallpaper-space');
-        document.querySelectorAll('.wallpaper-item').forEach(function(el) {
-            el.classList.toggle('active', el.dataset.wallpaper === 'space');
-        });
+        setWallpaper('default', true);
         document.getElementById('fontSizeSelect').value = 'medium';
         applyFontSize('medium');
         document.getElementById('iconSizeSelect').value = 'medium';
