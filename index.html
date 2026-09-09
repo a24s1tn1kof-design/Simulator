@@ -366,9 +366,9 @@
         </div>
 
     </div>
-                    </div>
-                  <script>
-    // ===== DRAG-AND-DROP С СОХРАНЕНИЕМ ПОЗИЦИЙ =====
+    </div>
+    <script>
+    // ===== DRAG-AND-DROP =====
     var dragData = {
         dragEl: null,
         offsetX: 0,
@@ -378,8 +378,7 @@
     };
 
     function initDrag() {
-        var items = document.querySelectorAll('.app-item');
-        items.forEach(function(item) {
+        document.querySelectorAll('.app-item').forEach(function(item) {
             item.addEventListener('pointerdown', function(e) {
                 if (e.target.closest('.app-icon') || e.target.closest('.app-name') || e.target.closest('.app-item')) {
                     e.preventDefault();
@@ -507,7 +506,7 @@
     }
 
     setTimeout(function() { loadPositions(); initDrag(); }, 100);
-                  </script>
+    </script>
     <style>
     .sber-card {
         background: linear-gradient(135deg, #1a6d3e, #0d4a2a);
@@ -1261,39 +1260,59 @@
         showToast('✅ Перевод выполнен! Сумма: ' + amount + ' ₽');
     }
 
+    // ===== ОТКРЫТИЕ ПРИЛОЖЕНИЙ (ТОЛЬКО ЧЕРЕЗ addEventListener) =====
     function openStudy() {
         document.getElementById('studyModal').classList.add('active');
         renderStudy();
     }
-    function closeStudy() { document.getElementById('studyModal').classList.remove('active'); }
+
+    function closeStudy() {
+        document.getElementById('studyModal').classList.remove('active');
+    }
 
     function openBank() {
         document.getElementById('bankModal').classList.add('active');
         loadBankData();
         renderBank();
     }
+
     function closeBank() {
         bankData.loggedIn = false;
         saveBankData();
         document.getElementById('bankModal').classList.remove('active');
     }
 
+    // ===== СОБЫТИЯ =====
     document.getElementById('closeStudyBtn').addEventListener('click', closeStudy);
     document.getElementById('closeBankBtn').addEventListener('click', closeBank);
     document.getElementById('closeBookBtn').addEventListener('click', closeBook);
 
-    document.getElementById('studyModal').addEventListener('click', function(e) { if (e.target === this) closeStudy(); });
-    document.getElementById('bankModal').addEventListener('click', function(e) { if (e.target === this) closeBank(); });
-    document.getElementById('bookModal').addEventListener('click', function(e) { if (e.target === this) closeBook(); });
+    document.getElementById('studyModal').addEventListener('click', function(e) {
+        if (e.target === this) closeStudy();
+    });
+    document.getElementById('bankModal').addEventListener('click', function(e) {
+        if (e.target === this) closeBank();
+    });
+    document.getElementById('bookModal').addEventListener('click', function(e) {
+        if (e.target === this) closeBook();
+    });
 
+    // ===== КЛИК ПО ИКОНКЕ (БЕЗ onclick В HTML) =====
     document.getElementById('studyAppBtn').addEventListener('click', function(e) {
-        if (!dragData.isDragging) openStudy();
-    });
-    document.getElementById('bankAppBtn').addEventListener('click', function(e) {
-        if (!dragData.isDragging) openBank();
+        if (!dragData.isDragging) {
+            openStudy();
+        }
     });
 
+    document.getElementById('bankAppBtn').addEventListener('click', function(e) {
+        if (!dragData.isDragging) {
+            openBank();
+        }
+    });
+
+    // ===== ЗАПУСК =====
     renderStudy();
+
     setInterval(function() {
         var counter = document.getElementById('daysCounter');
         if (counter) {
